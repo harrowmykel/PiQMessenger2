@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ng.com.coursecode.piqmessenger.MainActivity">
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/action_search"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search_black_24dp"/>
+    <item
+        android:id="@+id/action_more"
+        android:title="@string/action_more"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_more_vert_black_24dp"/>
+</menu>

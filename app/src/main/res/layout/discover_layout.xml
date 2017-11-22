@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="2dp"
+    app:cardElevation="2dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="7dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/discover_dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/user_sample" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/mrgtop"
+                android:layout_marginTop="@dimen/mrgtop"
+                android:layout_marginLeft="@dimen/mrginleft"
+                android:layout_marginStart="@dimen/mrginleft"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/discover_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/mrgtop"
+                    android:layout_marginTop="@dimen/mrgtop_"
+                    android:textSize="@dimen/headsize"
+                    android:textStyle="bold"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignLeft="@+id/discover_more"
+                    android:layout_alignStart="@+id/discover_more"
+                    android:text="Discover_username" />
+
+                <TextView
+                    android:id="@+id/discover_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discover_username"
+                    android:textSize="@dimen/descSize"
+                    android:layout_below="@+id/discover_username" />
+
+                <ImageView
+                    android:id="@+id/discover_more"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignTop="@+id/discover_username"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/discover_subtitle"
+                    android:id="@+id/discover_image"
+                    style="@style/imageViewCover"
+                    app:srcCompat="@drawable/post_sample"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_below="@+id/discover_image"
+                    android:id="@+id/gh"
+                    android:background="@color/dark_divider_color"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="5dp"
+                    android:layout_below="@+id/gh"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_reply_black_24dp"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

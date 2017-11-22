@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/profile"
+        android:orderInCategory="100"
+        android:title="@string/profile"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_person_black_24dp"/>
+    <item
+        android:id="@+id/edit_profile"
+        android:orderInCategory="100"
+        android:title="@string/edit_profile"/>
+    <item
+        android:id="@+id/more_"
+        android:orderInCategory="100"
+        android:title="@string/more"/>
+
+
+</menu>

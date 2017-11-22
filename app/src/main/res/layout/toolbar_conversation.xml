@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:layout_width="fill_parent"
+    android:layout_height="?actionBarSize">
+    <!-- android:background="?attr/selectableItemBackgroundBorderless" will cause this Custom View to make ripple effect -->
+
+    <LinearLayout
+        android:id="@+id/conversation_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/crt_dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/user_sample" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/conversation_image"
+        android:layout_toEndOf="@+id/conversation_image"
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingLeft="4dp"
+        android:paddingStart="4dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:paddingTop="0dp" >
+
+
+        <TextView
+            android:id="@+id/action_bar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="0.6"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:text="shanraisshan"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/action_bar_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="0.4"
+            android:ellipsize="end"
+            android:text="last seen 1 hour ago"
+            android:maxLines="1"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
+</RelativeLayout>

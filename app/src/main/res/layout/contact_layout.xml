@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/users_dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/user_sample"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/users_dp"
+        android:layout_toEndOf="@+id/users_dp"
+        android:layout_toRightOf="@+id/users_dp"
+        android:layout_alignBottom="@+id/users_dp"
+        android:layout_marginBottom="@dimen/mrgtop"
+        android:layout_marginTop="@dimen/mrgtop">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:id="@+id/users_linear"
+            android:layout_alignLeft="@+id/users_time"
+            android:layout_alignStart="@+id/users_time"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/mrginleft"
+            android:layout_marginStart="@dimen/mrginleft"
+            android:layout_marginBottom="@dimen/mrgtop"
+            android:layout_marginTop="@dimen/mrgtop">
+<!--
+            android:layout_marginLeft="@dimen/mrginleft"
+            android:layout_marginStart="@dimen/mrginleft"
+            android:layout_marginBottom="@dimen/mrgtop"-->
+        <TextView
+            android:id="@+id/users_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/users_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="12sp"
+            android:layout_below="@+id/users_username" />
+        </LinearLayout>
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/users_frnds"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignTop="@+id/users_linear"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="@dimen/mrgtop"
+            android:layout_marginRight="12dp"
+            android:textSize="12sp"
+            android:text="@string/app_name"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dark_divider_color"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="8dp"/>
+    </RelativeLayout>
+</RelativeLayout>

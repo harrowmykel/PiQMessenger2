@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#9C27B0</color>
+    <color name="colorPrimaryDark">#7B1FA2</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="dark_divider_color">#cccccc</color>
+    <color name="theme_primary">#cccccc</color>
+    <color name="theme_primary_text_inverted">#cccccc</color>
+    <color name="theme_secondary_text_inverted">#cccccc</color>
+    <color name="bckgrnd">#D7D9E1</color>
+    <color name="bckgrnd_home">#DDDDDD</color>
+    <color name="button_selected">#777</color>
+    <color name="pattern_correct">#009688</color>
+    <color name="border_color_">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grrey">#888</color>
+    <color name="privacy_selected">#EA80FC</color>
+    <color name="privacy_selected_border">#E040FB</color>
+
+
+    <color name="red500">#F44336</color>
+    <color name="teal100">#B2DFDB</color>
+    <color name="teal500">#009688</color>
+    <color name="cyan900">#006064</color>
+    <color name="lightBlue500">#03A9F4</color>
+
+    <color name="green500">#4CAF50</color>
+
+
+
+    <!-- Grey scales -->
+    <color name="gray200">#EEEEEE</color>
+    <color name="gray300">#E0E0E0</color>
+    <color name="blueGray50">#ECEFF1</color>
+    <color name="blueGray200">#B0BEC5</color>
+    <color name="blueGray300">#90A4AE</color>
+    <color name="blueGray400">#78909C</color>
+    <color name="blueGray500">#607D8B</color>
+    <color name="colorDateAccent">#888</color>
+    <color name="colorRecivMsg">#BA68C8</color>
+    <color name="colorAuthMsg">#E1BEE7</color>
+    <color name="msg_color">#fff</color>
+    <color name="bckgrnd_stat">#000</color>
+</resources>
