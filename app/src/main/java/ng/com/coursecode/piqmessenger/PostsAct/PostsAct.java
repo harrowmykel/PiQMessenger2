@@ -30,7 +30,10 @@ import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Interfaces.PostItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Interfaces.sendData;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.Model__2;
+import ng.com.coursecode.piqmessenger.Model__.PostModelParcel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.Profile;
@@ -46,33 +49,24 @@ import retrofit2.Retrofit;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class PostsAct extends AppCompatActivity {
+public class PostsAct extends AppCompatActivity implements sendData {
 
     public static String POSTID="lkresdkltj;kf";
 
     Context context;
     Stores stores;
-    RecyclerView seenrecyclerview;
-    int page=1;
-    boolean moreCanBeLoaded=true;
-    LinearLayoutManager mLayoutManagerseen;
     int toSkip=0;
-    Model__ main_post;
+    PostModelParcel main_post;
 
-    List<Posts_tab> model_list_= new ArrayList<>();
-
-    ApiInterface apiInterface;
-    PostsAdapter postsAdapter2;
-
+    boolean fromSavedState;
     Posts_tab posts_tab_;
-    boolean do_once=true;
 
     String[] send= Posts.send;
 
     public TextView posts_username, posts_subtitle, posts_text, post_likes;
     public CircleImageView posts_dp;
     public ImageView posts_image, posts_fav, posts_msg, posts_more;
-
+    String postid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +76,13 @@ public class PostsAct extends AppCompatActivity {
         stores=new Stores(context);
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        postid=getIntent().getStringExtra(POSTID);
+        if(postid==null || postid.isEmpty()){
+            //TODO report ERror here
+            return;
+        }
         startLoader();
-        seenrecyclerview=(RecyclerView)findViewById(R.id.main_recycle);
-        (findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model_list_= new ArrayList<>();
-                toSkip=0;
-                page=1;
-                moreCanBeLoaded=true;
-                doNetworkCall();
-            }
-        });
         loadMainPostViews();
     }
 
@@ -111,69 +100,21 @@ public class PostsAct extends AppCompatActivity {
     }
 
     private void doNetworkCall() {
-        toSkip=model_list_.size();
-        Retrofit retrofit = ApiClient.getClient();
-        stores = new Stores(context);
-        apiInterface = retrofit.create(ApiInterface.class);
-        String postid=getIntent().getStringExtra(POSTID);
-        if(postid==null){
-            //TODO report ERror here
-            return;
+        // Create a new Fragment to be placed in the activity layout
+        Posts firstFragment = Posts.newInstance(postid, true);
+        // In case this activity was started with special instructions from an
+        // Intent, pass the Intent's extras to the fragment as arguments
+        if (fromSavedState) {
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.cont_framecontent, firstFragment).commit();
+        }else{
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.cont_framecontent, firstFragment).commit();
         }
-        if(postid.isEmpty()){
-            //TODO report ERror here
-            return;
-        }
+        fromSavedState=true;
 
-        Call<Model__> call=apiInterface.getPostsReplies(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, ""+page);
-        call.enqueue(new Callback<Model__>() {
-            @Override
-            public void onResponse(Call<Model__> call, Response<Model__> response) {
-                Model__ model_lisj=response.body();
-                Model__ model_l=model_lisj.getPagination();
-
-                String any = model_l.getPagesLeft();
-                int pgLeft = Stores.parseInt(any);
-
-                moreCanBeLoaded = (pgLeft > 0);
-                if (!moreCanBeLoaded) {
-                    closeLoader();
-                }
-
-                main_post=model_lisj.getMain_post();
-                if(main_post.getError()!=null) {
-                    stores.handleError(main_post.getError(), context, new ServerError() {
-                        @Override
-                        public void onEmptyArray() {
-                            Toasta.makeText(context, R.string.post_not_found, Toast.LENGTH_SHORT);
-                        }
-
-                        @Override
-                        public void onShowOtherResult(int res__) {
-                            Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
-                        }
-                    });
-                    closeLoader();
-                }
-                if(main_post!=null){
-                    setPostView();
-                    if(main_post.getAuth_username()!=null){
-                        setPostView();
-                    }
-                }
-                setRecyclerView(model_lisj);
-                if(do_once) {
-                    do_once=false;
-                }
-                page++;
-            }
-
-            @Override
-            public void onFailure(Call<Model__> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "postscall");
-                closeLoader();
-            }
-        });
     }
 
     private void setPostView() {
@@ -343,209 +284,9 @@ public class PostsAct extends AppCompatActivity {
         smoothProgressBar.setVisibility(VISIBLE);
     }
 
-    private onVerticalScrollListener createInfiniteScrollListener() {
-        return new onVerticalScrollListener(){
-            @Override
-            public void onScrolledToBottom() {
-                startLoader();
-                if(moreCanBeLoaded){
-                    doNetworkCall();
-                }else {
-                    closeLoader();
-                }
-                super.onScrolledToBottom();
-            }
-
-        };
-    }
-
     private String getString__(String confirm) {
         return (confirm==null)?"":confirm;
     }
-
-
-    public void likedd(final int position, final String liketobeset){
-
-        Retrofit retrofit = ApiClient.getClient();
-        final String type=model_list_.get(position).getLiked();
-        posts_fav.setImageResource(Stores.getLikeImageRes(type));
-
-        String postid=model_list_.get(position).getPosts_id();
-        stores = new Stores(context);
-        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-        Call<Model__> call;
-
-        if(type.equals("0")){
-            call = apiInterface.unlikePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid);
-        }else{
-            call = apiInterface.likePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, type);
-        }
-
-        call.enqueue(new Callback<Model__>() {
-            @Override
-            public void onResponse(Call<Model__> call, Response<Model__> response) {
-                Model__ model_lisj=response.body();
-                List<Model__> model_lis=model_lisj.getData();
-                Model__ modelll=model_lis.get(0);
-
-                if(modelll.getError()!=null) {
-                    posts_fav.setImageResource(Stores.getLikeImageRes(type));
-                }else if(modelll.getSuccess() !=null){
-                    model_list_.get(position).setLiked(liketobeset);
-                    postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
-                    seenrecyclerview.setAdapter(postsAdapter2);
-                    postsAdapter2.notifyDataSetChanged();
-                    seenrecyclerview.scrollToPosition(position);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Model__> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "contactlist");
-            }
-        });
-    }
-
-    private void setRecyclerView(Model__ model_lisj) {
-        if(do_once){
-            seenrecyclerview.setItemAnimator(new DefaultItemAnimator());
-            mLayoutManagerseen = new LinearLayoutManager(context);
-            seenrecyclerview.setLayoutManager(mLayoutManagerseen);
-
-            if (Stores.flingEdit) {
-                seenrecyclerview.fling(Stores.flingVelX, Stores.flingVelY);
-            }
-            seenrecyclerview.addOnScrollListener(createInfiniteScrollListener());
-        }
-        doModelList(model_lisj);
-        postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
-        seenrecyclerview.setAdapter(postsAdapter2);
-        postsAdapter2.notifyDataSetChanged();
-
-        if(!do_once){
-            seenrecyclerview.scrollToPosition(toSkip);
-        }
-        closeLoader();
-    }
-
-    private void doModelList(Model__ model_lisj) {
-        List<Model__> model_list=model_lisj.getData();
-        int num=model_list.size();
-        for(int i=0; i<num; i++){
-            Model__ modelll=model_list.get(i);
-            posts_tab_=new Posts_tab();
-
-            Users_prof users_prof=new Users_prof();
-            Users_prof users_prof1=new Users_prof();
-
-            final TextView tx=(TextView)findViewById(R.id.warning);
-            tx.setVisibility(Stores.initView);
-            if(modelll.getError()!=null) {
-                stores.handleError(modelll.getError(), context, new ServerError() {
-                    @Override
-                    public void onEmptyArray() {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(R.string.empty_result);
-                    }
-
-                    @Override
-                    public void onShowOtherResult(int res__) {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(res__);
-                    }
-                });
-                closeLoader();
-                break;
-            }
-            users_prof.setUser_name(modelll.getReciv_username());
-            users_prof.setFullname(modelll.getReciv_data().getReciv());
-            users_prof.setImage(modelll.getReciv_data().getReciv_img());
-            users_prof1.setUser_name(modelll.getAuth_username());
-            users_prof1.setFullname(modelll.getAuth_data().getAuth());
-            users_prof1.setImage(modelll.getAuth_data().getAuth_img());
-
-            users_prof.save(context);
-            users_prof1.save(context);
-
-            posts_tab_.setUser_name(getString__(modelll.getAuth_username()));
-            posts_tab_.setReciv(getString__(modelll.getReciv_username()));
-            posts_tab_.setPosts_id(getString__(modelll.getId()));
-            posts_tab_.setTime(getString__(modelll.getTimestamp()));
-            posts_tab_.setText(getString__(modelll.getSubtitle()));
-            posts_tab_.setImage(getString__(modelll.getImage()));
-            posts_tab_.setFav(getString__(modelll.getFav()));
-            posts_tab_.setLiked(getString__(modelll.getLiked()));
-            posts_tab_.setLikes(getString__(modelll.getLikes()));
-            posts_tab_.setComment(getString__(modelll.getComment()));
-            posts_tab_.setFullname(modelll.getAuth_data().getAuth());
-            posts_tab_.setUser_image(modelll.getAuth_data().getAuth_img());
-
-            model_list_.add(posts_tab_);
-        }
-    }
-
-
-    PostItemClicked pPostItemClicked=new PostItemClicked(){
-        @Override
-        public void onReplyClicked(int position) {
-            String postid=model_list_.get(position).getPosts_id();
-            Intent intent=new Intent(context, PostsAct.class);
-            intent.putExtra(PostsAct.POSTID, postid);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onDMessageClicked(int position) {
-            String postid=model_list_.get(position).getUser_name();
-            Intent intent=new Intent(context, Converse.class);
-            intent.putExtra(Converse.USERNAME, postid);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onUsernameClicked(int position) {
-            String username=model_list_.get(position).getUser_name();
-            Intent intent=new Intent(context, Profile.class);
-            intent.putExtra(Profile.USERNAME, username);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onMoreClicked(int position) {
-            Toasta.makeText(context, "more", Toast.LENGTH_SHORT);
-        }
-
-        @Override
-        public void onShowClicked(int position) {
-            String postid=model_list_.get(position).getPosts_id();
-            Intent intent=new Intent(context, PostsAct.class);
-            intent.putExtra(PostsAct.POSTID, postid);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onShowMoreLikeOptions(int position) {
-            Toasta.makeText(context, "showmore", Toast.LENGTH_SHORT);
-            String liked=model_list_.get(position).getLiked();
-
-            if(liked.equals("0")){
-                likedd(position, Stores.POST_LIKE);
-            }else{
-                likedd(position, "0");
-            }
-        }
-
-        @Override
-        public void onLikeClicked(final int position) {
-            Toasta.makeText(context, "like", Toast.LENGTH_SHORT);
-            String liked=model_list_.get(position).getLiked();
-            if(liked.equals("0")){
-                likedd(position, Stores.POST_LIKE);
-            }else{
-                likedd(position, "0");
-            }
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -562,5 +303,11 @@ public class PostsAct extends AppCompatActivity {
             startActivity(ontent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void send(Object object) {
+        main_post=(PostModelParcel)object;
+        setPostView();
     }
 }

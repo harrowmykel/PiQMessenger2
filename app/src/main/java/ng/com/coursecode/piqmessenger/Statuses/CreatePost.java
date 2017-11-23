@@ -113,12 +113,14 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         user_prof=(LinearLayout)findViewById(R.id.newpost_user);
         emojiconEditText=(EditText)findViewById(R.id.newpost_edit);
         camera_Post=img=(ImageView)findViewById(R.id.newpost_img_show);
+        TextView fulln=(TextView)findViewById(R.id.crt_fullname);
         TextView username=(TextView)findViewById(R.id.crt_user);
         ImageView user_dp=(CircleImageView)findViewById(R.id.crt_dp);
         String uiser=stores.getUsername();
         Users_prof users_prof=Users_prof.getInfo(context, uiser);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
-        username.setText(users_prof.getFullname());
+        fulln.setText(users_prof.getFullname());
+        username.setText(uiser);
 
         counter.setText("" + NUMBER_OF_WORDS);
 

@@ -20,13 +20,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contacts">Friends</string>
     <string name="new_requests">New Requests</string>
-    <string-array name="query_suggestions">
-        <item>Android</item>
-        <item>iOS</item>
-        <item>SCALA</item>
-        <item>Ruby</item>
-        <item>JavaScript</item>
-    </string-array>
     <string name="title_activity_contacts">ContactsAct</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -90,24 +83,6 @@
     <string name="likes">Likes</string>
     <string name="action_reply">Reply</string>
     <string name="show_previous_post">Show previous post</string>
-
-    <array name="NewPost_array">
-        <item>@string/takePht</item>
-        <item>@string/onlineGifs</item>
-        <item>@string/selcamera</item>
-        <item>@string/cancel</item>
-    </array>
-    <string-array name="NewPost_array_img">
-        <item>@string/upPic</item>
-        <item>@string/upVid</item>
-        <item>@string/cancel</item>
-    </string-array>
-    <string-array name="ReportArray">
-        <item>@string/report_agg</item>
-        <item>@string/report_tribRace</item>
-        <item>@string/repor_pblic</item>
-        <item>@string/report_hate</item>
-    </string-array>
     <string name="title_activity_converse">Converse</string>
     <string name="title_activity_show__status">Show_Status</string>
     <string name="action_send">Send</string>
@@ -132,4 +107,5 @@
     <string name="accept_request">Accept</string>
     <string name="request_sent">Request sent</string>
     <string name="error_fetchin_item">Error fetching items...</string>
+    <string name="edit">Edit</string>
 </resources>

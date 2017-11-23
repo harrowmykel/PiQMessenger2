@@ -178,17 +178,23 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/replies_"
+                android:id="@+id/refresh"
+                style="@style/sub_titles"/>
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical">
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cont_framecontent"/>
-            </LinearLayout>
+                android:layout_marginBottom="5dp"
+                android:id="@+id/main_recycle"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/warning"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/warning"/>
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

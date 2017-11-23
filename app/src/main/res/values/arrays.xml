@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nt_user_post">
+        <item>@string/report</item>
+    </string-array>
+    <string-array name="user_post">
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+    <string-array name="query_suggestions">
+        <item>Android</item>
+        <item>iOS</item>
+        <item>SCALA</item>
+        <item>Ruby</item>
+        <item>JavaScript</item>
+    </string-array>
+    <array name="NewPost_array">
+        <item>@string/takePht</item>
+        <item>@string/onlineGifs</item>
+        <item>@string/selcamera</item>
+        <item>@string/cancel</item>
+    </array>
+    <string-array name="NewPost_array_img">
+        <item>@string/upPic</item>
+        <item>@string/upVid</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="ReportArray">
+        <item>@string/report_agg</item>
+        <item>@string/report_tribRace</item>
+        <item>@string/repor_pblic</item>
+        <item>@string/report_hate</item>
+    </string-array>
+</resources>

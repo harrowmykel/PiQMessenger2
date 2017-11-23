@@ -82,6 +82,9 @@ public class Model__2 implements Parcelable {
 
     // @SerializedName("userid")
     public String userid;
+    public String likes;
+    public String liked;
+    public String comment;
 
     // @SerializedName("subtitle")
     public String subtitle;
@@ -152,6 +155,9 @@ public class Model__2 implements Parcelable {
     // @SerializedName("work")
     public String work;
 
+    // @SerializedName("work")
+    public String reply_to;
+
     // @SerializedName("dream")
     public String dream;
 
@@ -189,6 +195,30 @@ public class Model__2 implements Parcelable {
 
     public Model__2(){
 
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
+    public String getLiked() {
+        return liked;
+    }
+
+    public void setLiked(String liked) {
+        this.liked = liked;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getId() {
@@ -683,6 +713,15 @@ public class Model__2 implements Parcelable {
         return statFav;
     }
 
+
+    public String getReply_to() {
+        return reply_to;
+    }
+
+    public void setReply_to(String reply_to) {
+        this.reply_to = reply_to;
+    }
+
     public Model__2(Parcel in) {
         if (in.readByte() == 0x01) {
             db_result = new ArrayList<Messages>();
@@ -723,6 +762,9 @@ public class Model__2 implements Parcelable {
         error_more = in.readString();
         username = in.readString();
         reciv = in.readString();
+        liked = in.readString();
+        likes = in.readString();
+        comment = in.readString();
         reciv_data = (Model__2) in.readValue(Model__2.class.getClassLoader());
         reciv_username = in.readString();
         reciv_img = in.readString();
@@ -753,6 +795,7 @@ public class Model__2 implements Parcelable {
         school = in.readString();
         country = in.readString();
         work = in.readString();
+        reply_to = in.readString();
         dream = in.readString();
         hobby = in.readString();
         status_id = in.readString();
@@ -828,6 +871,9 @@ public class Model__2 implements Parcelable {
         dest.writeString(error_more);
         dest.writeString(username);
         dest.writeString(reciv);
+        dest.writeString(liked);
+        dest.writeString(likes);
+        dest.writeString(comment);
         dest.writeValue(reciv_data);
         dest.writeString(reciv_username);
         dest.writeString(reciv_img);
@@ -858,6 +904,7 @@ public class Model__2 implements Parcelable {
         dest.writeString(school);
         dest.writeString(country);
         dest.writeString(work);
+        dest.writeString(reply_to);
         dest.writeString(dream);
         dest.writeString(hobby);
         dest.writeString(status_id);

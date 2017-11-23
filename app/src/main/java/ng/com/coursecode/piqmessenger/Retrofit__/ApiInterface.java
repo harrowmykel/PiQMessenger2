@@ -94,7 +94,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("posts/index.php?req=getpost")
-    Call<Model__> getPostsReplies(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q, @Field("page") String page);
+    Call<PostsModel> getPostsReplies(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q, @Field("page") String page);
 
     @FormUrlEncoded
     @POST("posts/index.php?req=getlikes")

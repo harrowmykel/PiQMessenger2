@@ -86,7 +86,6 @@ public class Status extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
                 StatusCall statusCall=new StatusCall(context);
                 statusCall.getAllMessages(new FetchMore(){
                     @Override
@@ -94,7 +93,6 @@ public class Status extends Fragment {
                         setLists();
                     }
                 });
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
@@ -155,6 +153,7 @@ public class Status extends Fragment {
     }
 
     public void setLists() {
+        swipeRefreshLayout.setRefreshing(true);
 
         messages = new ArrayList<>();
         messagesrecommended = new ArrayList<>();
@@ -215,6 +214,7 @@ public class Status extends Fragment {
         statusAdapter.notifyDataSetChanged();
         statusAdapterseen.notifyDataSetChanged();
         statusAdapterrecommended.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public static Status newInstance(){

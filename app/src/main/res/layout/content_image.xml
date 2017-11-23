@@ -58,7 +58,7 @@
                     style="@style/fancy_create"
                     fancy:fb_text="@string/cancel"
                     android:id="@+id/cancel_action"
-                    fancy:fb_fontIconResource="&#xf2d3;"/>
+                    fancy:fb_fontIconResource="&#xf00d;"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

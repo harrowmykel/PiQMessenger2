@@ -14,11 +14,21 @@ public class PostsModel {
     @Expose
     private Pagination pagination;
 
+    @SerializedName("main_post")
+    public Datum main_post;
     /**
      * No args constructor for use in serialization
      *
      */
     public PostsModel() {
+    }
+
+    public Datum getMain_post() {
+        return main_post;
+    }
+
+    public void setMain_post(Datum main_post) {
+        this.main_post = main_post;
     }
 
     /**
