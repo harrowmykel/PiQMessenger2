@@ -112,18 +112,38 @@
                     android:layout_margin="2dp"
                     android:layout_below="@+id/gh"
                     android:orientation="horizontal">
-                    <ImageView
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="20dp"
-                        app:srcCompat="@drawable/ic_favorite_border_black_24dp"
-                        android:id="@+id/posts_fav"
-                        android:layout_weight="1"/>
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:contentDescription="@string/accept_request"
+                            app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+                            android:id="@+id/posts_fav"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:id="@+id/posts_likes_txt"/>
+                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
                     <ImageView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="20dp"
+                        android:contentDescription="@string/accept_request"
                         app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
-                        android:id="@+id/posts_reply"
-                        android:layout_weight="1"/>
+                        android:id="@+id/posts_reply"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:id="@+id/posts_reply_txt"/>
+                </LinearLayout>
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="20dp"

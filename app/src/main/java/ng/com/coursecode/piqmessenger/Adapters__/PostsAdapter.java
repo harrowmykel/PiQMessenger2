@@ -56,6 +56,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsViewHolder> {
             holder.posts_subtitle.setText((new TimeModel(context)).getDWM3(messages.getTime()));
             holder.posts_username.setText(messages.getFullname());
             holder.posts_text.setText(messages.getText());
+            String lkes=(messages.getLikes().equalsIgnoreCase("0"))?"":messages.getLikes();
+
+            holder.post_likes_text.setText(lkes);
 
             String image=messages.getImage();
             if(postItemClicked!=null)

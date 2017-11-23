@@ -15,7 +15,7 @@ import ng.com.coursecode.piqmessenger.R;
 
 public class PostsViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView posts_username, posts_subtitle, posts_text;
+    public TextView posts_username, posts_subtitle, posts_text, post_likes_text,  post_replies_text;
     public CircleImageView posts_dp;
     public ImageView posts_image, posts_fav, posts_reply, posts_msg, posts_more;
     public View post_view;
@@ -26,6 +26,8 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         post_view=itemView;
         posts_username=(TextView)itemView.findViewById(R.id.posts_username);
         posts_subtitle=(TextView)itemView.findViewById(R.id.posts_subtitle);
+        post_likes_text=(TextView)itemView.findViewById(R.id.posts_likes_txt);
+        post_replies_text=(TextView)itemView.findViewById(R.id.posts_reply_txt);
         posts_text=(TextView)itemView.findViewById(R.id.posts_text);
         posts_dp=(CircleImageView) itemView.findViewById(R.id.posts_dp);
         posts_image=(ImageView) itemView.findViewById(R.id.posts_image);

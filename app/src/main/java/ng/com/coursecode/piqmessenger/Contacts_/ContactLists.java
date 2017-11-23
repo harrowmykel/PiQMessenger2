@@ -251,6 +251,7 @@ public class ContactLists extends Fragment {
         @Override
         public void onFriendCLicked(int position) {
             Toasta.makeText(context, "send friendreq here", Toast.LENGTH_SHORT);
+//            messages.get(position)
         }
 
         @Override

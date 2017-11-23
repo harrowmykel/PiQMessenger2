@@ -93,7 +93,7 @@ public class PostModelParcel implements Parcelable {
     public String email;
 
     // @SerializedName("work")
-    public String reply_to;
+    public String reply_to="";
     public String error_more;
 
 

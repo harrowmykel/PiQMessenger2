@@ -136,8 +136,12 @@ public class Posts extends Fragment {
                 loadPostFrag();
             }
         });
+        query=(query==null)?"":query;
+        postid=(postid==null)?"":postid;
         if (!query.isEmpty()) {
             ((TextView)view.findViewById(R.id.refresh)).setText(R.string.action_search);
+        }else if (!postid.isEmpty()) {
+            ((TextView)view.findViewById(R.id.refresh)).setText(R.string.replies_);
         }
         setLists();
     }
@@ -175,9 +179,9 @@ public class Posts extends Fragment {
         String where=query;
 
         Call<PostsModel> call;
-        if(!who.isEmpty()){
+        if(who!=null && !who.isEmpty()){
             call=apiInterface.getUsersPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
-        }else if(!postid.isEmpty()){
+        }else if(postid!=null && !postid.isEmpty()){
             call=apiInterface.getPostsReplies(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, ""+page);
         }else{
             call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
@@ -222,21 +226,22 @@ public class Posts extends Fragment {
         post_more.setVisibility(View.VISIBLE);
 
         main_post=model_lisj.getMain_post();
-        if(main_post.getError()!=null) {
-            stores.handleError(main_post.getError(), context, new ServerError() {
-                @Override
-                public void onEmptyArray() {
-                    Toasta.makeText(context, R.string.post_not_found, Toast.LENGTH_SHORT);
-                }
 
-                @Override
-                public void onShowOtherResult(int res__) {
-                    Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
-                }
-            });
-            closeLoader();
-        }
         if(main_post!=null){
+            if(main_post.getError()!=null) {
+                stores.handleError(main_post.getError(), context, new ServerError() {
+                    @Override
+                    public void onEmptyArray() {
+                        Toasta.makeText(context, R.string.post_not_found, Toast.LENGTH_SHORT);
+                    }
+
+                    @Override
+                    public void onShowOtherResult(int res__) {
+                        Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
+                    }
+                });
+                closeLoader();
+            }
             if(main_post.getAuthUsername()!=null){
                 setPostView();
             }
@@ -342,6 +347,7 @@ public class Posts extends Fragment {
         model__2.setComment(getString__(main_post.getComments()));
         model__2.setFullname(main_post.getAuthData().getAuth());
         model__2.setUser_image(main_post.getAuthData().getAuthImg());
+        model__2.setReply_to(main_post.getReplyTo());
 
         sendData sendData=(sendData) context;
         if(sendData!=null){

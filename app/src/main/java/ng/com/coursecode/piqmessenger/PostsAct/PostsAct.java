@@ -119,10 +119,10 @@ public class PostsAct extends AppCompatActivity implements sendData {
 
     private void setPostView() {
         posts_subtitle.setText((new TimeModel(context)).getDWM3(main_post.getTime()));
-        posts_username.setText(main_post.getAuth_data().getAuth());
-        posts_text.setText(main_post.getSubtitle());
+        posts_username.setText(main_post.getUsername());
+        posts_text.setText(main_post.getText());
         post_likes.setText(getString(R.string.likes_, main_post.getLikes()));
-        String images_=main_post.getAuth_data().getAuth_img();
+        String images_=main_post.getUser_image();
 
         final TextView txo=(TextView)findViewById(R.id.show_previous_post);
         txo.setVisibility(Stores.initView);
@@ -309,5 +309,6 @@ public class PostsAct extends AppCompatActivity implements sendData {
     public void send(Object object) {
         main_post=(PostModelParcel)object;
         setPostView();
+        closeLoader();
     }
 }
