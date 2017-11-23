@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pixplicity.easyprefs.library.Prefs;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,11 +92,6 @@ public class GifLists extends Fragment {
         StaggeredAdapter adapter = new StaggeredAdapter(context, messages, page, gifselected);
         gridView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        if(messages.size()<1){
-            ((TextView)view.findViewById(R.id.warning)).setText(R.string.empty_response);
-        }else{
-            ((TextView)view.findViewById(R.id.warning)).setText(R.string.gifs_and_images_by_tenor);
-        }
         return view;
     }
 

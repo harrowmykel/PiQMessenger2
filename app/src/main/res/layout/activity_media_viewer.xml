@@ -22,6 +22,7 @@
         fancy:fb_text="@string/select_image"
         android:id="@+id/select_image"
         android:layout_alignParentTop="true"
+        fancy:fb_textColor="@color/white"
         fancy:fb_fontIconResource="&#xf0c0;"/>
 
 </RelativeLayout>

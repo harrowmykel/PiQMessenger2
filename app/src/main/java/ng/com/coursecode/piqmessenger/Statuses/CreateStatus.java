@@ -132,7 +132,7 @@ public class CreateStatus extends AppCompatActivity implements View.OnClickListe
                 counter.setText("" + len);
             }
         });
-
+        showSelector();
     }
 
     public void sendToServer(String text, String urltoImage){

@@ -27,7 +27,7 @@
                 style="@style/fancy_create"
                 android:id="@+id/select_image"
                 fancy:fb_text="@string/select_image"
-                fancy:fb_fontIconResource="&#xf0ac;"/>
+                fancy:fb_fontIconResource="&#xf03e;"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                     style="@style/fancy_create"
                     android:id="@+id/action_done"
                     fancy:fb_text="@string/action_done"
-                    fancy:fb_fontIconResource="&#xf0ac;"/>
+                    fancy:fb_fontIconResource="&#xf14a;"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -58,7 +58,7 @@
                     style="@style/fancy_create"
                     fancy:fb_text="@string/cancel"
                     android:id="@+id/cancel_action"
-                    fancy:fb_fontIconResource="&#xf0c0;"/>
+                    fancy:fb_fontIconResource="&#xf2d3;"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

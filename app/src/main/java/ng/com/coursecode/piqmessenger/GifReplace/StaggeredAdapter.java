@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,8 @@ public class StaggeredAdapter extends ArrayAdapter<String> {
                 gifselected.onGifSelected(position);
             }
         });
+//        holder.img_src=(TextView)convertView.findViewById(R.id.img_src);
+//        holder.img_src.setText(getItem(position));
 
         if(page==0){
             holder.imageView.setVisibility(View.VISIBLE);
@@ -71,5 +74,7 @@ public class StaggeredAdapter extends ArrayAdapter<String> {
 
     static class ViewHolder {
         ScaleImageView2 imageView;
+        TextView img_src;
+
     }
 }

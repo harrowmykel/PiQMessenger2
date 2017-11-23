@@ -19,6 +19,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.util.Random;
 
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
+import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.NetworkCalls.GroupsCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
@@ -65,6 +66,7 @@ public class SplashScreen extends AppCompatActivity {
                         if(!Prefs.getBoolean(IS_NT_FIRST_TRIAL, false)){
                             FirebaseInstanceId.getInstance().getToken();
                             Prefs.putBoolean(IS_NT_FIRST_TRIAL, true);
+                            Prefs.putBoolean(GifAct.srcIsTENOR, true);
                             fetchOldThings();
                         }
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));

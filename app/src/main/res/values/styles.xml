@@ -233,4 +233,26 @@
         <item name="android:background">@color/colorDateAccent</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="mat_fancy_profile">
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingRight">10dp</item><!--
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingStart">10dp</item>-->
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <!--<item name="android:layout_marginStart">3dp</item>-->
+        <item name="mfb_textSize">@dimen/fncy_tsize</item>
+        <item name="mfb_borderColor">@color/white</item>
+        <item name="mfb_borderWidth">1dp</item>
+        <item name="mfb_defaultColor">@color/def_fancy</item>
+        <item name="mfb_focusColor">@color/def_focus</item>
+        <item name="mfb_radius">7dp</item>
+        <item name="mfb_textColor">@color/white</item>
+        <item name="mfb_iconPaddingRight">7dp</item>
+    </style>
+
+    <color name="def_fancy">#7ab800</color>
+    <color name="def_focus">#9bd823</color>
 </resources>

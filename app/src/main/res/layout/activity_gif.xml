@@ -43,6 +43,11 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/warning"
+            style="@style/warning"/>
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,6 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_expand_more_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

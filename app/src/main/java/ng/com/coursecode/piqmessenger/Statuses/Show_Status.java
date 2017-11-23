@@ -1,8 +1,11 @@
 package ng.com.coursecode.piqmessenger.Statuses;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,6 +24,7 @@ public class Show_Status extends AppCompatActivity {
 
     public static final String TYPE_ = "HJkwsdjknjkfsj";
     public static final String POSITION = "kejwdasnrfznkfl";
+    public static final String NEXT_STATUS = "jdkjfsnkj";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -62,7 +66,31 @@ public class Show_Status extends AppCompatActivity {
         mViewPager.setAdapter(mStatusPagerAdapter);
         mViewPager.setCurrentItem(position_, false);
         if(data.size()<1){
-            finish();
+            finir();
         }
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(NEXT_STATUS));
+    }
+
+    // Our handler for received Intents. This will be called whenever an Intent
+// with an action named "custom-event-name" is broadcasted.
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            int position=mViewPager.getCurrentItem();
+            int max=data.size();
+            position++;
+            if(position<max && position>-1){
+                mViewPager.setCurrentItem(position, true);
+            }else{
+                finir();
+            }
+        }
+    };
+
+    public  void finir(){
+        finish();
     }
 }

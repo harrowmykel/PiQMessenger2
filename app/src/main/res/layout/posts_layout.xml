@@ -114,19 +114,19 @@
                     android:orientation="horizontal">
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="24dp"
+                        android:layout_height="20dp"
                         app:srcCompat="@drawable/ic_favorite_border_black_24dp"
                         android:id="@+id/posts_fav"
                         android:layout_weight="1"/>
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="24dp"
+                        android:layout_height="20dp"
                         app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
                         android:id="@+id/posts_reply"
                         android:layout_weight="1"/>
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="24dp"
+                        android:layout_height="20dp"
                         android:id="@+id/posts_msg"
                         app:srcCompat="@drawable/ic_reply_black_24dp"
                         android:layout_weight="1"/>

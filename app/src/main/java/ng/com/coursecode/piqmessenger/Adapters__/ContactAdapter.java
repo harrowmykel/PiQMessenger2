@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rilixtech.materialfancybutton.MaterialFancyButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.Interfaces.ContactsItemClicked;
 import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Adapters__.ViewHolders.ContactViewHolder;
 
@@ -62,32 +64,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> {
                 holder.users_frnd.setVisibility(View.GONE);
             }else{
                 holder.users_frnd.setVisibility(View.VISIBLE);
-                setFrndText(holder.users_frnd, messages.getFrndsData());
+                Stores2.setFrndText(holder.users_frnd, messages.getFrndsData(), context);
             }
-
-            //"frnds_data":{"r_sent":"1","r_rcvd":"0","r_frnds":"1"}
             Piccassa.load(context, messages.image, R.drawable.user_sample, holder.users_dp);
-        }
-    }
-
-    private void setFrndText(FancyButton users_frnd, FrndsData frndsData) {
-        int icon=R.string.add_friends;
-        if(frndsData==null){
-            users_frnd.setVisibility(View.GONE);
-        }else{
-            if(frndsData.getRFrnds()){
-                icon=R.string.friends;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected, context.getTheme()));
-                }else{
-                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected));
-                }
-            }else if(frndsData.getRRcvd()){
-                icon=R.string.accept_request;
-            }else if (frndsData.getRSent()){
-                icon=R.string.request_sent;
-            }
-            users_frnd.setText(context.getString(icon));
         }
     }
 

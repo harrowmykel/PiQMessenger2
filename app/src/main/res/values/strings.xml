@@ -80,6 +80,7 @@
     <string name="private_">Private</string>
     <string name="empty_response">Server sent an empty response.</string>
     <string name="gifs_and_images_by_tenor">Gifs and Images with love from Tenor</string>
+    <string name="gifs_and_images_by_giphy">Gifs and Images with love from Giphy</string>
     <string name="empty_result">No more result...</string>
     <string name="error_sending_token">Error sending token...</string>
     <string name="replies_">Replies</string>
@@ -130,4 +131,5 @@
     <string name="add_friends">Add Friends</string>
     <string name="accept_request">Accept</string>
     <string name="request_sent">Request sent</string>
+    <string name="error_fetchin_item">Error fetching items...</string>
 </resources>

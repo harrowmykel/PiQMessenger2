@@ -5,12 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:staggered="http://schemas.android.com/tools"
     android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/warning"
-        style="@style/warning"/>
     <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.StaggeredGridView
         android:id="@+id/staggeredGridView1"
         staggered:numColumns="2"

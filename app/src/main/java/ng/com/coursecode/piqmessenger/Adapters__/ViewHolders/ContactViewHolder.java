@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.rilixtech.materialfancybutton.MaterialFancyButton;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.R;
@@ -16,7 +18,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
     public TextView users_username, users_subtitle;
     public CircleImageView users_dp;
-    public FancyButton users_frnd;
+    public MaterialFancyButton users_frnd;
     public View view;
 
     public ContactViewHolder(View itemView) {
@@ -25,6 +27,6 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         users_username=(TextView)itemView.findViewById(R.id.users_username);
         users_subtitle=(TextView)itemView.findViewById(R.id.users_subtitle);
         users_dp=(CircleImageView) itemView.findViewById(R.id.users_dp);
-        users_frnd=(FancyButton) itemView.findViewById(R.id.users_frnds);
+        users_frnd=(MaterialFancyButton) itemView.findViewById(R.id.users_frnds);
     }
 }

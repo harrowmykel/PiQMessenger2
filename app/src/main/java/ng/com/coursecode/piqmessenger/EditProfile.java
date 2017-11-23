@@ -185,7 +185,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void validateBeforeSend() {
-        if(tempUri!=Uri.EMPTY){
+        if(tempUri!=Uri.EMPTY && !stores.isExtUrl(tempUri.toString())){
             sendToGoogle();
         }else{
             sendToServer();

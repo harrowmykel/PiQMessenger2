@@ -1,8 +1,15 @@
 package ng.com.coursecode.piqmessenger.Model__;
 
+import android.content.Context;
+import android.os.Build;
+import android.view.View;
+
 import com.google.gson.Gson;
+import com.rilixtech.materialfancybutton.MaterialFancyButton;
 
 import java.util.List;
+
+import ng.com.coursecode.piqmessenger.R;
 
 /**
  * Created by harro on 18/10/2017.
@@ -49,5 +56,33 @@ public class Stores2 {
 
     public static String toJson(Object model_lis) {
         return (new Gson()).toJson(model_lis);
+    }
+
+
+
+    public static void setFrndText(MaterialFancyButton users_frnd, FrndsData frndsData, Context context) {
+        int icon= R.string.add_friends;
+        int iconRes=R.string.fawi_user_plus;
+        if(frndsData==null){
+            users_frnd.setVisibility(View.GONE);
+        }else{
+            if(frndsData.getRFrnds()){
+                icon=R.string.friends;
+                iconRes=R.string.fawi_users;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected, context.getTheme()));
+                }else{
+                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected));
+                }
+            }else if(frndsData.getRRcvd()){
+                icon=R.string.accept_request;
+                iconRes=R.string.fawi_user_plus;
+            }else if (frndsData.getRSent()){
+                icon=R.string.request_sent;
+                iconRes=R.string.fawi_check_square_o;
+            }
+            users_frnd.setIcon(context.getString(iconRes));
+            users_frnd.setText(context.getString(icon));
+        }
     }
 }

@@ -13,12 +13,22 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.giphy.sdk.core.models.Media;
+import com.giphy.sdk.core.models.enums.MediaType;
+import com.giphy.sdk.core.network.api.CompletionHandler;
+import com.giphy.sdk.core.network.api.GPHApi;
+import com.giphy.sdk.core.network.api.GPHApiClient;
+import com.giphy.sdk.core.network.response.ListMediaResponse;
+import com.koushikdutta.ion.Ion;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +51,7 @@ import retrofit2.Retrofit;
 public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
 
     private static final int GIFCODE = 2273;
+    private static final String LOAD_HIGH_QUALITY_IMAGE = "lwem.rnlkn;ttksjntrjn";
     private static String TITLE="vbj vhjfjhbfhjb";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -68,15 +79,19 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
 
     Boolean fromSavedState=false;
 
-    List<String> messages=new ArrayList<>();
-    List<String> messages2=new ArrayList<>();
+    List<String> gifListsArray;
+    List<String> imgListsArray;
 
     MaterialSearchView searchView;
-    public String searchQuery;
+    public String searchQuery="";
     Fragment oldFragment;
 
     int page=1;
     int toSkip=0;
+
+    boolean gifSrcIsTenor=true;
+    public static String srcIsTENOR="srcIsTenor";
+    TextView warning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +99,18 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         setContentView(R.layout.activity_gif);
         context=GifAct.this;
         startLoader();
-
+//        gifSrcIsTenor= Prefs.getBoolean(srcIsTENOR, true);
+        gifSrcIsTenor=false;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        warning=((TextView)findViewById(R.id.warning));
+        warning.setText(R.string.loading);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        setSearchQuery("");
+        setSearchQuery();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -100,13 +118,13 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query_) {
                 //Do some magic
                 backstack=true;
-                searchQuery=query;
+                searchQuery=query_;
                 submitted=true;
-                Stores.saveSuggestions(context, GifAct.TITLE, query);
-                setSearchQuery(query);
+                Stores.saveSuggestions(context, GifAct.TITLE, searchQuery);
+                setSearchQuery();
                 return false;
             }
 
@@ -141,7 +159,8 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                page++;
+                setSearchQuery();
             }
         });
     }
@@ -187,20 +206,112 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         return true;
     }
 
-    public void setSearchQuery(String query) {
-        searchQuery =query;
-        Retrofit retrofit1 = ApiClient.getGifClient();
+    public void setSearchQuery() {
         stores = new Stores(context);
-        ApiInterface apiInterface = retrofit1.create(ApiInterface.class);
-        toSkip=messages.size();
         startLoader();
+        if(gifSrcIsTenor){
+            loadFromTenor();
+            warning.setText(R.string.gifs_and_images_by_tenor);
+        }else{
+            loadFromGiphy();
+            warning.setText(R.string.gifs_and_images_by_giphy);
+        }
+    }
+
+    public void loadSectionIfGifAndImage(){
+        if(gifListsArray!=null && imgListsArray!=null){
+            Model__2 model=new Model__2();
+            model.setGif_list(gifListsArray);
+            model.setImg_list(imgListsArray);
+
+            int currItem=mViewPager.getCurrentItem();
+            GifSectionsPagerAdapter mGifSectionsPagerAdapter = new GifSectionsPagerAdapter(getSupportFragmentManager(), model, context, toSkip);
+            mViewPager.setAdapter(mGifSectionsPagerAdapter);
+            mViewPager.setCurrentItem(currItem, false);
+
+            if(gifListsArray.size()<1){
+                Toasta.makeText(GifAct.this, R.string.empty_response, Toast.LENGTH_SHORT);
+            }
+            closeLoader();
+        }
+    }
+
+    private void loadFromGiphy() {
+        GPHApi client = new GPHApiClient(stores.getGiphyApiKey());
+        if(!searchQuery.isEmpty()) {
+            /// Gif Search
+            client.search(searchQuery, MediaType.gif, null, null, null, null, new CompletionHandler<ListMediaResponse>() {
+                @Override
+                public void onComplete(ListMediaResponse result, Throwable e) {
+                    if (result == null) {
+                        // Do what you want to do with the error
+                        warning.setText(R.string.error_fetchin_item);
+                    } else {
+                        if (result.getData() != null) {
+                            insertIntoArray(0, result.getData());
+                        } else {
+                            warning.setText(R.string.empty_response);
+                        }
+                    }
+                }
+            });
+
+        }else{
+            /// Trending Gifs
+            client.trending(MediaType.gif, null, null, null, new CompletionHandler<ListMediaResponse>() {
+                @Override
+                public void onComplete(ListMediaResponse result, Throwable e) {
+                    if (result == null) {
+                        // Do what you want to do with the error
+                        warning.setText(R.string.error_fetchin_item);
+                    } else {
+                        if (result.getData() != null) {
+                            insertIntoArray(0, result.getData());
+                        } else {
+                            warning.setText(R.string.empty_response);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void insertIntoArray(int i, List<Media> data) {
+        gifListsArray=new ArrayList<>();
+        imgListsArray=new ArrayList<>();
+        boolean highQuality=Prefs.getBoolean(LOAD_HIGH_QUALITY_IMAGE, false);
+        for (Media gify : data) {
+            String gif="", gif2="";
+
+            if(highQuality){
+                gif=gify.getImages().getOriginal().getGifUrl();
+                gif2=gify.getImages().getOriginalStill().getGifUrl();
+            }else{
+                gif=gify.getImages().getFixedWidth().getGifUrl();
+                gif2 = gify.getImages().getFixedWidthStill().getGifUrl();
+            }
+            if(!gifListsArray.contains(gif)){
+                gifListsArray.add(gif);
+            }
+            if (!imgListsArray.contains(gif2)) {
+                imgListsArray.add(gif2);
+            }
+        }
+
+        loadSectionIfGifAndImage();
+    }
+
+    public void loadFromTenor(){
+
+        Retrofit retrofit1 = ApiClient.getGifClient();
+        ApiInterface apiInterface = retrofit1.create(ApiInterface.class);
         Call<Gif__> call;
         int limit=49;
         String pos=(page*limit)+"";
         String safesearch="off";
 
-        if(!query.isEmpty()) {
-            call = apiInterface.searchGifs(query, stores.getGifApiKey(), ""+pos, ""+limit, safesearch);
+        if(!searchQuery.isEmpty()) {
+            call = apiInterface.searchGifs(searchQuery, stores.getGifApiKey(), ""+pos, ""+limit, safesearch);
         }else{
             call = apiInterface.trendingGif(stores.getGifApiKey(), ""+limit);
         }
@@ -209,44 +320,41 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
             public void onResponse(Call<Gif__> call, Response<Gif__> response) {
                 Gif__ model_lisj=response.body();
                 List<Gif__.Result> model_lis=model_lisj.getResults();
-                messages=new ArrayList<>();
-                messages2=new ArrayList<>();
+                gifListsArray=new ArrayList<>();
+                imgListsArray=new ArrayList<>();
 
                 int num=model_lis.size();
+                if(num==0){
+                    warning.setText(R.string.empty_response);
+                }
 
+                boolean highQuality=Prefs.getBoolean(LOAD_HIGH_QUALITY_IMAGE, false);
                 for(int i=0; i<num; i++){
                     Gif__.Result modelll=model_lis.get(i);
-                    String gif=modelll.getMedia().get(0).getTinygif().getUrl();
-                    String gif2=modelll.getMedia().get(0).getTinygif().getPreview();
-
-                    if(!messages2.contains(gif2)){
-                        messages2.add(gif2);
+                    String gif="";
+                    String gif2="";
+                    if(highQuality){
+                        gif=modelll.getMedia().get(0).getGif().getUrl();
+                        gif2=modelll.getMedia().get(0).getGif().getPreview();
+                    }else{
+                        gif2=modelll.getMedia().get(0).getTinygif().getPreview();
+                        gif=modelll.getMedia().get(0).getTinygif().getUrl();
                     }
-                    if(!messages.contains(gif)){
-                        messages.add(gif);
+
+                    if(!imgListsArray.contains(gif2)){
+                        imgListsArray.add(gif2);
+                    }
+                    if(!gifListsArray.contains(gif)){
+                        gifListsArray.add(gif);
                     }
                 }
-
-                Model__2 model=new Model__2();
-                model.setGif_list(messages);
-                model.setImg_list(messages2);
-
-                int currItem=mViewPager.getCurrentItem();
-                GifSectionsPagerAdapter mGifSectionsPagerAdapter = new GifSectionsPagerAdapter(getSupportFragmentManager(), model, context, toSkip);
-                mViewPager.setAdapter(mGifSectionsPagerAdapter);
-                mViewPager.setCurrentItem(currItem, false);
-
-                if(messages.size()<1){
-                    Toasta.makeText(GifAct.this, R.string.empty_response, Toast.LENGTH_SHORT);
-                }
-                closeLoader();
+                loadSectionIfGifAndImage();
             }
 
             @Override
             public void onFailure(Call<Gif__> call, Throwable t) {
                 (new Stores(context)).reportThrowable(t, "contactlist");
                 closeLoader();
-                t.printStackTrace();
             }
         });
     }
@@ -267,7 +375,7 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
 
     @Override
     public void fetchNow() {
-        setSearchQuery(searchQuery);
+        setSearchQuery();
     }
 
     @Override

@@ -62,44 +62,20 @@
                     android:layout_below="@id/username"
                     android:orientation="horizontal"
                     android:layout_centerHorizontal="true">
-                    <mehdi.sakout.fancybuttons.FancyButton
+                    <com.rilixtech.materialfancybutton.MaterialFancyButton
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:paddingTop="10dp"
-                        fancy:fb_borderColor="#FFFFFF"
-                        fancy:fb_borderWidth="1dp"
-                        fancy:fb_defaultColor="#7ab800"
-                        fancy:fb_focusColor="#9bd823"
-                        fancy:fb_radius="3dp"
                         android:id="@+id/frnds"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginStart="3dp"
-                        fancy:fb_text="SHUFFLE PLAY"
-                        fancy:fb_textSize="@dimen/fncy_tsize"
-                        fancy:fb_textColor="#FFFFFF"/>
-                    <mehdi.sakout.fancybuttons.FancyButton
+                        style="@style/mat_fancy_profile"/>
+                    <com.rilixtech.materialfancybutton.MaterialFancyButton
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:paddingTop="10dp"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginStart="3dp"
-                        fancy:fb_radius="3dp"
                         android:id="@+id/prof_msg"
-                        fancy:fb_borderColor="#FFFFFF"
-                        fancy:fb_borderWidth="1dp"
-                        fancy:fb_defaultColor="#7ab800"
-                        fancy:fb_focusColor="#9bd823"
-                        fancy:fb_text="@string/message"
-                        fancy:fb_textSize="@dimen/fncy_tsize"
-                        fancy:fb_textColor="#FFFFFF"/>
+                        fancy:mfb_text="@string/message"
+                        fancy:mfb_icon="@string/fawi_inbox"
+                        style="@style/mat_fancy_profile"/>
 
                 </LinearLayout>
 

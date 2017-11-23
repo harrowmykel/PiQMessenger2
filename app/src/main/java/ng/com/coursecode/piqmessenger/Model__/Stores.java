@@ -253,6 +253,10 @@ public class Stores {
     }
 
     public boolean isExtUrl(String urltoImage) {
-        return urltoImage.toLowerCase().contains("tenor");
+        return (urltoImage.toLowerCase().contains("tenor") ||  urltoImage.toLowerCase().contains("giphy"));
+    }
+
+    public String getGiphyApiKey() {
+        return "e7b7fe5398b44c60a82bd68bfc82f3e5";
     }
 }

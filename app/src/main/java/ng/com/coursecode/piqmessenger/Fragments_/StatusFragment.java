@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -31,7 +32,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleIm
 import ng.com.coursecode.piqmessenger.Model__. Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
-
+import ng.com.coursecode.piqmessenger.Statuses.Show_Status;
 
 
 /**
@@ -281,6 +282,10 @@ public class StatusFragment  extends Fragment {
             public void onFinish() {
                 ringProgress.setProgress(100);
                 setImage(position+1);
+                if(position>=(max)){
+                    Intent intent = new Intent(Show_Status.NEXT_STATUS);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                }
             }
         };
         cTimer.start();

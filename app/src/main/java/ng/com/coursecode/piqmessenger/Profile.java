@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.rilixtech.materialfancybutton.MaterialFancyButton;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,6 +28,7 @@ import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
 import retrofit2.Call;
@@ -40,7 +43,7 @@ public class Profile extends AppCompatActivity {
     String username_;
     Context context;
 
-    FancyButton frnds_req, message;
+    MaterialFancyButton frnds_req, message;
     TextView fullname, username, bio;
     CircleImageView user_dp;
     Stores stores;
@@ -58,8 +61,8 @@ public class Profile extends AppCompatActivity {
         username=(TextView)findViewById(R.id.username);
         bio=(TextView)findViewById(R.id.bio_content);
         user_dp=(CircleImageView) findViewById(R.id.prof_pic);
-        frnds_req=(FancyButton)findViewById(R.id.frnds);
-        message=(FancyButton)findViewById(R.id.prof_msg);
+        frnds_req=(MaterialFancyButton)findViewById(R.id.frnds);
+        message=(MaterialFancyButton)findViewById(R.id.prof_msg);
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +153,8 @@ public class Profile extends AppCompatActivity {
                                 showMessage(bioo);
                             }
                         });
+
+                        Stores2.setFrndText(frnds_req, modelll.getFrndsData(), context);
                     }
                 }
             }
