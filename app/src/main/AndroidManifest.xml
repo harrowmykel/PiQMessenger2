@@ -88,6 +88,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".Servicess.MessageCallService"/>
+        <service android:name=".Servicess.StatusCallService"/>
         <!-- ./Firebase Notifications -->
         <activity
             android:name=".PostsAct.LikesAct"
@@ -104,6 +106,10 @@
         <activity
             android:name=".ImageActivity"
             android:label="@string/title_activity_image"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".dump.Main2Activity"
+            android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

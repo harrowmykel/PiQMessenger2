@@ -8,11 +8,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
+import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 
@@ -27,6 +31,7 @@ public class Users_prof implements Parcelable {
     public String fullname;
     public String image;
     public String friends;
+    public FrndsData frndsData;
 
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
@@ -205,6 +210,15 @@ public class Users_prof implements Parcelable {
         dbHelper.close();
         rdbleDb.close();
         return fname;
+    }
+
+
+    public FrndsData getFrndsData() {
+        return frndsData;
+    }
+
+    public void setFrndsData(FrndsData frndsData) {
+        this.frndsData = frndsData;
     }
 
     public String getFriends() {

@@ -202,7 +202,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
             Toasta.makeText(context, R.string.posting, Toast.LENGTH_SHORT);
             finish();
             String urltoImage=tempUri.toString();
-            if(urltoImage.contains(Stores.TENOR)){
+            if(stores.isExtUrl(urltoImage)){
                 sendToServer(text, urltoImage);
             }else{
                 sendToGoogle();

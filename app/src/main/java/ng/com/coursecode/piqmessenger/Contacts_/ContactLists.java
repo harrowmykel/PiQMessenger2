@@ -173,6 +173,7 @@ public class ContactLists extends Fragment {
                     status.setFullname(fullname);
                     status.setFriends(friends);
                     status.setImage(image);
+                    status.setFrndsData(modelll.getFrndsData());
 
                     if(!messages.contains(status)){
                         messages.add(status);

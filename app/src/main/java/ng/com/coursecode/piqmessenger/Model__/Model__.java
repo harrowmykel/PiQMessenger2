@@ -184,6 +184,18 @@ public class Model__ {
     @SerializedName("liked")
     public String liked;
 
+    @SerializedName("frnds_data")
+    @Expose
+    private FrndsData frndsData;
+
+    public FrndsData getFrndsData() {
+        return frndsData;
+    }
+
+    public void setFrndsData(FrndsData frndsData) {
+        this.frndsData = frndsData;
+    }
+
     public String getId() {
         return id;
     }

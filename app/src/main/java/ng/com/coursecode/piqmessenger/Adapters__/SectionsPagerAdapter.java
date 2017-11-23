@@ -23,7 +23,7 @@ import ng.com.coursecode.piqmessenger.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     Context context;
-    public static Fragment[] fragments={Posts.newInstance(),  Status.newInstance(), Groups.newInstance()};
+//    public static Fragment[] fragments={Posts.newInstance(),  Status.newInstance(), Groups.newInstance()};
     public static int[] fragmentTitles={R.string.posts,  R.string.status, R.string.groups};
 
     public SectionsPagerAdapter(FragmentManager fm, Context context1) {
@@ -35,14 +35,25 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        Fragment stringg=fragments[position];
+        Fragment stringg;
+        switch(position){
+            case 1:
+                stringg=Status.newInstance();
+                break;
+            case 2:
+                stringg=Groups.newInstance();
+                break;
+            default:
+                stringg=Posts.newInstance();
+                break;
+        }
         return stringg;
     }
 
     @Override
     public int getCount() {
         // Show 3 total pages.
-        return fragments.length;
+        return fragmentTitles.length;
     }
 
     @Override

@@ -24,7 +24,7 @@ import ng.com.coursecode.piqmessenger.R;
 
 public class Stores {
 
-    public static final CharSequence TENOR = "tenor";
+    public static final String[] TENOR = {"tenor", "giphy"};
     public static final String USERNAME = "jkdas;nfdzngsdjfgnjd";
     public static final String PROFILE_STORE = "profile/";
     public static final String STATUS_STORE = "status/";
@@ -250,5 +250,9 @@ public class Stores {
         DateTime dateTime=DateTime.today(TimeZone.getDefault());
         DateTime dateTime1=new DateTime(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay(), 0, 0, 0, 0);
         return profileStore+dateTime1.getMilliseconds(TimeZone.getDefault())+"/";
+    }
+
+    public boolean isExtUrl(String urltoImage) {
+        return urltoImage.toLowerCase().contains("tenor");
     }
 }

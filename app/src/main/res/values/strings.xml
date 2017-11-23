@@ -126,4 +126,8 @@
     <string name="click_image_to_edit">Click Image to Edit</string>
     <string name="profile_saved">Profile saved...</string>
     <string name="load_more">Load More</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="add_friends">Add Friends</string>
+    <string name="accept_request">Accept</string>
+    <string name="request_sent">Request sent</string>
 </resources>

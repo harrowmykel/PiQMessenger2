@@ -4,6 +4,7 @@ import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Model__.Gif__;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.PostsModel;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -31,7 +32,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("posts/index.php?req=fetchfrom")
-    Call<Model__> getAllPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String q, @Field("page") String page);
+    Call<PostsModel> getAllPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String q, @Field("page") String page);
 
     @FormUrlEncoded
     @POST("profile/index.php?req=about")
@@ -39,7 +40,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("posts/index.php?req=userposts")
-    Call<Model__> getUsersPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("page") String page, @Field("who") String who);
+    Call<PostsModel> getUsersPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("page") String page, @Field("who") String who);
 
     @FormUrlEncoded
     @POST("index.php?msg=msg")
@@ -58,10 +59,10 @@ public interface ApiInterface {
     Call<Model__> searchStatusUsers(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("status_code") String status_code, @Field("page") String page);
 
     @GET("search?as=wq")
-    Call<Gif__> searchGifs(@Query("q") String search, @Query("key") String key, @Query("page") String page);
+    Call<Gif__> searchGifs(@Query("q") String search, @Query("key") String key,  @Query("pos") String pos,  @Query("limit") String limit,  @Query("safesearch") String safesearch);
 
     @GET("trending?as=wq")
-    Call<Gif__> trendingGif(@Query("key") String key, @Query("page") String page);
+    Call<Gif__> trendingGif(@Query("key") String key, @Query("limit") String limit);
 
     @FormUrlEncoded
     @POST("posts/index.php?req=create")

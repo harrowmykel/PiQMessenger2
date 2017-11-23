@@ -105,7 +105,6 @@ public class Piccassa {
 
     public static void loadGlide(Context context_, Uri item, int nosong, ImageView imageView) {
         Glide.with(context_) // replace with 'this' if it's in activity
-                .asGif()
                 .load(item)
                 .into(imageView);
     }

@@ -76,7 +76,6 @@ public class Status extends Fragment {
         recyclerView=(RecyclerView)view.findViewById(R.id.main_recycle);
         seenrecyclerView=(RecyclerView)view.findViewById(R.id.main_recycle1);
         recommendedrecyclerView=(RecyclerView)view.findViewById(R.id.main_recycle2);
-
         if(getArguments()!=null)
             query=(getArguments().getString(Stores.SearchQuery, ""));
         if(requestCreate)
@@ -88,21 +87,13 @@ public class Status extends Fragment {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                Handler handler;
-                handler = new Handler();
-                final Runnable r = new Runnable() {
-                    public void run() {
-                        StatusCall statusCall=new StatusCall(context);
-                        statusCall.getAllMessages(new FetchMore(){
-                            @Override
-                            public void fetchNow() {
-                                setLists();
-                            }
-                        });
+                StatusCall statusCall=new StatusCall(context);
+                statusCall.getAllMessages(new FetchMore(){
+                    @Override
+                    public void fetchNow() {
+                        setLists();
                     }
-                };
-
-                handler.postDelayed(r, Stores.WAIT_PERIOD);// Stores.WAIT_PERIOD);
+                });
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -119,6 +110,7 @@ public class Status extends Fragment {
         if(query.isEmpty() && oldsavedInstanceState!=null){
             statuses=oldsavedInstanceState.getParcelableArrayList(OLD_INSTANCE);
             if(statuses!=null){
+                setVlist();
                 return;
             }
         }
@@ -128,6 +120,7 @@ public class Status extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -149,7 +142,8 @@ public class Status extends Fragment {
             // Get extra data included in the Intent
             if(!requestCreate)
                 setOLists();
-            Toasta.makeText(context, "gotten", Toast.LENGTH_SHORT);
+            else
+                setLists();
         }
     };
 
@@ -172,7 +166,7 @@ public class Status extends Fragment {
         } else {
             statuses = status.listAllSearch(context, query);
         }
-
+        setVlist();
     }
 
     public void setVlist(){

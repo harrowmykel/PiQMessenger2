@@ -27,6 +27,7 @@ import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView;
+import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2;
 import ng.com.coursecode.piqmessenger.Model__. Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
@@ -117,7 +118,7 @@ public class StatusFragment  extends Fragment {
         stat_text=(TextView)rootView.findViewById(R.id.stat_text);
         stat_reply=rootView.findViewById(R.id.stat_reply);
         stat_dp=(CircleImageView)rootView.findViewById(R.id.stat_img);
-        stat_img=(ScaleImageView)rootView.findViewById(R.id.stat_img_p);
+        stat_img=(ScaleImageView2)rootView.findViewById(R.id.stat_img_p);
         nxt=rootView.findViewById(R.id.stat_next);
         prev=rootView.findViewById(R.id.stat_prev);
         stat_menu=rootView.findViewById(R.id.stat_more);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -135,6 +136,14 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         searchView.setVoiceSearch(true); //or false
         searchView.setSuggestions(Stores.getSuggestions(GifAct.this, GifAct.TITLE));
         searchView.setCursorDrawable(R.drawable.custom_cursor);
+
+        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -186,11 +195,14 @@ public class GifAct extends AppCompatActivity implements FetchMore, IntentPass{
         toSkip=messages.size();
         startLoader();
         Call<Gif__> call;
+        int limit=49;
+        String pos=(page*limit)+"";
+        String safesearch="off";
 
         if(!query.isEmpty()) {
-            call = apiInterface.searchGifs(query, stores.getGifApiKey(), ""+page);
+            call = apiInterface.searchGifs(query, stores.getGifApiKey(), ""+pos, ""+limit, safesearch);
         }else{
-            call = apiInterface.trendingGif(stores.getGifApiKey(), ""+page);
+            call = apiInterface.trendingGif(stores.getGifApiKey(), ""+limit);
         }
         call.enqueue(new Callback<Gif__>() {
             @Override

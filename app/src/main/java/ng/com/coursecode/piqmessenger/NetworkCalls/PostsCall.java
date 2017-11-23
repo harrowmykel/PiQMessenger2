@@ -52,7 +52,7 @@ public class PostsCall {
     }
 
     public void fetchOnline(String where){
-        Call<Model__> call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
+        /*Call<Model__> call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -63,7 +63,7 @@ public class PostsCall {
             public void onFailure(Call<Model__> call, Throwable t) {
                 (new Stores(context)).reportThrowable(t, "postscall");
             }
-        });
+        });*/
     }
 
     private void saveToPostDb(Response<Model__> response) {

@@ -235,7 +235,8 @@ public class Converse extends AppCompatActivity {
             isReady=true;
             tempUri = data.getData();
             String urltoImage=tempUri.toString();
-            if(urltoImage.contains(Stores.TENOR)){
+
+            if(stores.isExtUrl(urltoImage)){
                 sendToServer();
             }else{
                 sendToGoogle();

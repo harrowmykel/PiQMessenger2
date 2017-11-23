@@ -147,6 +147,7 @@
         <item name="fb_radius">4dp</item>
         <item name="fb_borderColor">#FFF</item>
     </style>
+
     <style name="fancy_create_">
         <item name="android:paddingRight">20dp</item>
         <item name="android:paddingLeft">20dp</item><!--

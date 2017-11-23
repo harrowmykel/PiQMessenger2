@@ -65,8 +65,8 @@ public class SplashScreen extends AppCompatActivity {
                         if(!Prefs.getBoolean(IS_NT_FIRST_TRIAL, false)){
                             FirebaseInstanceId.getInstance().getToken();
                             Prefs.putBoolean(IS_NT_FIRST_TRIAL, true);
+                            fetchOldThings();
                         }
-                        fetchOldThings();
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));
                         finish();
                     }

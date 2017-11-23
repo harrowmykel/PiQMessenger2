@@ -29,11 +29,8 @@ import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Interfaces.PostItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Model__2;
-import ng.com.coursecode.piqmessenger.Model__.Pagination;
-import ng.com.coursecode.piqmessenger.Model__.PostsModel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
@@ -51,7 +48,7 @@ import retrofit2.Retrofit;
  * Created by harro on 09/10/2017.
  */
 
-public class Posts extends Fragment {
+public class Posts2 extends Fragment {
     View view;
     Context context;
     Stores stores;
@@ -78,9 +75,9 @@ public class Posts extends Fragment {
     boolean do_once=true;
 
     public static String[] send=new String[]{Stores.POST_LOVE, Stores.POST_LIKE, Stores.POST_SAD, Stores.POST_WOW,
-            Stores.POST_ANGRY, Stores.POST_HAHA};
+                                Stores.POST_ANGRY, Stores.POST_HAHA};
 
-    public Posts(){
+    public Posts2(){
     }
 
     @Nullable
@@ -91,7 +88,7 @@ public class Posts extends Fragment {
             query = (getArguments().getString(Stores.SearchQuery, ""));
             who = (getArguments().getString(Stores.USERNAME, ""));
         }
-        loadPostFrag();
+//        loadPostFrag();
         return view;
     }
 
@@ -100,7 +97,7 @@ public class Posts extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void loadPostFrag() {
+    /*public void loadPostFrag() {
         context = getContext();
         stores = new Stores(context);
         startLoader();
@@ -151,146 +148,140 @@ public class Posts extends Fragment {
     }
 
     public void setVLists() {
-        Ntwrkcall();
+
+        handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+                Ntwrkcall();
+            }
+        };
+
+        handler.postDelayed(r, Stores.WAIT_PERIOD);// 1000);
     }
 
     public void Ntwrkcall(){
-
-        post_more.setVisibility(View.GONE);
         toSkip=model_list_.size();
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
         apiInterface = retrofit.create(ApiInterface.class);
         String where=query;
 
-        Call<PostsModel> call;
+        post_more.setVisibility(View.GONE);
+
+        Call<Model__> call;
         if(who.isEmpty()){
             call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
         }else{
             call=apiInterface.getUsersPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
         }
-        call.enqueue(new Callback<PostsModel>() {
+        call.enqueue(new Callback<Model__>() {
             @Override
-            public void onResponse(Call<PostsModel> call, final Response<PostsModel> response) {
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+
+                Model__ model_lisj=response.body();
+                List<Model__> model_list=model_lisj.getData();
+                Model__ model_l=model_lisj.getPagination();
+                int num=model_list.size();
+
+                String any = model_l.getPagesLeft();
+                int pgLeft = Stores.parseInt(any);
+
+                moreCanBeLoaded = (pgLeft > 0);
+                post_more.setVisibility(View.VISIBLE);
+
+                for(int i=0; i<num; i++){
+                    Model__ modelll=model_list.get(i);
+                    posts_tab_=new Posts_tab();
+
+                    Users_prof users_prof=new Users_prof();
+                    Users_prof users_prof1=new Users_prof();
 
 
-                handler = new Handler();
+                    final TextView tx=(TextView)view.findViewById(R.id.warning);
+                    tx.setVisibility(Stores.initView);
+                    if(modelll.getError()!=null) {
+                        stores.handleError(modelll.getError(), context, new ServerError() {
+                            @Override
+                            public void onEmptyArray() {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(R.string.empty_result);
+                            }
 
-                final Runnable r = new Runnable() {
-                    public void run() {
-                        sendToUi(response);
+                            @Override
+                            public void onShowOtherResult(int res__) {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(res__);
+                            }
+                        });
+                        closeLoader();
+                        break;
                     }
-                };
+                    users_prof.setUser_name(modelll.getReciv_username());
+                    users_prof.setFullname(modelll.getReciv_data().getReciv());
+                    users_prof.setImage(modelll.getReciv_data().getReciv_img());
 
-                handler.postDelayed(r, Stores.WAIT_PERIOD);// 1000);
+                    users_prof1.setUser_name(modelll.getAuth_username());
+                    users_prof1.setFullname(modelll.getAuth_data().getAuth());
+                    users_prof1.setImage(modelll.getAuth_data().getAuth_img());
+
+                    users_prof.save(context);
+                    users_prof1.save(context);
+
+                    posts_tab_.setUser_name(getString__(modelll.getAuth_username()));
+                    posts_tab_.setReciv(getString__(modelll.getReciv_username()));
+                    posts_tab_.setPosts_id(getString__(modelll.getId()));
+                    posts_tab_.setTime(getString__(modelll.getTimestamp()));
+                    posts_tab_.setText(getString__(modelll.getSubtitle()));
+                    posts_tab_.setImage(getString__(modelll.getImage()));
+                    posts_tab_.setFav(getString__(modelll.getFav()));
+                    posts_tab_.setLiked(getString__(modelll.getLiked()));
+                    posts_tab_.setLikes(getString__(modelll.getLikes()));
+                    posts_tab_.setComment(getString__(modelll.getComment()));
+                    posts_tab_.setFullname(modelll.getAuth_data().getAuth());
+                    posts_tab_.setUser_image(modelll.getAuth_data().getAuth_img());
+
+                    model_list_.add(posts_tab_);
+                }
+                if (!moreCanBeLoaded) {
+                    closeLoader();
+                    post_more.setVisibility(View.GONE);
+                }
+
+                if(!do_once){
+                    postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
+                    seenrecyclerView.setAdapter(postsAdapter2);
+                    postsAdapter2.notifyDataSetChanged();
+                    seenrecyclerView.scrollToPosition(toSkip);
+                    closeLoader();
+                }
+
+                if(do_once) {
+                    seenrecyclerView.setItemAnimator(new DefaultItemAnimator());
+                    mLayoutManagerseen = new LinearLayoutManager(context);
+                    seenrecyclerView.setLayoutManager(mLayoutManagerseen);
+
+                    if (Stores.flingEdit) {
+                        seenrecyclerView.fling(Stores.flingVelX, Stores.flingVelY);
+                    }
+
+                    postsAdapter2 = new PostsAdapter(model_list_,pPostItemClicked);
+                    seenrecyclerView.setAdapter(postsAdapter2);
+                    seenrecyclerView.addOnScrollListener(createInfiniteScrollListener());
+                    postsAdapter2.notifyDataSetChanged();
+                    closeLoader();
+                    do_once=false;
+                }
+                page++;
             }
 
             @Override
-            public void onFailure(Call<PostsModel> call, Throwable t) {
+            public void onFailure(Call<Model__> call, Throwable t) {
                 (new Stores(context)).reportThrowable(t, "postscall");
                 closeLoader();
                 post_more.setVisibility(View.VISIBLE);
             }
         });
-
-    }
-
-    private void sendToUi(Response<PostsModel> response) {
-
-        PostsModel model_lisj=response.body();
-        List<Datum> model_list=model_lisj.getData();
-        Pagination model_l=model_lisj.getPagination();
-        int num=model_list.size();
-
-        String any = model_l.getPagesLeft();
-        int pgLeft = Stores.parseInt(any);
-
-        moreCanBeLoaded = (pgLeft > 0);
-        post_more.setVisibility(View.VISIBLE);
-
-        for(int i=0; i<num; i++){
-            Datum modelll=model_list.get(i);
-            posts_tab_=new Posts_tab();
-
-            Users_prof users_prof=new Users_prof();
-            Users_prof users_prof1=new Users_prof();
-
-
-            final TextView tx=(TextView)view.findViewById(R.id.warning);
-            tx.setVisibility(Stores.initView);
-            if(modelll.getError()!=null) {
-                stores.handleError(modelll.getError(), context, new ServerError() {
-                    @Override
-                    public void onEmptyArray() {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(R.string.empty_result);
-                    }
-
-                    @Override
-                    public void onShowOtherResult(int res__) {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(res__);
-                    }
-                });
-                closeLoader();
-                break;
-            }
-            users_prof.setUser_name(modelll.getRecivUsername());
-            users_prof.setFullname(modelll.getRecivData().getReciv());
-            users_prof.setImage(modelll.getRecivData().getRecivImg());
-
-            users_prof1.setUser_name(modelll.getAuthUsername());
-            users_prof1.setFullname(modelll.getAuthData().getAuth());
-            users_prof1.setImage(modelll.getAuthData().getAuthImg());
-
-            users_prof.save(context);
-            users_prof1.save(context);
-
-            posts_tab_.setUser_name(getString__(modelll.getAuthUsername()));
-            posts_tab_.setReciv(getString__(modelll.getRecivUsername()));
-            posts_tab_.setPosts_id(getString__(modelll.getId()));
-            posts_tab_.setTime(getString__(modelll.getTimestamp()));
-            posts_tab_.setText(getString__(modelll.getSubtitle()));
-            posts_tab_.setImage(getString__(modelll.getImage()));
-//            posts_tab_.setFav(getString__(modelll.getFav()));
-            posts_tab_.setLiked(getString__(modelll.getLiked()));
-            posts_tab_.setLikes(getString__(modelll.getLikes()));
-            posts_tab_.setComment(getString__(modelll.getComments()));
-            posts_tab_.setFullname(modelll.getAuthData().getAuth());
-            posts_tab_.setUser_image(modelll.getAuthData().getAuthImg());
-
-            model_list_.add(posts_tab_);
-        }
-        if (!moreCanBeLoaded) {
-            closeLoader();
-            post_more.setVisibility(View.GONE);
-        }
-
-        if(!do_once){
-            postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
-            seenrecyclerView.setAdapter(postsAdapter2);
-            postsAdapter2.notifyDataSetChanged();
-            seenrecyclerView.scrollToPosition(toSkip);
-            closeLoader();
-        }
-
-        if(do_once) {
-            seenrecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mLayoutManagerseen = new LinearLayoutManager(context);
-            seenrecyclerView.setLayoutManager(mLayoutManagerseen);
-
-            if (Stores.flingEdit) {
-                seenrecyclerView.fling(Stores.flingVelX, Stores.flingVelY);
-            }
-
-            postsAdapter2 = new PostsAdapter(model_list_,pPostItemClicked);
-            seenrecyclerView.setAdapter(postsAdapter2);
-            seenrecyclerView.addOnScrollListener(createInfiniteScrollListener());
-            postsAdapter2.notifyDataSetChanged();
-            closeLoader();
-            do_once=false;
-        }
-        page++;
     }
 
     public void loadMore(){
@@ -332,22 +323,22 @@ public class Posts extends Fragment {
         return (confirm==null)?"":confirm;
     }
 
-    public static Posts newInstance(){
-        return  new Posts();
+    public static Posts2 newInstance(){
+        return  new Posts2();
     }
 
-    public static Posts newInstance(String query) {
+    public static Posts2 newInstance(String query) {
         Bundle bundle = new Bundle();
         bundle.putString(Stores.SearchQuery, query);
-        Posts chat=new Posts();
+        Posts2 chat=new Posts2();
         chat.setArguments(bundle);
         return chat;
     }
 
-    public static Posts newInstance(String query, boolean df) {
+    public static Posts2 newInstance(String query, boolean df) {
         Bundle bundle = new Bundle();
         bundle.putString(Stores.USERNAME, query);
-        Posts chat=new Posts();
+        Posts2 chat=new Posts2();
         chat.setArguments(bundle);
         return chat;
     }
@@ -472,4 +463,5 @@ public class Posts extends Fragment {
             }
         });
     }
+*/
 }
