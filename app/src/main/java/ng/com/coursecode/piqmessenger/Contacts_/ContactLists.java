@@ -3,6 +3,7 @@ package ng.com.coursecode.piqmessenger.Contacts_;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -23,6 +24,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import ng.com.coursecode.piqmessenger.Adapters__.ContactAdapter;
 import ng.com.coursecode.piqmessenger.Adapters__.GroupAdapter;
+import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Group_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
@@ -30,8 +32,10 @@ import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Interfaces.ContactsItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
@@ -49,7 +53,10 @@ import static com.github.pwittchen.infinitescroll.library.R.attr.layoutManager;
  */
 public class ContactLists extends Fragment {
 
-    private static final String STAV = "hjefasfkjfjk";
+    public static final String STAV = "hjefasfkjfjk";
+    public static final String DELETE_FRND = "delete_frnd";
+    public static final String ACCEPT_FRND = "accept_frnd";
+    public static final String SEND_FRND = "send_frnd";
     View view;
     Context context;
     Stores stores;
@@ -187,11 +194,7 @@ public class ContactLists extends Fragment {
                 }
 
                 closeLoader();
-                statusAdapter=new ContactAdapter(messages, true, contactsItemClicked);
-                recyclerView.setAdapter(statusAdapter);
-                statusAdapter.notifyDataSetChanged();
-                recyclerView.addOnScrollListener(createInfiniteScrollListener());
-                recyclerView.scrollToPosition(toSkip);
+                loadRecycler();
                 page++;
             }
 
@@ -200,6 +203,14 @@ public class ContactLists extends Fragment {
                 (new Stores(context)).reportThrowable(t, "contactlist");
             }
         });
+        recyclerView.scrollToPosition(toSkip);
+    }
+
+    private void loadRecycler() {
+        statusAdapter=new ContactAdapter(messages, true, contactsItemClicked);
+        recyclerView.setAdapter(statusAdapter);
+        statusAdapter.notifyDataSetChanged();
+        recyclerView.addOnScrollListener(createInfiniteScrollListener());
         recyclerView.scrollToPosition(toSkip);
     }
 
@@ -250,8 +261,22 @@ public class ContactLists extends Fragment {
 
         @Override
         public void onFriendCLicked(int position) {
-            Toasta.makeText(context, "send friendreq here", Toast.LENGTH_SHORT);
-//            messages.get(position)
+            FrndsData frndsData= messages.get(position).getFrndsData();
+            String type;
+            if(frndsData.getRFrnds()){
+                //delete frndship
+                type=DELETE_FRND;
+            }else if(frndsData.getRRcvd()){
+                //accept
+                type=ACCEPT_FRND;
+            }else if (frndsData.getRSent()){
+                //delete
+                type=DELETE_FRND;
+            }else {
+                //send
+                type=SEND_FRND;
+            }
+            alterRequest(position, type);
         }
 
         @Override
@@ -262,6 +287,54 @@ public class ContactLists extends Fragment {
             startActivity(intent);
         }
     };
+
+    public void alterRequest(final int position, String type){
+
+        Retrofit retrofit = ApiClient.getClient();
+        String postid=messages.get(position).getUser_name();
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call;
+
+        call = apiInterface.friendReq(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, type);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
+
+                final TextView tx=(TextView)view.findViewById(R.id.warning);
+                tx.setVisibility(Stores.initView);
+                if(modelll.getError()!=null) {
+                    stores.handleError(modelll.getError(), context, new ServerError() {
+                        @Override
+                        public void onEmptyArray() {
+                            tx.setVisibility(View.VISIBLE);
+                            tx.setText(R.string.empty_result);
+                        }
+
+                        @Override
+                        public void onShowOtherResult(int res__) {
+                            tx.setVisibility(View.VISIBLE);
+                            tx.setText(res__);
+                        }
+                    });
+                }else if(modelll.getSuccess() !=null){
+                    FrndsData frndsData= messages.get(position).getFrndsData();
+                    FrndsData frndsData1= Stores2.getFrndsData(frndsData);
+                    messages.get(position).setFrndsData(frndsData1);
+                }
+                loadRecycler();
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "contactlist");
+            }
+        });
+    }
 
     public static ContactLists newInstance(boolean b, String status_code, String query) {
         Bundle bundle = new Bundle();

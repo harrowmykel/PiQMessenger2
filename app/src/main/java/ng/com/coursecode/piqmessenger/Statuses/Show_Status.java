@@ -19,15 +19,17 @@ import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.Adapters__.StatusPagerAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
+import ng.com.coursecode.piqmessenger.Interfaces.sendData;
 import ng.com.coursecode.piqmessenger.Model__.Model__2;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.R;
 
-public class Show_Status extends AppCompatActivity {
+public class Show_Status extends AppCompatActivity implements sendData {
 
     public static final String TYPE_ = "HJkwsdjknjkfsj";
     public static final String POSITION = "kejwdasnrfznkfl";
     public static final String NEXT_STATUS = "jdkjfsnkj";
+    public static final String FULLSCREEN = "jfksnkldgkf";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -51,14 +53,7 @@ public class Show_Status extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else {
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
+        setFullscreen();
         setContentView(R.layout.activity_show__status);
         context=Show_Status.this;
         Intent intent=getIntent();
@@ -79,17 +74,16 @@ public class Show_Status extends AppCompatActivity {
         if(data.size()<1){
             finir();
         }
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(NEXT_STATUS));
     }
 
-    // Our handler for received Intents. This will be called whenever an Intent
-// with an action named "custom-event-name" is broadcasted.
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
+    public  void finir(){
+        finish();
+    }
+
+    @Override
+    public void send(Object object) {
+        String obj=(String) object;
+        if(obj.equalsIgnoreCase(NEXT_STATUS)){
             int position=mViewPager.getCurrentItem();
             int max=data.size();
             position++;
@@ -98,10 +92,19 @@ public class Show_Status extends AppCompatActivity {
             }else{
                 finir();
             }
+        }else if(obj.equalsIgnoreCase(FULLSCREEN)){
+            setFullscreen();
         }
-    };
+    }
 
-    public  void finir(){
-        finish();
+    private void setFullscreen() {
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }else {
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 }

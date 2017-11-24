@@ -108,4 +108,8 @@ public interface ApiInterface {
     @POST("status/index.php?req=fetchfrom")
     Call<Model__> getAllDelStatuses(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("time") String time, @Field("page") String page);
 
+    @FormUrlEncoded
+    @POST("profile/index.php?req=reqfrnd")
+    Call<Model__> friendReq(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String postid, @Field("type") String type);
+
 }

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
 
@@ -26,6 +27,7 @@ import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
@@ -47,6 +49,7 @@ public class Profile extends AppCompatActivity {
     TextView fullname, username, bio;
     CircleImageView user_dp;
     Stores stores;
+    Model__ user_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,17 @@ public class Profile extends AppCompatActivity {
                 Intent intent=new Intent(context, Converse.class);
                 intent.putExtra(Converse.USERNAME, username_);
                 startActivity(intent);
+            }
+        });
+        frnds_req.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                frnds_req.setText(getString(R.string.elipsize));
+                if(user_data!=null) {
+                    sendFriendReq();
+                }else{
+                    Toast.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -98,6 +112,71 @@ public class Profile extends AppCompatActivity {
         setUpProfile();
     }
 
+    private void sendFriendReq() {
+        String type;
+
+        FrndsData frndsData= user_data.getFrndsData();
+        if(frndsData.getRFrnds()){
+            //delete frndship
+            type=ContactLists.DELETE_FRND;
+        }else if(frndsData.getRRcvd()){
+            //accept
+            type=ContactLists.ACCEPT_FRND;
+        }else if (frndsData.getRSent()){
+            //delete
+            type=ContactLists.DELETE_FRND;
+        }else {
+            //send
+            type=ContactLists.SEND_FRND;
+        }
+
+        Retrofit retrofit = ApiClient.getClient();
+        String postid=username_;
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call;
+
+        call = apiInterface.friendReq(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, type);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ user_data_=model_lis.get(0);
+
+                final TextView tx=(TextView)findViewById(R.id.warning_);
+                tx.setVisibility(Stores.initView);
+                if(user_data_.getError()!=null) {
+                    stores.handleError(user_data_.getError(), context, new ServerError() {
+                        @Override
+                        public void onEmptyArray() {
+                            tx.setVisibility(View.VISIBLE);
+                            tx.setText(R.string.empty_result);
+                        }
+
+                        @Override
+                        public void onShowOtherResult(int res__) {
+                            tx.setVisibility(View.VISIBLE);
+                            tx.setText(res__);
+                        }
+                    });
+                }else if(user_data_.getSuccess() !=null){
+                    FrndsData frndsData= user_data.getFrndsData();
+                    FrndsData frndsData1= Stores2.getFrndsData(frndsData);
+                    user_data.setFrndsData(frndsData1);
+                }
+                Stores2.setFrndText(frnds_req, user_data.getFrndsData(), context);
+
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "contactlist");
+            }
+        });
+    }
+
     private void setUpProfile() {
 
         Retrofit retrofit = ApiClient.getClient();
@@ -118,11 +197,11 @@ public class Profile extends AppCompatActivity {
                 String any = model_l.getPagesLeft();
                 int pgLeft = Stores.parseInt(any);
                 if (num > 0) {
-                    Model__ modelll = model_list.get(0);
+                    user_data = model_list.get(0);
                     final TextView tx = (TextView) findViewById(R.id.warning_);
                     tx.setVisibility(Stores.initView);
-                    if (modelll.getError() != null) {
-                        stores.handleError(modelll.getError(), context, new ServerError() {
+                    if (user_data.getError() != null) {
+                        stores.handleError(user_data.getError(), context, new ServerError() {
                             @Override
                             public void onEmptyArray() {
                                 tx.setVisibility(View.VISIBLE);
@@ -136,12 +215,12 @@ public class Profile extends AppCompatActivity {
                             }
                         });
                     }else{
-                        String user_name = modelll.getAuth_username();
-                        String image=modelll.getAuth_data().getAuth_img();
-                        String fullnames=modelll.getAuth_data().getFullname();
-                        String friends=modelll.getAuth_data().getFullname();
-                        String subtitle=modelll.getSubtitle();
-                        final String bioo=modelll.getBio();
+                        String user_name = user_data.getAuth_username();
+                        String image=user_data.getAuth_data().getAuth_img();
+                        String fullnames=user_data.getAuth_data().getFullname();
+                        String friends=user_data.getAuth_data().getFullname();
+                        String subtitle=user_data.getSubtitle();
+                        final String bioo=user_data.getBio();
 
                         fullname.setText(fullnames);
                         Piccassa.load(context, image, R.drawable.user_sample, user_dp);
@@ -154,7 +233,8 @@ public class Profile extends AppCompatActivity {
                             }
                         });
 
-                        Stores2.setFrndText(frnds_req, modelll.getFrndsData(), context);
+                        Stores2.setFrndText(frnds_req, user_data.getFrndsData(), context);
+
                     }
                 }
             }

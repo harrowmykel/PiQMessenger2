@@ -3,6 +3,7 @@ package ng.com.coursecode.piqmessenger.PostsAct;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,6 +68,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
     public CircleImageView posts_dp;
     public ImageView posts_image, posts_fav, posts_msg, posts_more;
     String postid;
+    SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
         posts_msg=(ImageView) findViewById(R.id.posts_act_2msg);
         posts_more=(ImageView) findViewById(R.id.posts_act_2more);
         post_likes=(TextView)findViewById(R.id.posts_act_2likes);
+        swipeRefresh=(SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
         doNetworkCall();
     }
 
@@ -120,6 +123,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
     private void setPostView() {
         posts_subtitle.setText((new TimeModel(context)).getDWM3(main_post.getTime()));
         posts_username.setText(main_post.getUsername());
+        main_post.setAuth_username(main_post.getUsername());
         posts_text.setText(main_post.getText());
         post_likes.setText(getString(R.string.likes_, main_post.getLikes()));
         String images_=main_post.getUser_image();
@@ -167,6 +171,13 @@ public class PostsAct extends AppCompatActivity implements sendData {
                 Intent intent=new Intent(context, LikesAct.class);
                 intent.putExtra(PostsAct.POSTID, postid);
                 startActivity(intent);
+            }
+        });
+        swipeRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoader();
+                loadMainPostViews();
             }
         });
         posts_more.setOnClickListener(new View.OnClickListener() {

@@ -63,7 +63,9 @@ public class Stores2 {
     public static void setFrndText(MaterialFancyButton users_frnd, FrndsData frndsData, Context context) {
         int icon= R.string.add_friends;
         int iconRes=R.string.fawi_user_plus;
-        if(frndsData==null){
+        if(users_frnd==null){
+            return;
+        }else if(frndsData==null){
             users_frnd.setVisibility(View.GONE);
         }else{
             if(frndsData.getRFrnds()){
@@ -84,5 +86,25 @@ public class Stores2 {
             users_frnd.setIcon(context.getString(iconRes));
             users_frnd.setText(context.getString(icon));
         }
+    }
+    public static FrndsData getFrndsData(FrndsData frndsData) {
+        if(frndsData==null){
+            frndsData=new FrndsData("0", "0", "0");
+        }
+        FrndsData frndsData1;
+        if(frndsData.getRFrnds()){
+            //delete frndship
+            frndsData1=new FrndsData("0", "0", "0");
+        }else if(frndsData.getRRcvd()){
+            //accept
+            frndsData1=new FrndsData("0", "0", "1");
+        }else if (frndsData.getRSent()){
+            //delete
+            frndsData1=new FrndsData("0", "0", "0");
+        }else {
+            //send
+            frndsData1=new FrndsData("1", "0", "0");
+        }
+        return frndsData1;
     }
 }

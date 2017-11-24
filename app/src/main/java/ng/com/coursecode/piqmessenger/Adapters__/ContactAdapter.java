@@ -70,7 +70,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> {
         }
     }
 
-    private void setHolderOnClick(ContactViewHolder holder, final int position) {
+    private void setHolderOnClick(final ContactViewHolder holder, final int position) {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +87,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> {
             @Override
             public void onClick(View v) {
                 contactsItemClicked.onFriendCLicked(position);
+                holder.users_frnd.setText(context.getString(R.string.elipsize));
             }
         });
     }

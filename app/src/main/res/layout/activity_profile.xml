@@ -67,6 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:id="@+id/frnds"
+                        fancy:mfb_text="@string/elipsize"
                         style="@style/mat_fancy_profile"/>
                     <com.rilixtech.materialfancybutton.MaterialFancyButton
                         android:layout_width="0dp"

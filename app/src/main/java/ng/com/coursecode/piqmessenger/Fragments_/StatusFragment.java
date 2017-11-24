@@ -1,6 +1,7 @@
 package ng.com.coursecode.piqmessenger.Fragments_;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -29,6 +30,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2;
+import ng.com.coursecode.piqmessenger.Interfaces.sendData;
 import ng.com.coursecode.piqmessenger.Model__. Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
@@ -200,6 +202,7 @@ public class StatusFragment  extends Fragment {
                 popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
                     @Override
                     public void onDismiss(PopupMenu menu) {
+                        sendToActivity(Show_Status.FULLSCREEN);
                         startTimer();
                     }
                 });
@@ -221,6 +224,13 @@ public class StatusFragment  extends Fragment {
                 popupMenu.show();
             }
         });
+    }
+
+    private void sendToActivity(String fullscreen) {
+        sendData sendData_=(sendData)context;
+        if(sendData_!=null){
+            sendData_.send(fullscreen);
+        }
     }
 
     private void setImage(int position) {
@@ -283,8 +293,7 @@ public class StatusFragment  extends Fragment {
                 ringProgress.setProgress(100);
                 setImage(position+1);
                 if(position>=(max)){
-                    Intent intent = new Intent(Show_Status.NEXT_STATUS);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    sendToActivity(Show_Status.NEXT_STATUS);
                 }
             }
         };
@@ -310,6 +319,12 @@ public class StatusFragment  extends Fragment {
             position=max-1;
         }
         alert.setMessage(messages.getText());
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                sendToActivity(Show_Status.FULLSCREEN);
+            }
+        });
         alert.show();
     }
 }

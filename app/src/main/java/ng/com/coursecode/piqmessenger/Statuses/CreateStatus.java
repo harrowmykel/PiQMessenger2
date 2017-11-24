@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -92,29 +94,28 @@ public class CreateStatus extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setFullscreen();
         setContentView(R.layout.activity_create_status);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         context = CreateStatus.this;
         stores=new Stores(context);
 
         Status_Folder=stores.getStatusFolder();
-        counter = (TextView) toolbar.findViewById(R.id.action_bar_subtitle);
+        counter = (TextView) findViewById(R.id.stat_amt);
         emojiconEditText = (EditText) findViewById(R.id.status_edit);
-        camera_Post = img = (ImageView) findViewById(R.id.status_img_show);
+        camera_Post = img = (ImageView) findViewById(R.id.stat_img_p);
 
-        TextView username=(TextView)findViewById(R.id.action_bar_title);
-        ImageView user_dp=(CircleImageView)findViewById(R.id.crt_dp);
+        TextView username=(TextView)findViewById(R.id.stat_sub);
+        ImageView user_dp=(CircleImageView)findViewById(R.id.stat_img);
         String uiser=stores.getUsername();
         Users_prof users_prof=Users_prof.getInfo(context, uiser);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         username.setText(users_prof.getFullname());
-
+        ((TextView)findViewById(R.id.stat_name)).setText(uiser);
         counter.setText("" + NUMBER_OF_WORDS);
 
         camera_Post.setOnClickListener(this);
-        (findViewById(R.id.ic_action_done)).setOnClickListener(this);
+        (findViewById(R.id.stat_reply)).setOnClickListener(this);
         emojiconEditText.setMaxEms(NUMBER_OF_WORDS);
         emojiconEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -197,11 +198,11 @@ public class CreateStatus extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.status_img_show:
+            case R.id.stat_img_p:
                 //TO DO startCameraActivityForResult done
                 showSelector();
                 break;
-            case R.id.ic_action_done:
+            case R.id.stat_reply:
                 validateBeforeSend();
                 break;
         }
@@ -303,6 +304,17 @@ public class CreateStatus extends AppCompatActivity implements View.OnClickListe
                     .build();
         } catch (Exception e) {
             Stores._reportException(e, "Createstatus", context);
+        }
+    }
+
+    private void setFullscreen() {
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }else {
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
         }
     }
 }
