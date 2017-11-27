@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,24 +13,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
-import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
-import ng.com.coursecode.piqmessenger.Interfaces.PostItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
-import ng.com.coursecode.piqmessenger.Model__.Model__2;
 import ng.com.coursecode.piqmessenger.Model__.PostModelParcel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
@@ -99,10 +91,17 @@ public class PostsAct extends AppCompatActivity implements sendData {
         posts_more=(ImageView) findViewById(R.id.posts_act_2more);
         post_likes=(TextView)findViewById(R.id.posts_act_2likes);
         swipeRefresh=(SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                doNetworkCall();                
+            }
+        });
         doNetworkCall();
     }
 
     private void doNetworkCall() {
+        swipeRefresh.setRefreshing(true);
         // Create a new Fragment to be placed in the activity layout
         Posts firstFragment = Posts.newInstance(postid, true);
         // In case this activity was started with special instructions from an
@@ -122,16 +121,16 @@ public class PostsAct extends AppCompatActivity implements sendData {
 
     private void setPostView() {
         posts_subtitle.setText((new TimeModel(context)).getDWM3(main_post.getTime()));
-        posts_username.setText(main_post.getUsername());
+        posts_username.setText(main_post.getFullname());
         main_post.setAuth_username(main_post.getUsername());
         posts_text.setText(main_post.getText());
         post_likes.setText(getString(R.string.likes_, main_post.getLikes()));
-        String images_=main_post.getUser_image();
+        String images_= main_post.getUser_image();
 
         final TextView txo=(TextView)findViewById(R.id.show_previous_post);
         txo.setVisibility(Stores.initView);
 
-        final String replypostid=main_post.getReply_to();
+        final String replypostid= main_post.getReply_to();
         if(!(replypostid.trim().isEmpty()) && !replypostid.equals("0")){
             txo.setVisibility(View.VISIBLE);
             txo.setText(R.string.show_previous_post);
@@ -145,7 +144,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
             });
         }
 
-        String image=main_post.getImage();
+        String image= main_post.getImage();
 
         if(!image.isEmpty()){
             posts_image.setVisibility(View.VISIBLE);
@@ -161,6 +160,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
         }
         Piccassa.load(context, images_, R.drawable.user_sample, posts_dp);
         runClicks();
+        swipeRefresh.setRefreshing(false);
     }
 
     private void runClicks() {
@@ -318,8 +318,45 @@ public class PostsAct extends AppCompatActivity implements sendData {
 
     @Override
     public void send(Object object) {
-        main_post=(PostModelParcel)object;
-        setPostView();
+        Datum main_post=(Datum)object;
+        if(main_post!=null) {
+            if(main_post.getError()!=null) {
+                stores.handleError(main_post.getError(), context, new ServerError() {
+                    @Override
+                    public void onEmptyArray() {
+                        Toasta.makeText(context, R.string.post_not_found, Toast.LENGTH_SHORT);
+                    }
+
+                    @Override
+                    public void onShowOtherResult(int res__) {
+                        Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
+                    }
+                });
+            }else{
+                replace(main_post);
+            }
+        }
         closeLoader();
+    }
+    
+    public void replace(Datum main__post){
+
+        //TODO mainpost
+        main_post=new PostModelParcel();
+        main_post.setUsername(getString__(main__post.getAuthUsername()));
+        main_post.setReciv(getString__(main__post.getRecivUsername()));
+        main_post.setId(getString__(main__post.getId()));
+        main_post.setTime(getString__(main__post.getTimestamp()));
+        main_post.setText(getString__(main__post.getSubtitle()));
+        main_post.setImage(getString__(main__post.getImage()));
+//      main_posts_tab_.setFav(getString__(main__post.getFav()));
+        main_post.setLiked(getString__(main__post.getLiked()));
+        main_post.setLikes(getString__(main__post.getLikes()));
+        main_post.setComment(getString__(main__post.getComments()));
+        main_post.setFullname(main__post.getAuthData().getAuth());
+        main_post.setUser_image(main__post.getAuthData().getAuthImg());
+        main_post.setReply_to(main__post.getReplyTo());
+
+        setPostView();
     }
 }

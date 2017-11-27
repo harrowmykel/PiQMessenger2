@@ -135,11 +135,7 @@ public class Chats extends Fragment {
 
         if (!query.isEmpty()) {
             recyclerView.addOnScrollListener(createInfiniteScrollListener());
-        }else{
-            closeLoader();
-        }
-
-        if(messages_list.size()<1){
+        }else if(messages_list.size()<1){
             closeLoader();
         }
 

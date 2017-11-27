@@ -36,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
@@ -185,10 +186,10 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void validateBeforeSend() {
-        if(tempUri!=Uri.EMPTY && !stores.isExtUrl(tempUri.toString())){
+        if(tempUri==Uri.EMPTY || stores.isExtUrl(tempUri.toString())){
             sendToGoogle();
         }else{
-            sendToServer();
+            sendToServer(tempUri.toString());
         }
     }
 
@@ -208,16 +209,6 @@ public class EditProfile extends AppCompatActivity {
             Piccassa.load(context, tempUri, user_dp);
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
-        }
-    }
-
-
-
-    public void sendToServer() {
-        if(tempUri==Uri.EMPTY){
-            sendToServer();
-        }else{
-            sendToServer(tempUri.toString());
         }
     }
 
@@ -267,81 +258,17 @@ public class EditProfile extends AppCompatActivity {
 
 
     public void sendToGoogle() {
-        // File or Blob
-        final Uri file = tempUri;
-
-// Create the file metadata
-        StorageMetadata metadata = new StorageMetadata.Builder()
-                .setContentType("image/jpeg")
-                .build();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl(Stores.CLOUD_URL);
-
-// Upload file and metadata to the path 'images/mountains.jpg'
-        UploadTask uploadTask = storageRef.child(stores.getFirebaseStore(Stores.PROFILE_STORE) + file.getLastPathSegment()).putFile(file, metadata);
-
-// Listen for state changes, errors, and completion of the upload.
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+        GoogleUpload googleUpload=new GoogleUpload(context, Stores.PROFILE_STORE, NOT_INT, small_icon, tempUri, new GoogleUpload.GoogleUploadListener() {
             @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+            public void onError() {
 
-                int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), tempUri);
-
-                    PugNotification.with(context)
-                            .load()
-                            .identifier(NOT_INT)
-                            .title(R.string.uploading_status)
-                            .smallIcon(small_icon)
-                            .largeIcon(bitmap)
-                            .progress()
-                            .value(progress, 100, false)
-                            .build();
-                } catch (Exception e) {
-                    Stores._reportException(e, "Createstatus", context);
-                }
             }
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
 
-                alert(R.string.upload_paused);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-
-                alert(R.string.upload_failed);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
-
-                alert(R.string.upload_successful);
-                sendToServer(downloadUrl.toString());
+            public void onSuccess(Uri url) {
+                sendToServer(url.toString());
             }
         });
-    }
-
-    public void alert(final int Resid) {
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), tempUri);
-            PugNotification.with(context)
-                    .load()
-                    .identifier(NOT_INT)
-                    .title(Resid)
-                    .smallIcon(small_icon)
-                    .largeIcon(bitmap)
-                    .flags(Notification.DEFAULT_ALL)
-                    .simple()
-                    .build();
-        } catch (Exception e) {
-            Stores._reportException(e, "editprof", context);
-        }
+        googleUpload.sendToGoogle();
     }
 }

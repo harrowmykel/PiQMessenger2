@@ -31,6 +31,7 @@ import retrofit2.Retrofit;
  */
 
 public class MessageCallService extends Service {
+    public static final String CHECKUPDATE = "fd,bkjfdkfbhfsjkbhskb vjhknb";
     Context context;
     List<Model__> model_list;
     Stores stores;
@@ -65,6 +66,7 @@ public class MessageCallService extends Service {
 
 
     public void getAllMessages(){
+        Prefs.putBoolean(CHECKUPDATE, true);
         Call<Model__> call=apiInterface.getAllMessages(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(MSGCALL), ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -131,6 +133,8 @@ public class MessageCallService extends Service {
                 page++;
                 if(pgLeft>0){
                     getAllMessages();
+                }else{
+                    Prefs.putBoolean(CHECKUPDATE, false);
                 }
             }
 

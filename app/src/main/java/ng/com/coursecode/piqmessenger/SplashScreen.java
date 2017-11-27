@@ -23,6 +23,8 @@ import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.NetworkCalls.GroupsCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
+import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
+import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -49,12 +51,20 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     public void fetchOldThings(){
-       StatusCall statusCall=new StatusCall(context);
-        statusCall.getAllMessages();
-        MessagesCall messagesCall=new MessagesCall(context);
-        messagesCall.getAllMessages();
+        checkStatus();
+        checkMsg();
 //        GroupsCall groupsCall=new GroupsCall(context);
 //        groupsCall.getAllMessages();
+    }
+
+    private void checkMsg() {
+        MessagesCall messagesCall=new MessagesCall(context);
+        messagesCall.getAllMessages();
+    }
+
+    private void checkStatus() {
+        StatusCall statusCall=new StatusCall(context);
+        statusCall.getAllMessages();
     }
 
     public void reqPerm(){
@@ -68,6 +78,13 @@ public class SplashScreen extends AppCompatActivity {
                             Prefs.putBoolean(IS_NT_FIRST_TRIAL, true);
                             Prefs.putBoolean(GifAct.srcIsTENOR, true);
                             fetchOldThings();
+                        }else{
+                            if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, false)){
+                                checkStatus();
+                            }
+                            if(Prefs.getBoolean(MessageCallService.CHECKUPDATE, false)){
+                                checkMsg();
+                            }
                         }
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));
                         finish();

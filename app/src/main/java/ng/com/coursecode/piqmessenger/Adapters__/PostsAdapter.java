@@ -56,7 +56,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsViewHolder> {
             holder.posts_subtitle.setText((new TimeModel(context)).getDWM3(messages.getTime()));
             holder.posts_username.setText(messages.getFullname());
             holder.posts_text.setText(messages.getText());
-            String lkes=(messages.getLikes().equalsIgnoreCase("0"))?"":messages.getLikes();
+            String lkes=Stores.notZero(messages.getLikes());
 
             holder.post_likes_text.setText(lkes);
 
@@ -107,10 +107,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsViewHolder> {
             @Override
             public void onClick(View v) {
                 postItemClicked.onLikeClicked(position);
+                int likess;
                 if((messages_list.get(position).getLiked()).equals("0")){
                     holder.posts_fav.setImageResource(Stores.getLikeSymbol());
+                    likess= (Stores.parseInt(messages_list.get(position).getLikes())+1);
+                    holder.post_likes_text.setText(Stores.notZero(likess));
                 }else{
                     holder.posts_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    likess=(Stores.parseInt(messages_list.get(position).getLikes())-1);
+                    holder.post_likes_text.setText(Stores.notZero(likess));
                 }
             }
         });

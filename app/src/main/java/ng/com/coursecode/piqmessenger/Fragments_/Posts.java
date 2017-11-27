@@ -73,6 +73,7 @@ public class Posts extends Fragment {
     int toSkip=0;
     String query="", who="";
     FancyButton post_more;
+    TextView tx;
 
     Handler handler;
 
@@ -98,6 +99,8 @@ public class Posts extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.recycler_layout_posts, container, false);
+        tx=(TextView)view.findViewById(R.id.warning);
+        stores = new Stores(context);
         if (getArguments() != null){
             query = (getArguments().getString(Stores.SearchQuery, ""));
             who = (getArguments().getString(Stores.USERNAME, ""));
@@ -114,7 +117,6 @@ public class Posts extends Fragment {
 
     public void loadPostFrag() {
         context = getContext();
-        stores = new Stores(context);
         startLoader();
         seenrecyclerView = (RecyclerView) view.findViewById(R.id.main_recycle);
         recommendedrecyclerView = (RecyclerView) view.findViewById(R.id.main_recycle2);
@@ -204,7 +206,7 @@ public class Posts extends Fragment {
 
             @Override
             public void onFailure(Call<PostsModel> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "postscall");
+                stores.reportThrowable(t, "postscall");
                 closeLoader();
                 post_more.setVisibility(View.VISIBLE);
             }
@@ -228,22 +230,9 @@ public class Posts extends Fragment {
         main_post=model_lisj.getMain_post();
 
         if(main_post!=null){
-            if(main_post.getError()!=null) {
-                stores.handleError(main_post.getError(), context, new ServerError() {
-                    @Override
-                    public void onEmptyArray() {
-                        Toasta.makeText(context, R.string.post_not_found, Toast.LENGTH_SHORT);
-                    }
-
-                    @Override
-                    public void onShowOtherResult(int res__) {
-                        Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
-                    }
-                });
-                closeLoader();
-            }
-            if(main_post.getAuthUsername()!=null){
-                setPostView();
+            sendData sendData=(sendData) context;
+            if(sendData!=null){
+                sendData.send(main_post);
             }
         }
 
@@ -254,23 +243,9 @@ public class Posts extends Fragment {
             Users_prof users_prof=new Users_prof();
             Users_prof users_prof1=new Users_prof();
 
-
-            final TextView tx=(TextView)view.findViewById(R.id.warning);
             tx.setVisibility(Stores.initView);
             if(modelll.getError()!=null) {
-                stores.handleError(modelll.getError(), context, new ServerError() {
-                    @Override
-                    public void onEmptyArray() {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(R.string.empty_result);
-                    }
-
-                    @Override
-                    public void onShowOtherResult(int res__) {
-                        tx.setVisibility(View.VISIBLE);
-                        tx.setText(res__);
-                    }
-                });
+                stores.handleError(modelll.getError(), context, serverError);
                 closeLoader();
                 break;
             }
@@ -330,29 +305,6 @@ public class Posts extends Fragment {
             do_once=false;
         }
         page++;
-    }
-
-    private void setPostView() {
-        //TODO mainpost
-        PostModelParcel model__2=new PostModelParcel();
-        model__2.setUsername(getString__(main_post.getAuthUsername()));
-        model__2.setReciv(getString__(main_post.getRecivUsername()));
-        model__2.setId(getString__(main_post.getId()));
-        model__2.setTime(getString__(main_post.getTimestamp()));
-        model__2.setText(getString__(main_post.getSubtitle()));
-        model__2.setImage(getString__(main_post.getImage()));
-//      model__2s_tab_.setFav(getString__(main_post.getFav()));
-        model__2.setLiked(getString__(main_post.getLiked()));
-        model__2.setLikes(getString__(main_post.getLikes()));
-        model__2.setComment(getString__(main_post.getComments()));
-        model__2.setFullname(main_post.getAuthData().getAuth());
-        model__2.setUser_image(main_post.getAuthData().getAuthImg());
-        model__2.setReply_to(main_post.getReplyTo());
-
-        sendData sendData=(sendData) context;
-        if(sendData!=null){
-            sendData.send(model__2);
-        }
     }
 
     public void loadMore(){
@@ -444,7 +396,7 @@ public class Posts extends Fragment {
         }
 
         @Override
-        public void onMoreClicked(int position) {
+        public void onMoreClicked(final int position) {
             View v=mLayoutManagerseen.findViewByPosition(position);
             v=v.findViewById(R.id.post_more);
             String username_=model_list_.get(position).getUser_name();
@@ -460,6 +412,16 @@ public class Posts extends Fragment {
                     Intent intentq;
                     switch(which){
                         case R.id.action_delete:
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                            alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
+                                    .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            delete(position);
+                                        }
+                                    }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).show();
                             break;
                         case R.id.action_report:
                             break;
@@ -511,17 +473,21 @@ public class Posts extends Fragment {
 
         Retrofit retrofit = ApiClient.getClient();
         String postid=model_list_.get(position).getPosts_id();
-        stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
         Call<Model__> call;
 
         final String liketobeset=type;
+        int likes_num=Stores.parseInt(model_list_.get(position).getLikes());
+        int plus_or;
 
         if(type.equals("0")){
             call = apiInterface.unlikePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid);
+            plus_or=likes_num-1;
         }else{
             call = apiInterface.likePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, type);
+            plus_or=likes_num+1;
         }
+        final int plus_or_=plus_or;
 
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -530,24 +496,12 @@ public class Posts extends Fragment {
                 List<Model__> model_lis=model_lisj.getData();
                 Model__ modelll=model_lis.get(0);
 
-                final TextView tx=(TextView)view.findViewById(R.id.warning);
                 tx.setVisibility(Stores.initView);
                 if(modelll.getError()!=null) {
-                    stores.handleError(modelll.getError(), context, new ServerError() {
-                        @Override
-                        public void onEmptyArray() {
-                            tx.setVisibility(View.VISIBLE);
-                            tx.setText(R.string.empty_result);
-                        }
-
-                        @Override
-                        public void onShowOtherResult(int res__) {
-                            tx.setVisibility(View.VISIBLE);
-                            tx.setText(res__);
-                        }
-                    });
+                    stores.handleError(modelll.getError(), context, serverError);
                 }else if(modelll.getSuccess() !=null){
                     model_list_.get(position).setLiked(liketobeset);
+                    model_list_.get(position).setLikes(Stores.notZero(plus_or_));
                     postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
                     seenrecyclerView.setAdapter(postsAdapter2);
                     postsAdapter2.notifyDataSetChanged();
@@ -557,8 +511,55 @@ public class Posts extends Fragment {
 
             @Override
             public void onFailure(Call<Model__> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "contactlist");
+                stores.reportThrowable(t, "contactlist");
             }
         });
     }
+
+    public void delete(final int position){
+
+        Retrofit retrofit = ApiClient.getClient();
+        String postid=model_list_.get(position).getPosts_id();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call = apiInterface.deletePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
+
+                tx.setVisibility(Stores.initView);
+                if(modelll.getError()!=null) {
+                    stores.handleError(modelll.getError(), context, serverError);
+                }else if(modelll.getSuccess() !=null){
+                    model_list_.remove(position);
+                    postsAdapter2 = new PostsAdapter(model_list_, pPostItemClicked);
+                    seenrecyclerView.setAdapter(postsAdapter2);
+                    postsAdapter2.notifyDataSetChanged();
+                    seenrecyclerView.scrollToPosition(position);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                stores.reportThrowable(t, "contactlist");
+            }
+        });
+    }
+
+    ServerError serverError=new ServerError() {
+        @Override
+        public void onEmptyArray() {
+            tx.setVisibility(View.VISIBLE);
+            tx.setText(R.string.empty_result);
+        }
+
+        @Override
+        public void onShowOtherResult(int res__) {
+            tx.setVisibility(View.VISIBLE);
+            tx.setText(res__);
+        }
+    };
 }

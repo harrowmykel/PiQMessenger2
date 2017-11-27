@@ -82,6 +82,9 @@ public class Stores2 {
             }else if (frndsData.getRSent()){
                 icon=R.string.request_sent;
                 iconRes=R.string.fawi_check_square_o;
+            }else{
+                icon=R.string.send_request;
+                iconRes=R.string.fawi_user_plus;
             }
             users_frnd.setIcon(context.getString(iconRes));
             users_frnd.setText(context.getString(icon));

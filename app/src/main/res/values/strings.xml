@@ -111,4 +111,7 @@
     <string name="elipsize">...</string>
     <string name="profile_loading">profile loading, please wait...</string>
     <string name="action_upload">Upload</string>
+    <string name="delete_confirm">Are you sure you want to delete this?</string>
+    <string name="yes">Yes</string>
+    <string name="send_request">Send Request</string>
 </resources>

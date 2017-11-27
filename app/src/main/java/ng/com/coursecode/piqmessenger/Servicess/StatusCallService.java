@@ -37,6 +37,7 @@ import retrofit2.Retrofit;
 
 public class StatusCallService extends Service {
 
+    public static final String CHECKUPDATE = "sdjbdfjnjklbsdf";
     List<Model__> model_list;
     Stores stores;
 
@@ -63,6 +64,7 @@ public class StatusCallService extends Service {
     }
 
     public void getAllMessages(){
+        Prefs.putBoolean(CHECKUPDATE, true);
         Call<Model__> call=apiInterface.getAllStatuses(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(STATCALL), ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -124,6 +126,7 @@ public class StatusCallService extends Service {
                 if(pgLeft>0){
                     getAllMessages();
                 }else{
+                    Prefs.putBoolean(CHECKUPDATE, false);
                     sendEnd();
                 }
             }

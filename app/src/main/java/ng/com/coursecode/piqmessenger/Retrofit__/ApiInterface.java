@@ -93,6 +93,14 @@ public interface ApiInterface {
     Call<Model__> unlikePost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String postid);
 
     @FormUrlEncoded
+    @POST("posts/index.php?req=deletepost")
+    Call<Model__> deletePost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String postid);
+
+    @FormUrlEncoded
+    @POST("status/index.php?req=deletestatus")
+    Call<Model__> deleteStatus(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String postid);
+
+    @FormUrlEncoded
     @POST("posts/index.php?req=getpost")
     Call<PostsModel> getPostsReplies(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q, @Field("page") String page);
 

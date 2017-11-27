@@ -3,6 +3,7 @@ package ng.com.coursecode.piqmessenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -50,26 +51,28 @@ public class Profile extends AppCompatActivity {
     CircleImageView user_dp;
     Stores stores;
     Model__ user_data;
+    SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        context=Profile.this;
+        context = Profile.this;
         stores = new Stores(context);
-        username_= getIntent().getStringExtra(USERNAME);
-        username_=(username_==null)?(new Stores(context)).getUsername():username_;
+        username_ = getIntent().getStringExtra(USERNAME);
+        username_ = (username_ == null) ? (new Stores(context)).getUsername() : username_;
 
-        fullname=(TextView)findViewById(R.id.fullname);
-        username=(TextView)findViewById(R.id.username);
-        bio=(TextView)findViewById(R.id.bio_content);
-        user_dp=(CircleImageView) findViewById(R.id.prof_pic);
-        frnds_req=(MaterialFancyButton)findViewById(R.id.frnds);
-        message=(MaterialFancyButton)findViewById(R.id.prof_msg);
+        fullname = (TextView) findViewById(R.id.fullname);
+        username = (TextView) findViewById(R.id.username);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        bio = (TextView) findViewById(R.id.bio_content);
+        user_dp = (CircleImageView) findViewById(R.id.prof_pic);
+        frnds_req = (MaterialFancyButton) findViewById(R.id.frnds);
+        message = (MaterialFancyButton) findViewById(R.id.prof_msg);
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, Converse.class);
+                Intent intent = new Intent(context, Converse.class);
                 intent.putExtra(Converse.USERNAME, username_);
                 startActivity(intent);
             }
@@ -78,22 +81,32 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 frnds_req.setText(getString(R.string.elipsize));
-                if(user_data!=null) {
+                if (user_data != null) {
                     sendFriendReq();
-                }else{
+                } else {
                     Toast.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadUp();
+            }
+        });
 
-        String ab="@"+ username_;
+        String ab = "@" + username_;
         username.setText(ab);
 
-        Users_prof users_prof=Users_prof.getInfo(context, username_);
+        Users_prof users_prof = Users_prof.getInfo(context, username_);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         fullname.setText(users_prof.getFullname());
 
         setTitle(users_prof.getFullname());
+        loadUp();
+    }
+
+    public void loadUp(){
         // Create a new Fragment to be placed in the activity layout
         Posts firstFragment = Posts.newInstance(username_, false);
         // In case this activity was started with special instructions from an
@@ -179,6 +192,7 @@ public class Profile extends AppCompatActivity {
 
     private void setUpProfile() {
 
+        swipeRefresh.setRefreshing(true);
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
@@ -237,12 +251,14 @@ public class Profile extends AppCompatActivity {
 
                     }
                 }
+                swipeRefresh.setRefreshing(false);
             }
 
 
             @Override
             public void onFailure(Call<Model__> call, Throwable t) {
                 (new Stores(context)).reportThrowable(t, "postscall");
+                swipeRefresh.setRefreshing(false);
             }
         });
     }

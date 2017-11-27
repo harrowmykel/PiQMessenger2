@@ -44,6 +44,7 @@ import br.com.goncalves.pugnotification.notification.PugNotification;
 import de.hdodenhof.circleimageview.CircleImageView;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.File.CFile;
@@ -205,7 +206,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
             finish();
             String urltoImage=tempUri.toString();
             if(stores.isExtUrl(urltoImage)){
-                sendToServer(text, urltoImage);
+                sendToServer(urltoImage);
             }else{
                 sendToGoogle();
             }
@@ -213,7 +214,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
             if(!text.isEmpty()){
                 Toasta.makeText(context, R.string.posting, Toast.LENGTH_SHORT);
                 finish();
-                sendToServer(text, "");
+                sendToServer("");
             }else{
                 Toasta.makeText(context, R.string.text_and_image_must_not_be_empty, Toast.LENGTH_SHORT);
             }
@@ -221,67 +222,22 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
     }
 
     public void sendToGoogle() {
-        // File or Blob
-
-// Create the file metadata
-        StorageMetadata metadata = new StorageMetadata.Builder()
-                .build();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl(Stores.CLOUD_URL);
-
-// Upload file and metadata to the path 'images/mountains.jpg'
-        UploadTask uploadTask = storageRef.child(stores.getFirebaseStore(Stores.POST_STORE) + tempUri.getLastPathSegment()).putFile(tempUri);
-
-// Listen for state changes, errors, and completion of the upload.
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+        GoogleUpload googleUpload=new GoogleUpload(context, Stores.POST_STORE, NOT_INT, small_icon, tempUri, new GoogleUpload.GoogleUploadListener() {
             @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+            public void onError() {
 
-                int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), tempUri);
-
-                    PugNotification.with(context)
-                            .load()
-                            .identifier(NOT_INT)
-                            .title(R.string.uploading_status)
-                            .smallIcon(small_icon)
-                            .largeIcon(bitmap)
-                            .progress()
-                            .value(progress, 100, false)
-                            .build();
-                } catch (Exception e) {
-                    Stores._reportException(e, "Createpost", context);
-                }
             }
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
 
-                alert(R.string.upload_paused);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-
-                alert(R.string.upload_failed);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
-                downloadUrl = taskSnapshot.getDownloadUrl();
-                Toasta.makeText(context, downloadUrl.toString(), Toast.LENGTH_SHORT);
-                sendToServer(text, downloadUrl.toString());
-                alert(R.string.upload_successful);
+            public void onSuccess(Uri url) {
+                tempUri=url;
+                sendToServer(url.toString());
             }
         });
+        googleUpload.sendToGoogle();
     }
 
-    public void sendToServer(String text, String urltoImage){
+    public void sendToServer(String urltoImage){
         text=emojiconEditText.getText().toString();
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
@@ -321,23 +277,6 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
                 (new Stores(context)).reportThrowable(t, "contactlist");
             }
         });
-    }
-
-    public void alert(final int Resid) {
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), tempUri);
-            PugNotification.with(context)
-                    .load()
-                    .identifier(NOT_INT)
-                    .title(Resid)
-                    .smallIcon(small_icon)
-                    .largeIcon(bitmap)
-                    .flags(Notification.DEFAULT_ALL)
-                    .simple()
-                    .build();
-        } catch (Exception e) {
-            Stores._reportException(e, "Createpost", context);
-        }
     }
 
     @Override

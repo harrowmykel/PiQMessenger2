@@ -30,6 +30,7 @@ public class Show_Status extends AppCompatActivity implements sendData {
     public static final String POSITION = "kejwdasnrfznkfl";
     public static final String NEXT_STATUS = "jdkjfsnkj";
     public static final String FULLSCREEN = "jfksnkldgkf";
+    public static String FINISH_="jkh;jlkjl";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -94,6 +95,8 @@ public class Show_Status extends AppCompatActivity implements sendData {
             }
         }else if(obj.equalsIgnoreCase(FULLSCREEN)){
             setFullscreen();
+        }else if(obj.equalsIgnoreCase(FINISH_)){
+            finir();
         }
     }
 

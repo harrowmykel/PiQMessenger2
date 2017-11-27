@@ -87,12 +87,7 @@ public class Status extends Fragment {
             @Override
             public void onRefresh() {
                 StatusCall statusCall=new StatusCall(context);
-                statusCall.getAllMessages(new FetchMore(){
-                    @Override
-                    public void fetchNow() {
-                        setLists();
-                    }
-                });
+                statusCall.getAllMessages();
             }
         });
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,

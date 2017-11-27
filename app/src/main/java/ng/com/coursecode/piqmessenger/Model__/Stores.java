@@ -259,4 +259,12 @@ public class Stores {
     public String getGiphyApiKey() {
         return "e7b7fe5398b44c60a82bd68bfc82f3e5";
     }
+
+    public static String notZero(String s) {
+        return (s.equalsIgnoreCase("0"))?"":s;
+    }
+
+    public static String notZero(int s) {
+        return (s<1 )?"":""+s;
+    }
 }

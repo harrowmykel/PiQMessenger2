@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -21,21 +20,27 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Contacts_.StatusAct;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
-import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2;
+import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Interfaces.sendData;
-import ng.com.coursecode.piqmessenger.Model__. Model__3;
+import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
+import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
+import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
 import ng.com.coursecode.piqmessenger.Statuses.Show_Status;
-
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by harro on 15/11/2017.
@@ -72,7 +77,6 @@ public class StatusFragment  extends Fragment {
     Stores store;
     ArrayList< Model__3> status_tabs;
      Model__3 messages;
-
     public StatusFragment() {
     }
 
@@ -211,6 +215,16 @@ public class StatusFragment  extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.action_delete:
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
+                                        .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deleteStatus();
+                                    }
+                                }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                }).show();
                                 break;
                             case R.id.action_view:
                                 Intent intent=new Intent(context, StatusAct.class);
@@ -222,6 +236,42 @@ public class StatusFragment  extends Fragment {
                     }
                 });
                 popupMenu.show();
+            }
+        });
+    }
+
+    ServerError serverError=new ServerError() {
+        @Override
+        public void onEmptyArray() {
+        }
+
+        @Override
+        public void onShowOtherResult(int res__) {
+        }
+    };
+
+    public void deleteStatus(){
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call = apiInterface.deletePost(store.getUsername(), store.getPass(), store.getApiKey(), status_code);
+
+        call.enqueue(new retrofit2.Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
+
+                if(modelll.getError()!=null) {
+                    store.handleError(modelll.getError(), context, serverError);
+                }else if(modelll.getSuccess() !=null){
+                    sendToActivity(Show_Status.FINISH_);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                store.reportThrowable(t, "contactlist");
             }
         });
     }
