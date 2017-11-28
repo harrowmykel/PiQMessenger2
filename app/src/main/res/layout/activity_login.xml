@@ -39,6 +39,7 @@
             android:textAlignment="center"
             android:background="@color/colorPrimaryDark"
             android:id="@+id/log_in"
+            android:textSize="16sp"
             android:text="@string/log_in"/>
         <TextView
             android:layout_width="match_parent"
@@ -47,6 +48,7 @@
             android:textAlignment="center"
             android:background="@color/colorAccent"
             android:id="@+id/sign_up"
+            android:textSize="16sp"
             android:text="@string/signup"/>
 
     </LinearLayout>

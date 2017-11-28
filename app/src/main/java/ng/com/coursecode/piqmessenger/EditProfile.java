@@ -63,7 +63,6 @@ public class EditProfile extends AppCompatActivity {
     CircleImageView user_dp;
     Stores stores;
 
-
     private static final int IMGREQUESTCODE = 234;
     private static final int GALLERYREQUESTCODE = 287;
     private static final int GIFREQUESTCODE = 1233;
@@ -186,7 +185,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void validateBeforeSend() {
-        if(tempUri==Uri.EMPTY || stores.isExtUrl(tempUri.toString())){
+        if(tempUri!=Uri.EMPTY && stores.isExtUrl(tempUri.toString())){
             sendToGoogle();
         }else{
             sendToServer(tempUri.toString());

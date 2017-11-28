@@ -205,7 +205,7 @@ public class StatusFragment  extends Fragment {
         });
 
         stat_reply.setText(R.string.view_users);
-        stat_reply.setIconResource(R.string.fawi_eye);
+        stat_reply.setIconResource(getString(R.string.fawi_eye));
 
         stat_menu.setOnClickListener(new View.OnClickListener() {
             @Override

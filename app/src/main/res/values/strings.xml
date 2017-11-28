@@ -132,5 +132,9 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="log_in">LOG IN</string>
     <string name="signup">SIGN UP</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="gtThan">Must be greater than %1$d</string>
+    <string name="inv_user">Invalid Username</string>
 
 </resources>

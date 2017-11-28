@@ -18,6 +18,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Random;
 
+import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.NetworkCalls.GroupsCall;
@@ -25,10 +26,12 @@ import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
 import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
+import ng.com.coursecode.piqmessenger.Signin.LoginActivity;
+import ng.com.coursecode.piqmessenger.Signin.SignActivity;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private String IS_NT_FIRST_TRIAL="is_first_trial";
+    public static String IS_NT_FIRST_TRIAL="is_first_trial";
     Context context;
 
     @Override
@@ -50,55 +53,32 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    public void fetchOldThings(){
-        checkStatus();
-        Prefs.putBoolean(MessageCallService.CHECKUPDATE, true);
-        MessagesCall messagesCall=new MessagesCall(context);
-        messagesCall.refresh();
-//        GroupsCall groupsCall=new GroupsCall(context);
-//        groupsCall.getAllMessages();
-    }
-
-    private void checkStatus() {
-        StatusCall statusCall=new StatusCall(context);
-        statusCall.getAllMessages();
-    }
-
     public void reqPerm(){
         String[] perms = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, perms, new PermissionsResultAction() {
 
-                    @Override
-                    public void onGranted() {
-                        if(!Prefs.getBoolean(IS_NT_FIRST_TRIAL, false)){
-                            FirebaseInstanceId.getInstance().getToken();
-                            Prefs.putBoolean(IS_NT_FIRST_TRIAL, true);
-                            Prefs.putBoolean(GifAct.srcIsTENOR, true);
-                            Prefs.putString(Profile.USERS_FULLNAME, "");
-                            Prefs.putString(Profile.USERS_IMAGE, "");
-                            Prefs.putString(Profile.USERS_NAME, "piccmaq");
-                            Prefs.putString(Profile.USERS_PASS, "08036660086");
-                            fetchOldThings();
-                        }else{
-
-                            if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, false)){
-                                checkStatus();
-                            }
-
-                            MessagesCall messagesCall=new MessagesCall(context);
-                            messagesCall.refresh();
-                        }
-                        startActivity(new Intent(SplashScreen.this, MainActivity.class));
-                        finish();
+            @Override
+            public void onGranted() {
+                if(!Prefs.getString(Profile.USERS_NAME, "").isEmpty()){
+                    if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, false)){
+                        (new StartUp(context)).checkStatus();
                     }
+                    (new StartUp(context)).checkMessage();
+                    Intent intent=new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(intent);
+                }else {
+                    startActivity(new Intent(SplashScreen.this, LoginActivity.class));
+                }
+                finish();
+            }
 
-                    @Override
-                    public void onDenied(String permission) {
-                        Toasta.makeText(SplashScreen.this,
-                                "Sorry, we need the Storage Permission to do that",
-                                Toast.LENGTH_SHORT);
-                        reqPerm();
-                    }
-                });
+            @Override
+            public void onDenied(String permission) {
+                Toasta.makeText(SplashScreen.this,
+                        "Sorry, we need the Storage Permission to do that",
+                        Toast.LENGTH_SHORT);
+                reqPerm();
+            }
+        });
     }
 }

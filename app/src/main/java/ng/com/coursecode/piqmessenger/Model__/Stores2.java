@@ -93,7 +93,7 @@ public class Stores2 {
             users_frnd.setText(context.getString(icon));
 //            users_frnd.setTextColor(textColor);
 //            users_frnd.setBorderColor(textColor);
-            users_frnd.setIconColor(textColor);
+//            users_frnd.setIconColor(textColor);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 users_frnd.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));

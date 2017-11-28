@@ -108,6 +108,9 @@ public class Stores {
             case "6479":
                 serverError.onEmptyArray();
                 break;
+            default:
+                serverError.onShowOtherResult(R.string.acc_req);
+                break;
         }
     }
 

@@ -125,4 +125,7 @@ public interface ApiInterface {
     @POST("profile/index.php?req=reqfrnd")
     Call<Model__> friendReq(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String postid, @Field("type") String type);
 
+    @FormUrlEncoded
+    @POST("profile/index.php?req=create")
+    Call<Model__> createUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("check") String postid);
 }
