@@ -184,6 +184,24 @@
         <item name="fb_borderColor">#FFF</item>
     </style>
 
+    <style name="mfancy_stat">
+        <item name="android:paddingRight">7dp</item>
+        <item name="android:paddingLeft">7dp</item><!--
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingEnd">3dp</item>-->
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="mfb_textSize">16sp</item>
+        <item name="mfb_textColor">@color/white</item>
+        <item name="mfb_iconPosition">left</item>
+        <item name="mfb_borderWidth">1dp</item>
+        <!--<item namme="fb_defaultColor">@color/cardview_shadow_end_color</item>-->
+        <item name="mfb_defaultColor">@color/cardview_shadow_start_color</item>
+        <item name="mfb_radius">4dp</item>
+        <item name="mfb_borderColor">#FFF</item>
+    </style>
+
     <style name="fancy_reply">
         <item name="android:paddingRight">20dp</item>
         <item name="android:paddingLeft">20dp</item><!--
@@ -255,4 +273,25 @@
 
     <color name="def_fancy">#7ab800</color>
     <color name="def_focus">#9bd823</color>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="txtButtons">
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <!--<item name="android:textAlignment">center</item>-->
+    </style>
 </resources>

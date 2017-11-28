@@ -52,6 +52,7 @@ import ng.com.coursecode.piqmessenger.Interfaces.ConvoInterface;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
@@ -130,7 +131,6 @@ public class Converse extends AppCompatActivity {
     }
 
     private void startInit() {
-
         Messages messages = new Messages();
         messages_list = messages.listAllFromUser(context, username);
 
@@ -156,9 +156,6 @@ public class Converse extends AppCompatActivity {
         recyclerView.addOnScrollListener(createInfiniteScrollListener());
         recyclerView.setAdapter(convoActAdapter);
         convoActAdapter.notifyDataSetChanged();
-
-        MessagesCall messagesCall=new MessagesCall(context);
-        messagesCall.getAllMessages();
     }
 
 
@@ -176,49 +173,24 @@ public class Converse extends AppCompatActivity {
     public void sendToServer(){
         String text= materialEditText.getText().toString();
         String urltoImage=tempUri!=Uri.EMPTY?tempUri.toString():"";
-        Retrofit retrofit = ApiClient.getClient();
-        stores = new Stores(context);
-        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+//        privacy
+        Messages messages_=new Messages();
+        messages_.setImage(urltoImage);
+        messages_.setRecip(recipient);
+        messages_.setMess_age(text);
+        messages_.setTim_e(TimeModel.getPhpTime());
+        messages_.setTime_stamp(TimeModel.getPhpTime());
+        messages_.setAuth(stores.getUsername());
+        messages_.setmsg_id("0");
+        messages_.setSent(0);
+        messages_.setContext(context);
+        boolean fg=messages_.save(context);
 
-        Call<Model__> call = apiInterface.newMsg(stores.getUsername(), stores.getPass(), stores.getApiKey(), text, urltoImage, privacy, recipient);
-        call.enqueue(new Callback<Model__>() {
-            @Override
-            public void onResponse(Call<Model__> call, Response<Model__> response) {
-                Model__ model_lisj=response.body();
-                List<Model__> model_lis=model_lisj.getData();
-                Model__ modelll=model_lis.get(0);
-
-                final TextView tx=(TextView)findViewById(R.id.warning);
-                tx.setVisibility(Stores.initView);
-                if(modelll.getError()!=null) {
-                    stores.handleError(modelll.getError(), context, new ServerError() {
-                        @Override
-                        public void onEmptyArray() {
-                            tx.setVisibility(View.VISIBLE);
-                            tx.setText(R.string.empty_result);
-                        }
-
-                        @Override
-                        public void onShowOtherResult(int res__) {
-                            tx.setVisibility(View.VISIBLE);
-                            tx.setText(res__);
-                        }
-                    });
-                }else if(modelll.getSuccess() !=null){
-                }
-
-                materialEditText.setText("");
-                tempUri=Uri.EMPTY;
-            }
-
-            @Override
-            public void onFailure(Call<Model__> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "converse");
-            }
-        });
+        materialEditText.setText("");
+        tempUri=Uri.EMPTY;
 
         MessagesCall messagesCall=new MessagesCall(context);
-        messagesCall.getAllMessages();
+        messagesCall.sendAllMessages();
         startInit();
     }
 

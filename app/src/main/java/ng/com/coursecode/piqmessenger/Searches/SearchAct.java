@@ -1,10 +1,12 @@
 package ng.com.coursecode.piqmessenger.Searches;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,6 +26,7 @@ import ng.com.coursecode.piqmessenger.Fragments_.Groups;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.R;
 
 public class SearchAct extends AppCompatActivity {
@@ -43,6 +46,8 @@ public class SearchAct extends AppCompatActivity {
     // Create a new Fragment to be placed in the activity layout
     Fragment firstFragment;
     boolean submitted=false;
+    SwipeRefreshLayout swiper;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class SearchAct extends AppCompatActivity {
         setSupportActionBar(toolbar);
         sect=SectionsPagerAdapter.fragmentTitles[currentPage];
         toolbar.setTitle(sect);
+        context=SearchAct.this;
         frameLayout=(FrameLayout)findViewById(R.id.search_framecontent);
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
@@ -82,6 +88,14 @@ public class SearchAct extends AppCompatActivity {
         searchView.setCursorDrawable(R.drawable.custom_cursor);
 
         firstFragment=frageSearch("");
+        swiper=((SwipeRefreshLayout)findViewById(R.id.swipeRefresh));
+
+        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                startFragmentTransactions();
+            }
+        });
         startFragmentTransactions();
     }
 

@@ -39,6 +39,7 @@ public class DB_Aro extends SQLiteOpenHelper {
                     Stores2.tim_e + " TEXT NOT NUll, " +
                     Stores2.image + " TEXT NOT NUll, " +
                     Stores2.confirm + " TEXT NOT NUll, " +
+                    Stores2.sent + " INTEGER(2) NOT NUll, " +
                     Stores2.msg_id + " TEXT NOT NUll)");
 
             db.execSQL("CREATE TABLE " + Stores2.statusTable + "(" +

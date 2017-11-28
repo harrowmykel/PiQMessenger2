@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.Interfaces.searchInterface;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 
 public class ContactAct extends AppCompatActivity {
@@ -157,6 +158,20 @@ public class ContactAct extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+switch(item.getItemId()) {
+    case R.id.profile:
+        Stores stores=new Stores(context);
+        String username = stores.getUsername();
+        Intent intent = new Intent(context, Profile.class);
+        intent.putExtra(Profile.USERNAME, username);
+        startActivity(intent);
+        break;
+}
+        return super.onOptionsItemSelected(item);
     }
 
     public void setSearchQuery(String query) {

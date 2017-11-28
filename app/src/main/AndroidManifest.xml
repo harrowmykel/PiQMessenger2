@@ -58,7 +58,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Contacts_.ContactAct"
-            android:label="@string/title_activity_contact"
+            android:label="@string/friends"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashScreen"
@@ -88,8 +88,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Servicess.MessageCallService"/>
-        <service android:name=".Servicess.StatusCallService"/>
+        <service android:name=".Servicess.MessageCallService" />
+        <service android:name=".Servicess.StatusCallService" />
         <!-- ./Firebase Notifications -->
         <activity
             android:name=".PostsAct.LikesAct"
@@ -110,7 +110,12 @@
         <activity
             android:name=".dump.Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Signin.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_login"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

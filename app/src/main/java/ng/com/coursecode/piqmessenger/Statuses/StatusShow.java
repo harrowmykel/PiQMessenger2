@@ -310,6 +310,7 @@ public class StatusShow extends AppCompatActivity implements View.OnClickListene
                     .smallIcon(small_icon)
                     .largeIcon(bitmap)
                     .flags(Notification.DEFAULT_ALL)
+                    .autoCancel(true)
                     .simple()
                     .build();
         } catch (Exception e) {

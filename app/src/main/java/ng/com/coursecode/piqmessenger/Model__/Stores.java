@@ -16,6 +16,7 @@ import hirondelle.date4j.DateTime;
 import ng.com.coursecode.piqmessenger.Database__.Messages;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 
 /**
@@ -70,8 +71,6 @@ public class Stores {
 
     public static int dbReqCounts=14;
     Context context;
-    private String username="Piccmaq";
-    private String pass="08036660086";
     private String apiKey="dcbafhjh";
     public boolean useInternet=false;
     public boolean useList=false;
@@ -85,11 +84,11 @@ public class Stores {
     }
 
     public String getUsername() {
-        return username;
+        return Prefs.getString(Profile.USERS_NAME, "");
     }
 
     public String getPass() {
-        return pass;
+        return Prefs.getString(Profile.USERS_PASS, "");
     }
 
     public String getApiKey() {
@@ -243,7 +242,7 @@ public class Stores {
     }
 
     public String getTime(String msgcall) {
-        return ""+Prefs.getLong(msgcall, 0);
+        return ""+(Prefs.getLong(msgcall, 0)-6);
     }
 
     public String getFirebaseStore(String profileStore) {

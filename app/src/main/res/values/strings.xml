@@ -114,4 +114,23 @@
     <string name="delete_confirm">Are you sure you want to delete this?</string>
     <string name="yes">Yes</string>
     <string name="send_request">Send Request</string>
+    <string name="sent_req">\@%1$s sent you a friend request.</string>
+    <string name="mention_req">\@%1$s mentioned you in a post.</string>
+    <string name="comment_like">\@%1$s liked your comment.</string>
+    <string name="add_reply">\@%1$s replied to your comment on a post.</string>
+    <string name="send_piccoin">\@%1$s sent you some piccoins.</string>
+    <string name="comment_req">\@%1$s commented on your post.</string>
+    <string name="acc_req">\@%1$s accepted your request.</string>
+    <string name="add_like">\@%1$s liked your post.</string>
+    <string name="new_post_by_admin">\@%1$s added a new post.</string>
+    <string name="new_post_r">\@%1$s wrote on your profile.</string>
+    <string name="check_prof">\@%1$s checked your profile.</string>
+    <string name="new_message_have">You may have a new Message.</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="log_in">LOG IN</string>
+    <string name="signup">SIGN UP</string>
+
 </resources>

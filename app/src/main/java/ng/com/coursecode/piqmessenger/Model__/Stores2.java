@@ -53,6 +53,7 @@ public class Stores2 {
     public static String likes="likes"+ending__;
     public static String Comment="comment"+ending__;
     public static String time_db="time_db"+ending__;
+    public static String sent="sent"+ending__;
 
     public static String toJson(Object model_lis) {
         return (new Gson()).toJson(model_lis);
@@ -63,6 +64,8 @@ public class Stores2 {
     public static void setFrndText(MaterialFancyButton users_frnd, FrndsData frndsData, Context context) {
         int icon= R.string.add_friends;
         int iconRes=R.string.fawi_user_plus;
+        int color=R.color.privacy_selected;
+        int textColor=R.color.white;
         if(users_frnd==null){
             return;
         }else if(frndsData==null){
@@ -71,23 +74,32 @@ public class Stores2 {
             if(frndsData.getRFrnds()){
                 icon=R.string.friends;
                 iconRes=R.string.fawi_users;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected, context.getTheme()));
-                }else{
-                    users_frnd.setBackgroundColor(context.getResources().getColor(R.color.privacy_selected));
-                }
+                color=R.color.friends_reqq;
             }else if(frndsData.getRRcvd()){
                 icon=R.string.accept_request;
                 iconRes=R.string.fawi_user_plus;
+//                color=R.color.black;
             }else if (frndsData.getRSent()){
                 icon=R.string.request_sent;
                 iconRes=R.string.fawi_check_square_o;
+//                color=R.color.black;
             }else{
                 icon=R.string.send_request;
                 iconRes=R.string.fawi_user_plus;
+                color=R.color.send_reqq;
+                textColor=R.color.sendtext;
             }
             users_frnd.setIcon(context.getString(iconRes));
             users_frnd.setText(context.getString(icon));
+//            users_frnd.setTextColor(textColor);
+//            users_frnd.setBorderColor(textColor);
+            users_frnd.setIconColor(textColor);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                users_frnd.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));
+            }else{
+                users_frnd.setBackgroundColor(context.getResources().getColor(color));
+            }
         }
     }
     public static FrndsData getFrndsData(FrndsData frndsData) {

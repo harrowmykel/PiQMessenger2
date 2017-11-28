@@ -51,4 +51,10 @@ public class StatusCall {
     public void getAllMessages(FetchMore fetchMore) {
         getAllMessages();
     }
+
+    public void getAllDelMessages() {
+        Intent intent=new Intent(context, StatusCallService.class);
+        intent.putExtra(StatusCallService.DEL, true);
+        context.startService(intent);
+    }
 }

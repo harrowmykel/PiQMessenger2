@@ -399,7 +399,7 @@ public class Posts extends Fragment {
         public void onMoreClicked(final int position) {
             View v=mLayoutManagerseen.findViewByPosition(position);
             v=v.findViewById(R.id.post_more);
-            String username_=model_list_.get(position).getUser_name();
+            final String username_=model_list_.get(position).getUser_name();
 
             AlertDialog.Builder alert=new AlertDialog.Builder(context);
             int NewPost_array=R.array.nt_user_post;
@@ -411,21 +411,24 @@ public class Posts extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intentq;
                     switch(which){
-                        case R.id.action_delete:
+                        case 0:
+                            if(username_.equalsIgnoreCase(stores.getUsername())){
+//                                case R.id.action_edit:
+                            }else{
+//                                case R.id.action_report:
+                        }
+                            break;
+                        case 1:
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                             alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
                                     .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            delete(position);
                                         }
                                     }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    delete(position);
                                 }
                             }).show();
-                            break;
-                        case R.id.action_report:
-                            break;
-                        case R.id.action_edit:
                             break;
                     }
                 }

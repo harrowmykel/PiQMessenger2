@@ -13,16 +13,16 @@ public class Toasta {
     }
 
     public static void makeText(Context context, int res, int duration){
-        String hj=context.getClass().getSimpleName();
+//        String hj=context.getClass().getSimpleName();
         Toast.makeText(context, res, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, hj, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, hj, Toast.LENGTH_SHORT).show();
 
     }
 
     public static void makeText(Context context, String res, int duration){
-        String hj=context.getClass().getSimpleName();
+//        String hj=context.getClass().getSimpleName();
         Toast.makeText(context, res, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, hj, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, hj, Toast.LENGTH_SHORT).show();
 
     }
 }

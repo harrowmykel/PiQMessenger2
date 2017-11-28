@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rilixtech.materialfancybutton.MaterialFancyButton;
 import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
@@ -56,7 +57,8 @@ public class StatusFragment  extends Fragment {
     TextView stat_username, stat_name, stat_amt, stat_text;
     CircleImageView stat_dp;
     ImageView stat_img;
-    View nxt, prev, stat_reply, stat_menu;
+    View nxt, prev, stat_menu;
+    MaterialFancyButton stat_reply;
     View rootView;
     //Declare timer
     CountDownTimer cTimer = null;
@@ -77,6 +79,9 @@ public class StatusFragment  extends Fragment {
     Stores store;
     ArrayList< Model__3> status_tabs;
      Model__3 messages;
+    String thisUser="";
+    String stry;
+
     public StatusFragment() {
     }
 
@@ -98,6 +103,7 @@ public class StatusFragment  extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_show__status, container, false);
         context=getContext();
         store=new Stores(context);
+        thisUser=store.getUsername();
 
         Bundle args = getArguments();
          Model__3 users_posts=args.getParcelable(ARG_PARCEL);
@@ -123,7 +129,7 @@ public class StatusFragment  extends Fragment {
         stat_amt=(TextView)rootView.findViewById(R.id.stat_amt);
         stat_name=(TextView)rootView.findViewById(R.id.stat_name);
         stat_text=(TextView)rootView.findViewById(R.id.stat_text);
-        stat_reply=rootView.findViewById(R.id.stat_reply);
+        stat_reply=(MaterialFancyButton) rootView.findViewById(R.id.stat_reply);
         stat_dp=(CircleImageView)rootView.findViewById(R.id.stat_img);
         stat_img=(ScaleImageView2)rootView.findViewById(R.id.stat_img_p);
         nxt=rootView.findViewById(R.id.stat_next);
@@ -156,6 +162,7 @@ public class StatusFragment  extends Fragment {
                 stat_name.setVisibility(type_Visi);
                 stat_reply.setVisibility(type_Visi);
                 stat_dp.setVisibility(type_Visi);
+                if(!stry.isEmpty())
                 stat_text.setVisibility(type_Visi);
 
                 if(type_Visi==View.VISIBLE && imgLoaded){
@@ -186,22 +193,29 @@ public class StatusFragment  extends Fragment {
         stat_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String postid=username_;
-                Intent intent=new Intent(context, Converse.class);
-                intent.putExtra(Converse.USERNAME, postid);
-                startActivity(intent);
+                if(username_.equalsIgnoreCase(thisUser)){
+                    String postid = username_;
+                    Intent intent = new Intent(context, Converse.class);
+                    intent.putExtra(Converse.USERNAME, postid);
+                    startActivity(intent);
+                }else{
+                    goToViewUsers();
+                }
             }
         });
+
+        stat_reply.setText(R.string.view_users);
+        stat_reply.setIconResource(R.string.fawi_eye);
 
         stat_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelTimer();
                 PopupMenu popupMenu=new PopupMenu(context, v);
-                if(username_.equalsIgnoreCase(store.getUsername())){
+                if(username_.equalsIgnoreCase(thisUser)){
                     popupMenu.getMenuInflater().inflate(R.menu.menu_status_act, popupMenu.getMenu());
                 }else{
-                    popupMenu.getMenuInflater().inflate(R.menu.menu_status_act_, popupMenu.getMenu());
+                    popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());
                 }
                 popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
                     @Override
@@ -219,17 +233,16 @@ public class StatusFragment  extends Fragment {
                                 alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
                                         .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        deleteStatus();
+
                                     }
                                 }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        deleteStatus();
                                     }
                                 }).show();
                                 break;
                             case R.id.action_view:
-                                Intent intent=new Intent(context, StatusAct.class);
-                                intent.putExtra(StatusAct.STATUS_CODE, status_code);
-                                startActivity(intent);
+                                goToViewUsers();
                                 break;
                         }
                         return false;
@@ -238,6 +251,12 @@ public class StatusFragment  extends Fragment {
                 popupMenu.show();
             }
         });
+    }
+
+    private void goToViewUsers() {
+        Intent intent=new Intent(context, StatusAct.class);
+        intent.putExtra(StatusAct.STATUS_CODE, status_code);
+        startActivity(intent);
     }
 
     ServerError serverError=new ServerError() {
@@ -253,7 +272,7 @@ public class StatusFragment  extends Fragment {
     public void deleteStatus(){
         Retrofit retrofit = ApiClient.getClient();
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-        Call<Model__> call = apiInterface.deletePost(store.getUsername(), store.getPass(), store.getApiKey(), status_code);
+        Call<Model__> call = apiInterface.deleteStatus(store.getUsername(), store.getPass(), store.getApiKey(), status_code);
 
         call.enqueue(new retrofit2.Callback<Model__>() {
             @Override
@@ -297,7 +316,7 @@ public class StatusFragment  extends Fragment {
             if(img!=null){
                 img_ring.setVisibility(View.VISIBLE);
                 cancelTimer();
-                String stry=messages.getText();
+                stry=messages.getText();
                 status_code=messages.getStatus_id();
                 if(stry.trim().length()>0){
                     stat_text.setVisibility(View.VISIBLE);

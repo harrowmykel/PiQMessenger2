@@ -29,6 +29,11 @@ public class TimeModel {
         res = context.getResources();
     }
 
+    public static String getPhpTime() {
+        long bn=System.currentTimeMillis()/1000;
+        return ""+bn;
+    }
+
 
     public int getIntVal(String posii) {
         int time=334;

@@ -66,7 +66,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("posts/index.php?req=create")
-    Call<Model__> newPost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("recipient") String recipient,  @Field("postid") String location);
+    Call<Model__> newPost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("who") String who,  @Field("postid") String location);
 
     @FormUrlEncoded
     @POST("status/index.php?req=create")
@@ -98,7 +98,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("status/index.php?req=deletestatus")
-    Call<Model__> deleteStatus(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String postid);
+    Call<Model__> deleteStatus(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("status_code") String postid);
 
     @FormUrlEncoded
     @POST("posts/index.php?req=getpost")
@@ -110,10 +110,15 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("msgs/index.php?req=create")
-    Call<Model__> newMsg(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("recipient") String recipient);
+    Call<Model__> newMsg(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text);
 
+    /*
     @FormUrlEncoded
-    @POST("status/index.php?req=fetchfrom")
+    @POST("msgs/index.php?req=create")
+    Call<Model__> newMsg(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("who") String who);
+*/
+    @FormUrlEncoded
+    @POST("status/index.php?req=fetchdeleted")
     Call<Model__> getAllDelStatuses(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("time") String time, @Field("page") String page);
 
     @FormUrlEncoded

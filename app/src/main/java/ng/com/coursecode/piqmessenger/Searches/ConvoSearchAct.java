@@ -1,10 +1,12 @@
 package ng.com.coursecode.piqmessenger.Searches;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Chats;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.R;
 
 public class ConvoSearchAct extends AppCompatActivity {
@@ -39,18 +42,20 @@ public class ConvoSearchAct extends AppCompatActivity {
     // Create a new Fragment to be placed in the activity layout
     Fragment firstFragment;
     boolean submitted=false;
+    SwipeRefreshLayout swiper;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-            currentPage=currentPage=R.string.chats;
+        currentPage=currentPage=R.string.chats;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sect=currentPage=R.string.chats;
         toolbar.setTitle(sect);
         frameLayout=(FrameLayout)findViewById(R.id.search_framecontent);
-
+        context=ConvoSearchAct.this;
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -77,6 +82,15 @@ public class ConvoSearchAct extends AppCompatActivity {
         searchView.setCursorDrawable(R.drawable.custom_cursor);
 
         firstFragment=frageSearch("");
+        swiper=((SwipeRefreshLayout)findViewById(R.id.swipeRefresh));
+
+        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                (new MessagesCall(context)).getAllMessages();
+                swiper.setRefreshing(false);
+            }
+        });
         startFragmentTransactions();
     }
 
@@ -164,7 +178,6 @@ public class ConvoSearchAct extends AppCompatActivity {
                 fromSavedState=true;
             }catch ( Exception f){
                 Toasta.makeText(this, f.getMessage(), Toast.LENGTH_SHORT);
-                Toasta.makeText(this, "oncreate", Toast.LENGTH_SHORT);
             }
         }
     }

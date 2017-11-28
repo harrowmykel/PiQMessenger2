@@ -321,4 +321,17 @@ public class Status_tab {
     public void setUser_image(String user_image) {
         this.user_image = user_image;
     }
+
+    public void delete(Context context_, String string__) {
+        context = context_;
+        dbHelper = new DB_Aro(context);
+        rdbleDb = dbHelper.getReadableDatabase();
+
+        String selection = Stores2.status_id + " = ?";
+        String[] selectionArgs = {string__};
+
+        rdbleDb.delete(Stores2.statusTable,  // The table to query
+               selection,                                // The columns for the WHERE clause
+                selectionArgs);
+    }
 }

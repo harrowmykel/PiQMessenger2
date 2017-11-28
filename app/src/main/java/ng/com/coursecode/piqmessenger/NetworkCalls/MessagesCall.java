@@ -20,11 +20,13 @@ import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
 import ng.com.coursecode.piqmessenger.HomeSta;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.NotificationData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,14 +42,41 @@ import static ng.com.coursecode.piqmessenger.Model__.Stores2.user_name;
 public class MessagesCall {
 
     Context context;
+    Intent intent;
     public MessagesCall(Context context1) {
         super();
         context=context1;
+        intent=new Intent(context, MessageCallService.class);
     }
 
 
     public void getAllMessages() {
-        Intent intent=new Intent(context, StatusCallService.class);
         context.startService(intent);
+    }
+
+
+    public void sendAllMessages() {
+        intent.putExtra(MessageCallService.SEND_NEW, "Jnd");
+        context.startService(intent);
+    }
+
+
+    private void checkMsg(boolean b) {
+        MessagesCall messagesCall=new MessagesCall(context);
+        if(b) {
+            messagesCall.getAllMessages();
+        }else{
+            messagesCall.sendAllMessages();
+        }
+    }
+
+    public void refresh() {
+        if(Prefs.getBoolean(MessageCallService.CHECKUPDATE, false)){
+            checkMsg(true);
+        }
+
+        if(Prefs.getBoolean(MessageCallService.SEND_NEW, false)) {
+            checkMsg(false);
+        }
     }
 }

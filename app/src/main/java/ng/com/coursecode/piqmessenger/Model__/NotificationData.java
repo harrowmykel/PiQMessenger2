@@ -176,6 +176,10 @@ import com.google.gson.annotations.SerializedName;*/
         @SerializedName("status")
         @Expose
         private Status status;
+        @SerializedName("del_status")
+        @Expose
+        private Status delstatus;
+
         @SerializedName("message")
         @Expose
         private Message message;
@@ -191,6 +195,14 @@ import com.google.gson.annotations.SerializedName;*/
 
         public Status getStatus() {
             return status;
+        }
+
+        public Status getDelstatus() {
+            return delstatus;
+        }
+
+        public void setDelstatus(Status delstatus) {
+            this.delstatus = delstatus;
         }
 
         public void setStatus(Status status) {
@@ -536,6 +548,9 @@ import com.google.gson.annotations.SerializedName;*/
         @SerializedName("notif_id")
         @Expose
         private String notifId;
+        @SerializedName("notif_c")
+        @Expose
+        private String notifC;
         @SerializedName("type_of")
         @Expose
         private String typeOf;
@@ -574,6 +589,14 @@ import com.google.gson.annotations.SerializedName;*/
 
         public String getNotifId() {
             return notifId;
+        }
+
+        public String getNotifC() {
+            return notifC;
+        }
+
+        public void setNotifC(String notifC) {
+            this.notifC = notifC;
         }
 
         public void setNotifId(String notifId) {

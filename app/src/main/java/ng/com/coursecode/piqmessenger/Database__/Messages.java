@@ -26,7 +26,7 @@ public class Messages{
     public String tim_e;
     public String time_stamp;
     public String auth;
-    public String confirm;
+    public String confirm="w";
     public String image;
     public String recip;
     ContentValues contentValues;
@@ -40,6 +40,7 @@ public class Messages{
 
     long newId;
     private String fullname;
+    private int sent=0;
 
     public Messages(){
 
@@ -58,23 +59,24 @@ public class Messages{
         setImage(image);
     }
 
-    public boolean save(Context context1){
-        context=context1;
-        if(context!=null){
-            dbHelper=new DB_Aro(getContext());
+    public boolean save(Context context1) {
+        context = context1;
+        if (context != null) {
+            dbHelper = new DB_Aro(getContext());
             wrtable = dbHelper.getWritableDatabase();
-            contentValues=new ContentValues();
+            contentValues = new ContentValues();
             contentValues.put(Stores2.auth, getAuth().toLowerCase());
             contentValues.put(Stores2.recip, getRecip().toLowerCase());
             contentValues.put(Stores2.mess_age, getMess_age());
             contentValues.put(Stores2.tim_e, getTim_e());
             contentValues.put(Stores2.image, getImage());
             contentValues.put(Stores2.confirm, getConfirm());
+            contentValues.put(Stores2.sent, getSent());
             contentValues.put(Stores2.msg_id, getmsg_id());
 
-            String toFind=Stores2.msg_id + " = ?";
-            String sTable=Stores2.messagesTable;
-            String[] sArray=new String[]{getmsg_id()};
+            String toFind = Stores2.msg_id + " = ?";
+            String sTable = Stores2.messagesTable;
+            String[] sArray = new String[]{getmsg_id()};
             Cursor result = wrtable.query(
                     sTable,
                     null,
@@ -86,13 +88,13 @@ public class Messages{
             );
             long nuk;
             if (result != null && result.getCount() > 0) {
-                nuk=wrtable.update(sTable, contentValues, toFind, sArray);
+                nuk = wrtable.update(sTable, contentValues, toFind, sArray);
                 result.close();
-            }else{
-                nuk=wrtable.insert(sTable, null, contentValues);
+            } else {
+                nuk = wrtable.insert(sTable, null, contentValues);
             }
-            newId=nuk;
-            return (nuk!=-1);
+            newId = nuk;
+            return (nuk != -1);
         }
 
         return false;
@@ -473,5 +475,68 @@ public class Messages{
         }
         cursor.close();
         return msgs;
+    }
+
+    public int getSent() {
+        return sent;
+    }
+
+    public void setSent(int sentt){
+        sent=sentt;
+    }
+
+    public String getOldMess(Context context) {
+        dbHelper = new DB_Aro(context);
+        rdbleDb = dbHelper.getReadableDatabase();
+        String msgs = "[";
+        Stores store=new Stores(context);
+
+        String[] projection = {Stores2.id_,
+                Stores2.auth,
+                Stores2.recip,
+                Stores2.mess_age,
+                Stores2.tim_e,
+                Stores2.image,
+                Stores2.confirm,
+                Stores2.msg_id};
+
+        String selection = Stores2.sent + " = ? ";
+        String[] selectionArgs = {"0"};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.tim_e + " ASC ";
+
+        cursor = rdbleDb.query(false, Stores2.messagesTable,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder,                                 // The sort order
+                "1"
+        );
+        int num = cursor.getCount();
+
+        for (int i = 0; i < num; i++) {
+            cursor.moveToPosition(i);
+            if(i!=0){
+                msgs+=", ";
+            }
+
+            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
+            recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
+            mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
+            tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
+            image = cursor.getString(cursor.getColumnIndex(Stores2.image));
+            confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
+            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
+            msgs+="{'recip':'"+recip+"', 'message':'"+mess_age+
+                    "', 'image':'"+image+"'}";
+        }
+        cursor.close();
+
+        rdbleDb.close();
+        dbHelper.close();
+        return msgs+"]";
     }
 }

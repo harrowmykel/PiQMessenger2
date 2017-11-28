@@ -52,14 +52,11 @@ public class SplashScreen extends AppCompatActivity {
 
     public void fetchOldThings(){
         checkStatus();
-        checkMsg();
+        Prefs.putBoolean(MessageCallService.CHECKUPDATE, true);
+        MessagesCall messagesCall=new MessagesCall(context);
+        messagesCall.refresh();
 //        GroupsCall groupsCall=new GroupsCall(context);
 //        groupsCall.getAllMessages();
-    }
-
-    private void checkMsg() {
-        MessagesCall messagesCall=new MessagesCall(context);
-        messagesCall.getAllMessages();
     }
 
     private void checkStatus() {
@@ -77,14 +74,19 @@ public class SplashScreen extends AppCompatActivity {
                             FirebaseInstanceId.getInstance().getToken();
                             Prefs.putBoolean(IS_NT_FIRST_TRIAL, true);
                             Prefs.putBoolean(GifAct.srcIsTENOR, true);
+                            Prefs.putString(Profile.USERS_FULLNAME, "");
+                            Prefs.putString(Profile.USERS_IMAGE, "");
+                            Prefs.putString(Profile.USERS_NAME, "piccmaq");
+                            Prefs.putString(Profile.USERS_PASS, "08036660086");
                             fetchOldThings();
                         }else{
+
                             if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, false)){
                                 checkStatus();
                             }
-                            if(Prefs.getBoolean(MessageCallService.CHECKUPDATE, false)){
-                                checkMsg();
-                            }
+
+                            MessagesCall messagesCall=new MessagesCall(context);
+                            messagesCall.refresh();
                         }
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));
                         finish();

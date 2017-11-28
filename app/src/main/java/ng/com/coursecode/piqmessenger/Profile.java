@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pixplicity.easyprefs.library.Prefs;
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
 
 import java.util.List;
@@ -41,6 +42,10 @@ import retrofit2.Retrofit;
 
 public class Profile extends AppCompatActivity {
 
+    public static final String USERS_FULLNAME = "jkdbckjfsbkdfjkcb";
+    public static final String USERS_IMAGE = "Kndlksndaljf";
+    public static final String USERS_NAME = "JKlnedfjsjkds;cb";
+    public static final String USERS_PASS = "okldnneldkne";
     public static String USERNAME="djkbzjriudbfudjbiud";
     boolean fromSavedState;
     String username_;
@@ -248,6 +253,10 @@ public class Profile extends AppCompatActivity {
                         });
 
                         Stores2.setFrndText(frnds_req, user_data.getFrndsData(), context);
+                        if(user_name.toLowerCase().equalsIgnoreCase(stores.getUsername().toLowerCase())){
+                            Prefs.putString(USERS_FULLNAME, fullnames);
+                            Prefs.putString(USERS_IMAGE, image);
+                        }
 
                     }
                 }

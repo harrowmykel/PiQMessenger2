@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import retrofit2.Retrofit;
 public class StatusCallService extends Service {
 
     public static final String CHECKUPDATE = "sdjbdfjnjklbsdf";
+    public static final String DEL = "Jddkl";
     List<Model__> model_list;
     Stores stores;
 
@@ -60,7 +62,22 @@ public class StatusCallService extends Service {
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
         apiInterface = retrofit.create(ApiInterface.class);
-        getAllMessages();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int ans;
+        if(intent!=null){
+            if(intent.getBooleanExtra(DEL, false)){
+                getAllDeletedMessages();
+            }else{
+                getAllMessages();
+            }
+        }else{
+            getAllMessages();
+        }
+        ans=super.onStartCommand(intent, flags, startId);
+        return ans;
     }
 
     public void getAllMessages(){
@@ -178,12 +195,12 @@ public class StatusCallService extends Service {
                             }
                         });
                         break;
-                    }
+                    }/*
 
                     messages_.setUser_name(getString__(modelll.getAuth_username()));
                     messages_.setTime(getString__(modelll.getTime()));
                     messages_.setText(getString__(modelll.getSubtitle()));
-                    messages_.setStatus_id(getString__(modelll.getStatus_code()));
+                    messages_.setStatus_id();
                     messages_.setFav(getString__(modelll.getFav()));
                     messages_.setImage(getString__(modelll.getImage()));
                     messages_.setSeen("0");
@@ -194,9 +211,9 @@ public class StatusCallService extends Service {
                     users_prof.setImage(modelll.getAuth_data().getAuth_img());
                     users_prof.save(context);
 
-                    Stime=modelll.getTime();
+                    Stime=modelll.getTime();*/
                     try {
-                        messages_.save(context);
+                        messages_.delete(context, getString__(modelll.getStatus_code()));
                     }catch (Exception r){
                         stores.reportException(r, "statuscall.class");
                     }
