@@ -69,6 +69,14 @@ public interface ApiInterface {
     Call<Model__> newPost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("who") String who,  @Field("postid") String location);
 
     @FormUrlEncoded
+    @POST("posts/index.php?req=edit")
+    Call<Model__> editPost(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("privacy") String privacy,  @Field("postid") String location);
+
+    @FormUrlEncoded
+    @POST("posts/index.php?req=createtouser")
+    Call<Model__> newPostToUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q, @Field("privacy") String privacy, @Field("who") String who,  @Field("postid") String location);
+
+    @FormUrlEncoded
     @POST("status/index.php?req=create")
     Call<Model__> newStatus(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text, @Field("imgurl") String q);
 
@@ -128,4 +136,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("profile/index.php?req=create")
     Call<Model__> createUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("check") String postid);
+
+    @FormUrlEncoded
+    @POST("posts/index.php?req=fetchthis")
+    Call<PostsModel> getThisPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q);
 }

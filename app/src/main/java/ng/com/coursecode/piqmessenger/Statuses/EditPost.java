@@ -1,17 +1,13 @@
 package ng.com.coursecode.piqmessenger.Statuses;
 
-import android.app.Notification;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -26,33 +22,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-import br.com.goncalves.pugnotification.notification.PugNotification;
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import mehdi.sakout.fancybuttons.FancyButton;
+import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.File.CFile;
-import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.ImageActivity;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Model__.Gif__;
+import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.Pagination;
+import ng.com.coursecode.piqmessenger.Model__.PostsModel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.R;
@@ -63,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class CreatePost extends AppCompatActivity implements View.OnClickListener {
+public class EditPost extends AppCompatActivity implements View.OnClickListener {
 
 
     private static final int IMGREQUESTCODE = 234;
@@ -94,6 +80,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
     private int small_icon=R.drawable.profile_add_photo;
     private String POST_FOLDER;//="solder/";
     boolean isReady=false;
+    boolean isStillLoading=true;
 
     String postid;
 
@@ -104,7 +91,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
 
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        context=CreatePost.this;
+        context=EditPost.this;
 
         postid=unNull(getIntent().getStringExtra(PostsAct.POSTID));
         recipient=unNull(getIntent().getStringExtra(PostsAct.RECIPIENT));
@@ -136,7 +123,6 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         (findViewById(R.id.public_p)).setOnClickListener(this);
         (findViewById(R.id.friends_p)).setOnClickListener(this);
         setToDefault(R.id.public_p);
-        switchView();
         emojiconEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -153,16 +139,9 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
                 counter.setText("" + len);
             }
         });
-
-        if(!recipient.isEmpty() && recipient.equalsIgnoreCase(stores.getUsername())){
-            replying.setText(getString(R.string.write_on_profile, recipient));
-        }else if(!postid.isEmpty()){
-            replying.setText(R.string.write_a_reply);
-        }else{
-            replying.setText(R.string.create_a_new_post);
-        }
+        replying.setText(R.string.edit_post);
         replying.setVisibility(View.VISIBLE);
-
+        Ntwrkcall();
     }
 
     private String unNull(String stringExtra) {
@@ -175,37 +154,6 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void showSelector() {
-        Intent intentq;
-        intentq=new Intent(context, ImageActivity.class);
-        intentq.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-        startActivityForResult(intentq, IMGREQUESTCODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            isReady=true;
-            tempUri = data.getData();
-            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
-        } else {
-            Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
-        }
-    }
-
-    private void switchView() {
-        if(handle_toggle.isChecked()){
-            if(user_prof.getVisibility()!=View.VISIBLE)
-                user_prof.setVisibility(View.VISIBLE);
-        }
-        else{
-            if(user_prof.getVisibility()!=View.INVISIBLE)
-                user_prof.setVisibility(View.INVISIBLE);
-        }
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
@@ -216,42 +164,19 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         return super.onOptionsItemSelected(item);
     }
 
-    public void validateBeforeSend(){
-        text=emojiconEditText.getText().toString();
-        if(isReady){
-            Toasta.makeText(context, R.string.posting, Toast.LENGTH_SHORT);
-            finish();
-            String urltoImage=tempUri.toString();
-            if(stores.isExtUrl(urltoImage)){
-                sendToServer(urltoImage);
-            }else{
-                sendToGoogle();
-            }
-        }else{
-            if(!text.isEmpty()){
+    public void validateBeforeSend() {
+        text = emojiconEditText.getText().toString();
+        if (!isStillLoading) {
+            if (!text.isEmpty()) {
                 Toasta.makeText(context, R.string.posting, Toast.LENGTH_SHORT);
                 finish();
                 sendToServer("");
-            }else{
+            } else {
                 Toasta.makeText(context, R.string.text_and_image_must_not_be_empty, Toast.LENGTH_SHORT);
             }
+        }else {
+            Toasta.makeText(context, R.string.loading, Toast.LENGTH_SHORT);
         }
-    }
-
-    public void sendToGoogle() {
-        GoogleUpload googleUpload=new GoogleUpload(context, Stores.POST_STORE, NOT_INT, small_icon, tempUri, new GoogleUpload.GoogleUploadListener() {
-            @Override
-            public void onError() {
-
-            }
-
-            @Override
-            public void onSuccess(Uri url) {
-                tempUri=url;
-                sendToServer(url.toString());
-            }
-        });
-        googleUpload.sendToGoogle();
     }
 
     public void sendToServer(String urltoImage){
@@ -259,14 +184,8 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-        Call<Model__>  call;
 
-        if(recipient!=null && !recipient.isEmpty()){
-            call = apiInterface.newPostToUser(stores.getUsername(), stores.getPass(), stores.getApiKey(), text, urltoImage, privacy, recipient, postid);
-        }else{
-            call = apiInterface.newPost(stores.getUsername(), stores.getPass(), stores.getApiKey(), text, urltoImage, privacy, recipient, postid);
-        }
-
+        Call<Model__>  call = apiInterface.editPost(stores.getUsername(), stores.getPass(), stores.getApiKey(), text, privacy, postid);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -306,23 +225,6 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v){
         int id=v.getId();
         switch (id){
-            case R.id.newpost_switch:
-                if(!handle_toggle.isChecked()){
-//                    if (!sharedPref.getBoolean(show_act)){
-                    Snackbar.make(v, R.string.hndl_nt, Snackbar.LENGTH_SHORT).setAction(R.string.never_disp, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-//                                sharedPref=sharedPref.saveBoolean(show_act, true);
-                        }
-                    }).show();
-//                    }
-                }
-                switchView();
-                break;
-            case R.id.newpost_img_show:
-                //TO DO startCameraActivityForResult done
-                showSelector();
-                break;
             case R.id.private_p:
                 setToDefault(id);
                 privacy=privacy_private;
@@ -359,4 +261,79 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
         ((FancyButton)findViewById(R.id.friends_p)).setTextColor(R.color.cardview_dark_background);
         ((FancyButton)findViewById(id)).setTextColor(R.color.white);
     }
+
+
+    public void Ntwrkcall(){
+        startLoader();
+        Retrofit retrofit = ApiClient.getClient();
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        Call<PostsModel> call=apiInterface.getThisPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid);
+
+        call.enqueue(new Callback<PostsModel>() {
+            @Override
+            public void onResponse(Call<PostsModel> call, final Response<PostsModel> response) {
+
+                PostsModel model_lisj=response.body();
+                List<Datum> model_list=model_lisj.getData();
+                int num=model_list.size();
+
+                for(int i=0; i<num; i++) {
+                    Datum modelll = model_list.get(i);
+
+                    if (modelll.getError() != null) {
+                        stores.handleError(modelll.getError(), context, serverError);
+                        closeLoader();
+                        break;
+                    }
+                    emojiconEditText.setText(getString__(modelll.getSubtitle()));
+                    String imglink=getString__(modelll.getImage());
+                    if (!imglink.isEmpty()) {
+                        Piccassa.load(context, imglink, img);
+                    }else{
+                        img.setVisibility(View.GONE);
+                    }
+
+                    isStillLoading=false;
+                }
+                closeLoader();
+            }
+
+            @Override
+            public void onFailure(Call<PostsModel> call, Throwable t) {
+                stores.reportThrowable(t, "postscall");
+                closeLoader();
+            }
+        });
+    }
+
+    public void closeLoader(){
+        SmoothProgressBar smoothProgressBar=(SmoothProgressBar)findViewById(R.id.smooth_prog);
+        smoothProgressBar.progressiveStop();
+        smoothProgressBar.setVisibility(View.GONE);
+    }
+
+
+    public void startLoader(){
+        SmoothProgressBar smoothProgressBar=(SmoothProgressBar)findViewById(R.id.smooth_prog);
+        smoothProgressBar.progressiveStart();
+        smoothProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    ServerError serverError=new ServerError() {
+        @Override
+        public void onEmptyArray() {
+
+        }
+
+        @Override
+        public void onShowOtherResult(int res__) {
+        }
+    };
+
+    private String getString__(String confirm) {
+        return (confirm==null)?"":confirm;
+    }
+
 }

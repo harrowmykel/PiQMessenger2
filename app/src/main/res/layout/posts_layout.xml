@@ -44,14 +44,12 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignLeft="@+id/posts_more"
-                    android:layout_alignStart="@+id/posts_more"
-                    android:text="Posts_username" />
+                    android:layout_alignStart="@+id/posts_more"/>
 
                 <TextView
                     android:id="@+id/posts_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Posts_username"
                     android:textSize="@dimen/descSize"
                     android:layout_below="@+id/posts_username" />
 
@@ -59,7 +57,6 @@
                     android:id="@+id/posts_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Posts_username"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:textSize="@dimen/postSize"
@@ -115,7 +112,9 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
@@ -131,7 +130,9 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"

@@ -42,13 +42,13 @@ public class Stores {
     public static String toSkip="Jbdfjkfbjkfbfj";
     public static String TopicEND="ending";
 
-    public static String POST_LOVE = "2636hb363";
-    public static String POST_LIKE = "393k99fd5";
-    public static String POST_SAD = "393k995fdsf";
-    public static String POST_WOW = "393k995fafk";
-    public static String POST_ANGRY = "393krkjhj995";
-    public static String POST_HAHA = "393k9rgrr95";
-    public static String POST_NONE = "0";
+    public static final String POST_LOVE = "2636hb363";
+    public static final String POST_LIKE = "393k99fd5";
+    public static final String POST_SAD = "393k995fdsf";
+    public static final String POST_WOW = "393k995fafk";
+    public static final String POST_ANGRY = "393krkjhj995";
+    public static final String POST_HAHA = "393k9rgrr95";
+    public static final String POST_NONE = "0";
     public static int initView= View.GONE;
     public static List<Integer> serviceError=new ArrayList<>();
 
@@ -220,10 +220,32 @@ public class Stores {
 
     public static int getLikeImageRes(String type) {
         int dp;
-        if(!type.equals("0")){
-            dp=Stores.getLikeSymbol();
-        }else{
-            dp=R.drawable.ic_favorite_border_black_24dp;
+
+        switch (type){
+            case POST_LOVE:
+                dp=R.drawable.love;
+                break;
+            case POST_LIKE:
+                dp=R.drawable.like;
+                break;
+            case POST_SAD:
+                dp=R.drawable.sad;
+                break;
+            case POST_WOW:
+                dp=R.drawable.wow;
+                break;
+            case POST_ANGRY:
+                dp=R.drawable.angry;
+                break;
+            case POST_HAHA:
+                dp=R.drawable.haha;
+                break;
+            case POST_NONE:
+                dp=R.drawable.ic_favorite_border_black_24dp;
+                break;
+            default:
+                dp=Stores.getLikeSymbol();
+                break;
         }
         return dp;
     }

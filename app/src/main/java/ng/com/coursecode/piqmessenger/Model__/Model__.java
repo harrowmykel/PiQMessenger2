@@ -13,6 +13,9 @@ import ng.com.coursecode.piqmessenger.Database__.Messages;
 
 public class Model__ {
 
+    @SerializedName("verified")
+    public String verified;
+
     @SerializedName("likes")
     public String likes;
 
@@ -659,6 +662,15 @@ public class Model__ {
     public void setReply_to(String reply_to) {
         this.reply_to = reply_to;
     }
+
+    public boolean getVerified() {
+        return (verified!=null && verified.trim().equalsIgnoreCase("1"));
+    }
+
+    public void setVerified(String reply_to) {
+        this.verified = reply_to;
+    }
+
 
 
 }

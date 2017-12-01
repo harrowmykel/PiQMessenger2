@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rrle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/users_dp"
         android:layout_width="50dp"
@@ -10,17 +20,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
         android:src="@drawable/user_sample"/>
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/img_like"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/users_dp"
-        android:layout_toEndOf="@+id/users_dp"
-        android:layout_toRightOf="@+id/users_dp"
-        android:layout_alignBottom="@+id/users_dp"
+        android:layout_alignTop="@+id/rrle"
+        android:layout_toEndOf="@+id/rrle"
+        android:layout_toRightOf="@+id/rrle"
+        android:layout_alignBottom="@+id/rrle"
         android:layout_marginBottom="@dimen/mrgtop"
         android:layout_marginTop="@dimen/mrgtop">
         <LinearLayout

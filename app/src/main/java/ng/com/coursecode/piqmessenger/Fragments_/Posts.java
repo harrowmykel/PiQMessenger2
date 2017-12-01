@@ -31,6 +31,7 @@ import ng.com.coursecode.piqmessenger.Contacts_.StatusAct;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.Dialog_.LikeDialog;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.File.CFile;
@@ -52,6 +53,7 @@ import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
 import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
+import ng.com.coursecode.piqmessenger.Statuses.EditPost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,6 +91,7 @@ public class Posts extends Fragment {
     Posts_tab posts_tab_;
     boolean do_once=true;
     Datum main_post;
+    boolean userIsAuth, userIsRecip, userIsNeither;
     public static String[] send=new String[]{Stores.POST_LOVE, Stores.POST_LIKE, Stores.POST_SAD, Stores.POST_WOW,
             Stores.POST_ANGRY, Stores.POST_HAHA};
 
@@ -400,11 +403,20 @@ public class Posts extends Fragment {
             View v=mLayoutManagerseen.findViewByPosition(position);
             v=v.findViewById(R.id.post_more);
             final String username_=model_list_.get(position).getUser_name();
+            final String username_a=model_list_.get(position).getReciv();
+
+            userIsAuth=username_.equalsIgnoreCase(stores.getUsername());
+            userIsRecip=username_a.equalsIgnoreCase(stores.getUsername());
+            userIsNeither=(!userIsAuth && !userIsRecip);
 
             AlertDialog.Builder alert=new AlertDialog.Builder(context);
             int NewPost_array=R.array.nt_user_post;
-            if(username_.equalsIgnoreCase(stores.getUsername())){
+            if(userIsAuth){
                 NewPost_array=R.array.user_post;
+            } else if(userIsRecip){
+                NewPost_array=R.array.user_post;
+            } else {
+                NewPost_array=R.array.nt_user_post;
             }
             alert.setItems(NewPost_array, new DialogInterface.OnClickListener() {
                 @Override
@@ -412,23 +424,32 @@ public class Posts extends Fragment {
                     Intent intentq;
                     switch(which){
                         case 0:
-                            if(username_.equalsIgnoreCase(stores.getUsername())){
-//                                case R.id.action_edit:
+                            if(userIsAuth){
+                                String postid=model_list_.get(position).getPosts_id();
+                                Intent ontent=new Intent(context, EditPost.class);
+                                ontent.putExtra(PostsAct.POSTID, postid);
+                                startActivity(ontent);
                             }else{
 //                                case R.id.action_report:
-                        }
+
+                            }
                             break;
                         case 1:
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                            alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
-                                    .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    delete(position);
-                                }
-                            }).show();
+                            if(userIsAuth || userIsRecip){
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
+                                        .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        delete(position);
+                                    }
+                                }).show();
+                            }else{
+                                //neither
+
+                            }
                             break;
                     }
                 }
@@ -445,24 +466,20 @@ public class Posts extends Fragment {
         }
 
         @Override
-        public void onShowMoreLikeOptions(int position) {
-            Toasta.makeText(context, "showmore", Toast.LENGTH_SHORT);
-            String liked=model_list_.get(position).getLiked();
-
-            if(liked.equals("0")){
-                likedd(position, Stores.POST_LIKE);
-            }else{
-                likedd(position, "0");
-            }
-            String postid=model_list_.get(position).getPosts_id();
-            Intent intent=new Intent(context, LikesAct.class);
-            intent.putExtra(PostsAct.POSTID, postid);
-            startActivity(intent);
+        public void onShowMoreLikeOptions(final int position) {
+           LikeDialog likeDialog=new LikeDialog(context, new sendData() {
+                @Override
+                public void send(Object object) {
+                    String tobe=(String) object;
+                    likedd(position, tobe);
+                }
+            });
+            likeDialog.show();
         }
 
         @Override
         public void onLikeClicked(final int position) {
-            Toasta.makeText(context, "like", Toast.LENGTH_SHORT);
+            LikeDialog.playLikeSound(context);
             String liked=model_list_.get(position).getLiked();
             if(liked.equals("0")){
                 likedd(position, Stores.POST_LIKE);

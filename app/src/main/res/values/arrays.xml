@@ -7,6 +7,10 @@
         <item>@string/edit</item>
         <item>@string/action_delete</item>
     </string-array>
+    <string-array name="recip_post">
+        <item>@string/report</item>
+        <item>@string/action_delete</item>
+    </string-array>
     <string-array name="query_suggestions">
         <item>Android</item>
         <item>iOS</item>

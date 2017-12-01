@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
+import com.rilixtech.materialfancybutton.typeface.IIcon;
+import com.rilixtech.materialfancybutton.typeface.ITypeface;
 import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
@@ -81,6 +83,7 @@ public class StatusFragment  extends Fragment {
      Model__3 messages;
     String thisUser="";
     String stry;
+    boolean thisUser_;
 
     public StatusFragment() {
     }
@@ -103,7 +106,6 @@ public class StatusFragment  extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_show__status, container, false);
         context=getContext();
         store=new Stores(context);
-        thisUser=store.getUsername();
 
         Bundle args = getArguments();
          Model__3 users_posts=args.getParcelable(ARG_PARCEL);
@@ -116,6 +118,9 @@ public class StatusFragment  extends Fragment {
 
         setViewsUp();
         String az="@"+ username_;
+
+        thisUser=store.getUsername();
+        thisUser_=username_.equalsIgnoreCase(thisUser);
 
         Piccassa.load(context, user_img_, R.drawable.user_sample, stat_dp);
         stat_username.setText(az);
@@ -193,7 +198,7 @@ public class StatusFragment  extends Fragment {
         stat_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(username_.equalsIgnoreCase(thisUser)){
+                if(thisUser_){
                     String postid = username_;
                     Intent intent = new Intent(context, Converse.class);
                     intent.putExtra(Converse.USERNAME, postid);
@@ -204,15 +209,18 @@ public class StatusFragment  extends Fragment {
             }
         });
 
-        stat_reply.setText(R.string.view_users);
-        stat_reply.setIconResource(getString(R.string.fawi_eye));
+        if(thisUser_){
+            stat_reply.setText(R.string.view_users);
+            stat_reply.setIconResource("\uf06e");
+            stat_reply.setIconResource(getString(R.string.fawi_eye));
+        }
 
         stat_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelTimer();
                 PopupMenu popupMenu=new PopupMenu(context, v);
-                if(username_.equalsIgnoreCase(thisUser)){
+                if(thisUser_){
                     popupMenu.getMenuInflater().inflate(R.menu.menu_status_act, popupMenu.getMenu());
                 }else{
                     popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());

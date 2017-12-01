@@ -1,128 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/swipeRefresh">
-    <android.support.v4.widget.NestedScrollView
-        xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:fancy="http://schemas.android.com/apk/res-auto">
-        <LinearLayout
+        android:paddingTop="@dimen/appbar_padding_topa"
+        android:paddingBottom="@dimen/appbar_padding_topa"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/swipeRefresh">
+        <android.support.v4.widget.NestedScrollView
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/warning"
-                android:id="@+id/warning_"/>
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/c1"
-                app:cardElevation="4dp">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginRight="7dp"
-                    android:layout_marginEnd="7dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginStart="7dp">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:id="@+id/prof_pic"
-                        android:src="@drawable/user_sample"
-                        android:layout_margin="@dimen/mrgin_ppic"
-                        android:layout_centerHorizontal="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textSize="16sp"
-                        android:id="@+id/fullname"
-                        android:layout_below="@id/prof_pic"
-                        android:layout_marginBottom="7dp"
-                        android:textStyle="bold"
-                        android:layout_centerHorizontal="true"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textSize="14sp"
-                        android:textStyle="italic|bold"
-                        android:id="@+id/username"
-                        android:layout_marginBottom="10dp"
-                        android:layout_below="@id/fullname"
-                        android:layout_centerHorizontal="true"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/username"
-                        android:orientation="horizontal"
-                        android:layout_centerHorizontal="true">
-                        <com.rilixtech.materialfancybutton.MaterialFancyButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/frnds"
-                            fancy:mfb_text="@string/elipsize"
-                            style="@style/mat_fancy_profile"/>
-                        <com.rilixtech.materialfancybutton.MaterialFancyButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:id="@+id/prof_msg"
-                            fancy:mfb_text="@string/message"
-                            fancy:mfb_icon="@string/fawi_inbox"
-                            style="@style/mat_fancy_profile"/>
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dp"/>
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="4dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textSize="14sp"
-                        android:ellipsize="end"
-                        android:maxLines="4"
-                        android:id="@+id/bio_content"/>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dp"/>
+            xmlns:fancy="http://schemas.android.com/apk/res-auto">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
-                <FrameLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/cont_framecontent"/>
+                    style="@style/warning"
+                    android:id="@+id/warning_"/>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/c1"
+                    app:cardElevation="4dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginStart="7dp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:id="@+id/prof_pic"
+                            android:src="@drawable/user_sample"
+                            android:layout_margin="@dimen/mrgin_ppic"
+                            android:layout_centerHorizontal="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:id="@+id/fullname"
+                            android:layout_below="@id/prof_pic"
+                            android:layout_marginBottom="7dp"
+                            android:textStyle="bold"
+                            android:layout_centerHorizontal="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@id/fullname"
+                            android:id="@+id/lle"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="italic|bold"
+                                android:id="@+id/username"
+                                android:layout_marginBottom="10dp"/>
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:id="@+id/verified"
+                                android:src="@drawable/verification_badge_bordered"
+                                android:visibility="gone"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginStart="3dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/lle"
+                            android:orientation="horizontal"
+                            android:layout_centerHorizontal="true">
+                            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/frnds"
+                                fancy:mfb_text="@string/elipsize"
+                                style="@style/mat_fancy_profile"/>
+                            <com.rilixtech.materialfancybutton.MaterialFancyButton
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/prof_msg"
+                                fancy:mfb_text="@string/message"
+                                fancy:mfb_icon="@string/fawi_inbox"
+                                style="@style/mat_fancy_profile"/>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"/>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textSize="14sp"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:id="@+id/bio_content"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cont_framecontent"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
+
+</android.support.design.widget.CoordinatorLayout>

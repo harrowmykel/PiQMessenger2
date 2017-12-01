@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical"
+    tools:context="ng.com.coursecode.piqmessenger.Mmenu.Menu_"
+    tools:showIn="@layout/activity_menu_">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/this_user">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/txtButtons_"
+            android:textAlignment="center"
+            android:background="@color/colorAccent"
+            android:id="@+id/edit_post"
+            android:textSize="16sp"
+            android:text="@string/edit"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/txtButtons_"
+            android:textAlignment="center"
+            android:background="@color/colorAccent"
+            android:id="@+id/delete_post"
+            android:textSize="16sp"
+            android:text="@string/action_delete"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/nt_this_user">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/txtButtons_"
+            android:textAlignment="center"
+            android:background="@color/colorAccent"
+            android:id="@+id/action_report"
+            android:textSize="16sp"
+            android:text="@string/report"/>
+    </LinearLayout>
+</LinearLayout>

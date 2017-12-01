@@ -182,6 +182,7 @@ public class ContactLists extends Fragment {
                     status.setImage(image);
                     status.setFrndsData(modelll.getFrndsData());
 
+                    status.setLike(modelll.getLiked());
                     if(!messages.contains(status)){
                         messages.add(status);
                     }

@@ -24,14 +24,12 @@
         android:layout_marginBottom="@dimen/mrgtop"
         android:layout_marginTop="@dimen/mrgtop">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:id="@+id/status_linear"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_marginLeft="@dimen/mrginleft"
             android:layout_marginStart="@dimen/mrginleft"
             android:layout_marginBottom="@dimen/mrgtop"

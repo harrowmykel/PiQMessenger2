@@ -1,9 +1,11 @@
 package ng.com.coursecode.piqmessenger.PostsAct;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,8 +19,10 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
+import ng.com.coursecode.piqmessenger.Dialog_.LikeDialog;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
@@ -34,6 +38,7 @@ import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
 import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
+import ng.com.coursecode.piqmessenger.Statuses.EditPost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +49,7 @@ import static android.view.View.VISIBLE;
 
 public class PostsAct extends AppCompatActivity implements sendData {
 
+    public static final String RECIPIENT = "";
     public static String POSTID="lkresdkltj;kf";
 
     Context context;
@@ -61,6 +67,8 @@ public class PostsAct extends AppCompatActivity implements sendData {
     public ImageView posts_image, posts_fav, posts_msg, posts_more;
     String postid;
     SwipeRefreshLayout swipeRefresh;
+    boolean userIsAuth, userIsRecip, userIsNeither;
+    String thisUser="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +128,11 @@ public class PostsAct extends AppCompatActivity implements sendData {
     }
 
     private void setPostView() {
+        postid=main_post.getId();
+        thisUser=main_post.getUsername();
         posts_subtitle.setText((new TimeModel(context)).getDWM3(main_post.getTime()));
         posts_username.setText(main_post.getFullname());
-        main_post.setAuth_username(main_post.getUsername());
+        main_post.setAuth_username(thisUser);
         posts_text.setText(main_post.getText());
         post_likes.setText(getString(R.string.likes_, main_post.getLikes()));
         String images_= main_post.getUser_image();
@@ -153,11 +163,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
             posts_image.setVisibility(View.GONE);
         }
 
-        if(!(main_post.getLiked()).equals("0")){
-            posts_fav.setImageResource(Stores.getLikeSymbol());
-        }else{
-            posts_fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        }
+        posts_fav.setImageResource(Stores.getLikeImageRes(main_post.getLiked()));
         Piccassa.load(context, images_, R.drawable.user_sample, posts_dp);
         runClicks();
         swipeRefresh.setRefreshing(false);
@@ -167,7 +173,6 @@ public class PostsAct extends AppCompatActivity implements sendData {
         post_likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String postid=main_post.getId();
                 Intent intent=new Intent(context, LikesAct.class);
                 intent.putExtra(PostsAct.POSTID, postid);
                 startActivity(intent);
@@ -183,28 +188,90 @@ public class PostsAct extends AppCompatActivity implements sendData {
         posts_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo do more
+                String username_, username_a;
+                username_=main_post.getUsername();
+                username_a=main_post.getReciv();
+
+                userIsAuth=username_.equalsIgnoreCase(stores.getUsername());
+                userIsRecip=username_a.equalsIgnoreCase(stores.getUsername());
+                userIsNeither=(!userIsAuth && !userIsRecip);
+
+                AlertDialog.Builder alert=new AlertDialog.Builder(context);
+                int NewPost_array=R.array.nt_user_post;
+                if(userIsAuth){
+                    NewPost_array=R.array.user_post;
+                } else if(userIsRecip){
+                    NewPost_array=R.array.user_post;
+                } else {
+                    NewPost_array=R.array.nt_user_post;
+                }
+                if(thisUser.equalsIgnoreCase(stores.getUsername())){
+                    NewPost_array=R.array.user_post;
+                }
+                alert.setItems(NewPost_array, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intentq;
+                        switch(which){
+                            case 0:
+                                if(userIsAuth){
+                                    Intent ontent=new Intent(context, EditPost.class);
+                                    ontent.putExtra(PostsAct.POSTID, postid);
+                                    startActivity(ontent);
+                                }else{
+//                                case R.id.action_report:
+
+                                }
+                                break;
+                            case 1:
+                                if(userIsAuth || userIsRecip){
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                    alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
+                                            .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            delete();
+                                        }
+                                    }).show();
+                                }else{
+                                    //neither
+
+                                }
+                                break;
+                        }
+                    }
+                });
+                alert.show();
             }
         });
         posts_fav.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 //todo postItemClicked.onShowMoreLikeOptions(position);
+                LikeDialog likeDialog=new LikeDialog(context, new sendData() {
+                    @Override
+                    public void send(Object object) {
+                        likeMainPost((String) object);
+                    }
+                });
+                likeDialog.show();
                 return false;
             }
         });
         posts_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String postid=main_post.getAuth_username();
                 Intent intent=new Intent(context, Converse.class);
-                intent.putExtra(Converse.USERNAME, postid);
+                intent.putExtra(Converse.USERNAME, thisUser);
                 startActivity(intent);
             }
         });
         posts_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LikeDialog.playLikeSound(context);
                 if(main_post.getLiked().equals("0")){
                     likeMainPost(Stores.POST_LIKE);
                 }else{
@@ -215,18 +282,16 @@ public class PostsAct extends AppCompatActivity implements sendData {
         posts_username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username=main_post.getAuth_username();
                 Intent intent=new Intent(context, Profile.class);
-                intent.putExtra(Profile.USERNAME, username);
+                intent.putExtra(Profile.USERNAME, thisUser);
                 startActivity(intent);
             }
         });
         posts_dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username=main_post.getAuth_username();
                 Intent intent=new Intent(context, Profile.class);
-                intent.putExtra(Profile.USERNAME, username);
+                intent.putExtra(Profile.USERNAME, thisUser);
                 startActivity(intent);
             }
         });
@@ -236,7 +301,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
         posts_fav.setImageResource(Stores.getLikeImageRes(type));
 
         Retrofit retrofit = ApiClient.getClient();
-        String postid=main_post.getId();
+
         stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
         Call<Model__> call;
@@ -359,4 +424,43 @@ public class PostsAct extends AppCompatActivity implements sendData {
 
         setPostView();
     }
+
+    public void delete(){
+
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call = apiInterface.deletePost(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
+
+                if(modelll.getError()!=null) {
+                    stores.handleError(modelll.getError(), context, serverError);
+                }else if(modelll.getSuccess() !=null){
+                    Toasta.makeText(context, R.string.deleted, Toast.LENGTH_SHORT);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                stores.reportThrowable(t, "postact");
+            }
+        });
+    }
+
+    ServerError serverError=new ServerError() {
+        @Override
+        public void onEmptyArray() {
+
+        }
+
+        @Override
+        public void onShowOtherResult(int res__) {
+        }
+    };
 }

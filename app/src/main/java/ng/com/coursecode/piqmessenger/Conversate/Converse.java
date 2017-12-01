@@ -172,7 +172,7 @@ public class Converse extends AppCompatActivity {
 
     public void sendToServer(){
         String text= materialEditText.getText().toString();
-        String urltoImage=tempUri!=Uri.EMPTY?tempUri.toString():"";
+        String urltoImage=(tempUri!=Uri.EMPTY)?tempUri.toString():"";
 //        privacy
         Messages messages_=new Messages();
         messages_.setImage(urltoImage);

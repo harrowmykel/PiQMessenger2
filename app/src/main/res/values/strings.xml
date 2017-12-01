@@ -136,5 +136,19 @@
     <string name="password">Password</string>
     <string name="gtThan">Must be greater than %1$d</string>
     <string name="inv_user">Invalid Username</string>
+    <string name="title_activity_menu_">Menu</string>
+    <string name="deleted">Deleted</string>
+    <string name="create_a_new_post">Create a new post</string>
+    <string name="write_a_reply">Write a reply...</string>
+    <string name="write_on_profile">Write on \@%1$s\'s profile</string>
+    <string name="edit_post">Edit Post</string>
+    <string name="newpost">New Post</string>
+    <string name="create_status">Create Status</string>
+    <string name="action_like">Like</string>
+    <string name="action_love">Love</string>
+    <string name="action_haha">Haha</string>
+    <string name="action_wow">Wow</string>
+    <string name="action_sad">Sad</string>
+    <string name="action_angry">Angry</string>
 
 </resources>

@@ -26,7 +26,8 @@
             android:name=".HomeSta"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Profile" />
+        <activity android:name=".Profile"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".EditProfile" />
         <activity
             android:name=".Contacts_.StatusAct"
@@ -41,9 +42,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Statuses.CreateStatus"
+            android:label="@string/create_status"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Statuses.CreatePost"
+            android:label="@string/newpost"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Statuses.EditPost"
+            android:label="@string/edit_post"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Groupss.JoinGroups"
@@ -115,12 +122,16 @@
             android:name=".Signin.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/FullAppTheme"/>
+            android:theme="@style/FullAppTheme" />
         <activity
             android:name=".Signin.SignActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/FullAppTheme"/>
+            android:theme="@style/FullAppTheme" />
+        <activity
+            android:name=".Mmenu.Menu_"
+            android:label="@string/title_activity_menu_"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -445,7 +445,6 @@ public class Messages{
 
         for (int i = 0; i < num; i++) {
             cursor.moveToPosition(i);
-            cursor.moveToPosition(i);
             Messages messages = new Messages();
 
             auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));

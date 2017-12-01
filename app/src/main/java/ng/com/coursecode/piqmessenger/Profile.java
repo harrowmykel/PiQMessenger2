@@ -3,11 +3,13 @@ package ng.com.coursecode.piqmessenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,19 +24,25 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
+import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
 import ng.com.coursecode.piqmessenger.Contacts_.ContactLists;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
+import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
+import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.Searches.SearchAct;
+import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
+import ng.com.coursecode.piqmessenger.Statuses.CreateStatus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,6 +70,8 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         context = Profile.this;
         stores = new Stores(context);
         username_ = getIntent().getStringExtra(USERNAME);
@@ -106,7 +116,15 @@ public class Profile extends AppCompatActivity {
         Users_prof users_prof = Users_prof.getInfo(context, username_);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         fullname.setText(users_prof.getFullname());
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, CreatePost.class);
+                intent.putExtra(PostsAct.RECIPIENT, username_);
+                startActivity(intent);
+            }
+        });
         setTitle(users_prof.getFullname());
         loadUp();
     }
@@ -240,10 +258,15 @@ public class Profile extends AppCompatActivity {
                         String friends=user_data.getAuth_data().getFullname();
                         String subtitle=user_data.getSubtitle();
                         final String bioo=user_data.getBio();
+                        boolean verified=user_data.getVerified();
 
                         fullname.setText(fullnames);
                         Piccassa.load(context, image, R.drawable.user_sample, user_dp);
                         bio.setText(bioo);
+
+                        if(verified){
+                            (findViewById(R.id.verified)).setVisibility(View.VISIBLE);
+                        }
 
                         bio.setOnClickListener(new View.OnClickListener() {
                             @Override

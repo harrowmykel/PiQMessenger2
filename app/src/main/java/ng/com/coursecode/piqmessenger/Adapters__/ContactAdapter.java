@@ -66,6 +66,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> {
                 holder.users_frnd.setVisibility(View.VISIBLE);
                 Stores2.setFrndText(holder.users_frnd, messages.getFrndsData(), context);
             }
+            String like=messages.getLike();
+            if(like!=null && !like.isEmpty()){
+                holder.users_like.setImageResource(Stores.getLikeImageRes(like));
+            }
             Piccassa.load(context, messages.image, R.drawable.user_sample, holder.users_dp);
         }
     }
