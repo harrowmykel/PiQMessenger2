@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 

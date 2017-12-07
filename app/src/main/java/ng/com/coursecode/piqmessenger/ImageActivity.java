@@ -10,7 +10,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,7 +23,7 @@ import ng.com.coursecode.piqmessenger.File.CFile;
 import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.R;
 
-public class ImageActivity extends AppCompatActivity implements View.OnClickListener{
+public class ImageActivity extends PiccMaqCompatActivity implements View.OnClickListener{
 
 
     private static final int IMGREQUESTCODE = 234;

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class PostsAct extends AppCompatActivity implements SendDatum {
+public class PostsAct extends PiccMaqCompatActivity implements SendDatum {
 
     public static final String RECIPIENT = "";
     public static String POSTID="lkresdkltj;kf";

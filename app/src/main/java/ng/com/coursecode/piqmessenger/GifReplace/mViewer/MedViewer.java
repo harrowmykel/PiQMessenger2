@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import ng.com.coursecode.piqmessenger.GifReplace.MediaViewer;
 import ng.com.coursecode.piqmessenger.Interfaces.DataPass;
 import ng.com.coursecode.piqmessenger.R;
 
-public class MedViewer extends AppCompatActivity implements DataPass{
+public class MedViewer extends PiccMaqCompatActivity implements DataPass{
 
     public static final String DATA_ = "mndktknkg";
     int position=0;

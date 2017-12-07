@@ -3,7 +3,7 @@ package ng.com.coursecode.piqmessenger.Statuses;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,7 +19,7 @@ import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.R;
 
-public class Show_Status extends AppCompatActivity implements SendDatum {
+public class Show_Status extends PiccMaqCompatActivity implements SendDatum {
 
     public static final String TYPE_ = "HJkwsdjknjkfsj";
     public static final String POSITION = "kejwdasnrfznkfl";

@@ -3,11 +3,12 @@ package ng.com.coursecode.piqmessenger.Mmenu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,13 +20,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Adapters__.ListAdapter_;
 import ng.com.coursecode.piqmessenger.Contacts_.ContactAct;
 import ng.com.coursecode.piqmessenger.EditProfile;
+import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Searches.ConvoSearchAct;
 
-public class Menu_ extends AppCompatActivity {
+public class Menu_ extends PiccMaqCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -92,6 +94,13 @@ public class Menu_ extends AppCompatActivity {
         list3.setLayoutManager(mLayoutManagerseen3);
         list3.setAdapter(adapter_);
 
+        (findViewById(R.id.logout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                (new StartUp(context)).end();
+                checkLogined();
+            }
+        });
     }
 
     public ArrayList<Integer> getIntArrAsString(int[] arr){

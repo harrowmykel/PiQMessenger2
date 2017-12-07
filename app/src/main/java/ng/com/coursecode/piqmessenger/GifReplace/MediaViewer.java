@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +21,7 @@ import java.io.File;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView;
 import ng.com.coursecode.piqmessenger.R;
 
-public class MediaViewer extends AppCompatActivity {
+public class MediaViewer extends PiccMaqCompatActivity {
 
     public static final String DATA__ = "sjbdj";
     public static String DATA_= "jfkdbdjzkfbs";

@@ -54,12 +54,12 @@ public class ListAdapter_ extends RecyclerView.Adapter<ListAdapter_.ListHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ListHolder holder, int position) {
-        posit=position;
-        holder.objectName.setText(context.getString(intArrAsString1.get(posit)));
+    public void onBindViewHolder(final ListHolder holder, int position) {
+        holder.objectName.setText(context.getString(intArrAsString1.get(position)));
         holder.itemView1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        posit=holder.getAdapterPosition();
                         sendDatum_.send(intArrAsString1.get(posit));
                         Toast.makeText(context, ""+context.getString(intArrAsString1.get(posit)), Toast.LENGTH_SHORT).show();
                     }

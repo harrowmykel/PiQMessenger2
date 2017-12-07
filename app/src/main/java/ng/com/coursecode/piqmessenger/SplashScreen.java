@@ -4,7 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 

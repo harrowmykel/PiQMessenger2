@@ -2,7 +2,7 @@ package ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.StaggeredGridView;
 import ng.com.coursecode.piqmessenger.R;
@@ -18,7 +18,7 @@ import ng.com.coursecode.piqmessenger.R;
  * @author Maurycy Wojtowicz
  *
  */
-public class MainActivity_r extends AppCompatActivity {
+public class MainActivity_r extends PiccMaqCompatActivity {
 
 	/**
 	 * Images are taken by Romain Guy ! He's a great photographer as well as a

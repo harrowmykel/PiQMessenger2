@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -20,11 +20,12 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
 
-public class StatusAct extends AppCompatActivity {
+public class StatusAct extends PiccMaqCompatActivity {
 
     public static final String STATUS_CODE = "klznklxklfzdnklnlkxcnclkck";
     private static String contacts="kwrnesk";

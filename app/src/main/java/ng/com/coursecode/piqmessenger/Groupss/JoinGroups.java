@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -26,7 +26,7 @@ import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
 
-public class JoinGroups extends AppCompatActivity {
+public class JoinGroups extends PiccMaqCompatActivity {
 
     FrameLayout frameLayout;
     Toolbar toolbar;

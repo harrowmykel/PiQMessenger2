@@ -62,12 +62,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsViewHolder> {
 
             String image=messages.getImage();
             if(postItemClicked!=null)
-            runListeners(holder, position);
+                runListeners(holder, position);
 
             if(!image.isEmpty()){
                 holder.posts_image.setVisibility(View.VISIBLE);
                 Piccassa.load(context, image, R.drawable.nosong, R.drawable.empty, holder.posts_image, holder.progressBar);
-             }else{
+            }else{
                 holder.posts_image.setVisibility(View.GONE);
                 holder.progressBar.setVisibility(View.GONE);
             }
