@@ -35,16 +35,16 @@ public interface ApiInterface {
     Call<PostsModel> getAllPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String q, @Field("page") String page);
 
     @FormUrlEncoded
+    @POST("posts/index.php?req=fetchdiscover")
+    Call<PostsModel> getAllDiscover(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String q, @Field("page") String page);
+
+    @FormUrlEncoded
     @POST("profile/index.php?req=about")
     Call<Model__> getUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String who);
 
     @FormUrlEncoded
     @POST("posts/index.php?req=userposts")
     Call<PostsModel> getUsersPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("page") String page, @Field("who") String who);
-
-    @FormUrlEncoded
-    @POST("index.php?msg=msg")
-    Call<Model__> getAllDiscover(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("time") String time);
 
     @FormUrlEncoded
     @POST("groups/index.php?req=search")
@@ -140,4 +140,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("posts/index.php?req=fetchthis")
     Call<PostsModel> getThisPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q);
+
+    @FormUrlEncoded
+    @POST("profile/index.php?req=search")
+    Call<Model__> getOnlineFriends(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
 }

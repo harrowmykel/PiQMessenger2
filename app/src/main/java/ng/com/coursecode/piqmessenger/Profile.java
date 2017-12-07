@@ -33,6 +33,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Mmenu.Menu_;
 import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -40,7 +41,6 @@ import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
-import ng.com.coursecode.piqmessenger.Searches.SearchAct;
 import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
 import ng.com.coursecode.piqmessenger.Statuses.CreateStatus;
 import retrofit2.Call;
@@ -131,7 +131,7 @@ public class Profile extends AppCompatActivity {
 
     public void loadUp(){
         // Create a new Fragment to be placed in the activity layout
-        Posts firstFragment = Posts.newInstance(username_, false);
+        Posts firstFragment = Posts.newInstance(username_, false, Posts.PROFILE);
         // In case this activity was started with special instructions from an
         // Intent, pass the Intent's extras to the fragment as arguments
         if (fromSavedState) {
@@ -324,6 +324,8 @@ public class Profile extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.more_:
+                intent=new Intent(context, Menu_.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

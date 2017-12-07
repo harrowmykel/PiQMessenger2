@@ -33,6 +33,7 @@ public class Stores {
     public static final String POST_STORE = "posts/";
     public static final String MSG_STORE = "fkdlnfeskl;nr";
     public static final long WAIT_PERIOD = 200;//for handlers
+    public static final String TYPE_OF_ACTION = "korwedgfgc";
     public static int flingVelX=1;
     public static int flingVelY=2;
     public static boolean flingEdit=true;

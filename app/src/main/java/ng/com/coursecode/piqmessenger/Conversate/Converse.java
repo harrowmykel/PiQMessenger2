@@ -214,6 +214,7 @@ public class Converse extends AppCompatActivity {
             }else{
                 sendToGoogle();
             }
+            finish();
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
         }

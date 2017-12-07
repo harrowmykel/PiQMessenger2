@@ -48,6 +48,9 @@ public class LikesAct extends AppCompatActivity {
 
     private static final String STAV = "hjefasfkjfjk";
     public static final String POST_ID = PostsAct.POSTID;
+    public static final String TYPE_OF_ACTION = Stores.TYPE_OF_ACTION;
+    public static final String ONLINE_FRIENDS = "klwdfdnkmg";//must alwayzs be lowercase
+    public static final String BIRTHDAY = "fkldofkfkfkfk";
     private static String contacts="kwrnefeksj;nfsk";
     private TextView mTextMessage;
     FrameLayout frameLayout;
@@ -66,6 +69,7 @@ public class LikesAct extends AppCompatActivity {
     boolean submitted = false;
     MaterialSearchView searchView;
     public String searchQuery;
+    public String action_type, jumk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,23 @@ public class LikesAct extends AppCompatActivity {
         setSupportActionBar(toolbar);
         frameLayout = (FrameLayout) findViewById(R.id.cont_framecontent);
         status_code = getIntent().getStringExtra(PostsAct.POSTID);
+
+        jumk=getIntent().getStringExtra(TYPE_OF_ACTION);
+        if(jumk!=null){
+            jumk=jumk.toLowerCase();
+            switch (jumk){
+                case ONLINE_FRIENDS:
+                    action_type = ONLINE_FRIENDS;
+                    break;
+                case BIRTHDAY:
+                    action_type = BIRTHDAY;
+                    break;
+                default:
+                    action_type = ContactLists.LIKESACT;
+                    break;
+            }
+        }
+
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -162,7 +183,7 @@ public class LikesAct extends AppCompatActivity {
 
     public void setSearchQuery(String query) {
         searchQuery = query;
-        newFragment = ContactLists.newInstance(false, status_code, query);
+        newFragment = ContactLists.newInstance(false, status_code, query, action_type);
         replaceFrag(newFragment);
     }
 
@@ -194,7 +215,7 @@ public class LikesAct extends AppCompatActivity {
                 if (getIntent().getExtras() != null)
                     args = getIntent().getExtras();
                 // Create a new Fragment to be placed in the activity layout
-                ContactLists firstFragment = ContactLists.newInstance(false, status_code, "");
+                ContactLists firstFragment = ContactLists.newInstance(false, status_code, "", action_type);
                 oldFragment = firstFragment;
                 // In case this activity was started with special instructions from an
                 // Intent, pass the Intent's extras to the fragment as arguments

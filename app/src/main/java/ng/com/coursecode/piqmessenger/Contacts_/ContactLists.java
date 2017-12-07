@@ -46,8 +46,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.github.pwittchen.infinitescroll.library.R.attr.layoutManager;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,6 +55,12 @@ public class ContactLists extends Fragment {
     public static final String DELETE_FRND = "delete_frnd";
     public static final String ACCEPT_FRND = "accept_frnd";
     public static final String SEND_FRND = "send_frnd";
+    private static final String TYPE_OF_ACTION = Stores.TYPE_OF_ACTION;
+    public static final String CONTACTS = "Kldmklm";
+    public static final String LIKESACT = "KLdmkdmk;,md";
+    public static final String STATUSACT = "ld;dlkdkdk";
+    private static final String ONLINES = "hjbkedjffjkxk";
+    private static final String BIRTHDAY = "hjbke";
     View view;
     Context context;
     Stores stores;
@@ -75,7 +79,7 @@ public class ContactLists extends Fragment {
     ContactAdapter statusAdapter;
     LinearLayoutManager mLayoutManager;
     boolean moreCanBeLoaded=true;
-    String status_code="", post_id="";
+    String status_code="", post_id="", what_to_do="";
 
     List<Users_prof> messages;
 
@@ -102,6 +106,7 @@ public class ContactLists extends Fragment {
             location=bundle.getString(Stores.CurrentPage);
             status_code=bundle.getString(StatusAct.STATUS_CODE);
             post_id=bundle.getString(LikesAct.POST_ID);
+            what_to_do=bundle.getString(TYPE_OF_ACTION);
         }
 
         recyclerView.setHasFixedSize(true);
@@ -128,14 +133,26 @@ public class ContactLists extends Fragment {
         toSkip=messages.size();
 
         Call<Model__> call=apiInterface.searchUsers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, location_, ""+page);
-        if(status_code!=null){
-            if(!status_code.isEmpty()){
-                call=apiInterface.searchStatusUsers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, status_code, ""+page);
-            }
-        }else if(post_id!=null){
-            if(!post_id.isEmpty()){
-                call=apiInterface.getLikes(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, post_id, ""+page);
-            }
+        switch (what_to_do){
+            case LIKESACT:
+                if((post_id!=null) && !post_id.isEmpty()){
+                    call=apiInterface.getLikes(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, post_id, ""+page);
+                }
+                break;
+            case STATUSACT:
+                if((status_code!=null) && !status_code.isEmpty()){
+                    call=apiInterface.searchStatusUsers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, status_code, ""+page);
+                }
+                break;
+            case LikesAct.ONLINE_FRIENDS:
+                call=apiInterface.getOnlineFriends(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, ONLINES, ""+page);
+                break;
+            case LikesAct.BIRTHDAY:
+                call=apiInterface.getOnlineFriends(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, BIRTHDAY, ""+page);
+                break;
+            default:
+                call=apiInterface.searchUsers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, location_, ""+page);
+                break;
         }
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -337,23 +354,22 @@ public class ContactLists extends Fragment {
         });
     }
 
-    public static ContactLists newInstance(boolean b, String status_code, String query) {
+    public static ContactLists newInstance(boolean b, String status_code, String query, String type) {
         Bundle bundle = new Bundle();
         bundle.putString(Stores.SearchQuery, query);
-        if(b)
-            bundle.putString(StatusAct.STATUS_CODE, status_code);
-        else
-            bundle.putString(LikesAct.POST_ID, status_code);
-
+        bundle.putString(StatusAct.STATUS_CODE, status_code);
+        bundle.putString(LikesAct.POST_ID, status_code);
+        bundle.putString(TYPE_OF_ACTION, type);
         ContactLists contactLists=new ContactLists();
         contactLists.setArguments(bundle);
         return contactLists;
     }
 
-    public static ContactLists newInstance(String s, String query) {
+    public static ContactLists newInstance(String s, String query, String type) {
         Bundle bundle = new Bundle();
         bundle.putString(Stores.CurrentPage, s);
         bundle.putString(Stores.SearchQuery, query);
+        bundle.putString(TYPE_OF_ACTION, type);
         ContactLists contactLists=new ContactLists();
         contactLists.setArguments(bundle);
         return contactLists;

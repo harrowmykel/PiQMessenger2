@@ -14,6 +14,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
 
+import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.MainActivity;
@@ -34,7 +35,7 @@ import retrofit2.Retrofit;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class SignActivity extends AppCompatActivity {
+public class SignActivity extends FullScreenActivity {
 
     public static final String IS_LOGIN = "jdsndfklns";
     boolean login=false;
@@ -131,16 +132,5 @@ public class SignActivity extends AppCompatActivity {
         Intent intent=new Intent(SignActivity.this, LoginActivity.class);
         intent.putExtra(SignActivity.IS_LOGIN, true);
         startActivity(intent);
-    }
-
-    private void setFullscreen() {
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else {
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
     }
 }

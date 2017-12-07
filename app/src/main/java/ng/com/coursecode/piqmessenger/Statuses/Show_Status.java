@@ -1,12 +1,8 @@
 package ng.com.coursecode.piqmessenger.Statuses;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,12 +15,11 @@ import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.Adapters__.StatusPagerAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
-import ng.com.coursecode.piqmessenger.Interfaces.sendData;
-import ng.com.coursecode.piqmessenger.Model__.Model__2;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.R;
 
-public class Show_Status extends AppCompatActivity implements sendData {
+public class Show_Status extends AppCompatActivity implements SendDatum {
 
     public static final String TYPE_ = "HJkwsdjknjkfsj";
     public static final String POSITION = "kejwdasnrfznkfl";

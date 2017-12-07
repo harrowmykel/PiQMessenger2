@@ -154,7 +154,7 @@ public class ContactAct extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onOptionsMenuClosed(menu);
-        getMenuInflater().inflate(R.menu.menu_contacts_act, menu);
+        getMenuInflater().inflate(R.menu.menu_contacts_act2, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         return true;

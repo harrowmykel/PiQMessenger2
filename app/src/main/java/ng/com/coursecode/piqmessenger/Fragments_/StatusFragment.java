@@ -18,22 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rilixtech.materialfancybutton.MaterialFancyButton;
-import com.rilixtech.materialfancybutton.typeface.IIcon;
-import com.rilixtech.materialfancybutton.typeface.ITypeface;
 import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Contacts_.StatusAct;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -304,9 +301,9 @@ public class StatusFragment  extends Fragment {
     }
 
     private void sendToActivity(String fullscreen) {
-        sendData sendData_=(sendData)context;
-        if(sendData_!=null){
-            sendData_.send(fullscreen);
+        SendDatum sendDatum_ =(SendDatum)context;
+        if(sendDatum_ !=null){
+            sendDatum_.send(fullscreen);
         }
     }
 

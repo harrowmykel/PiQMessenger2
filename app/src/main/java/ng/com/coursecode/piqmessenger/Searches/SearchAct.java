@@ -54,10 +54,10 @@ public class SearchAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         if(getIntent()!=null)
-            currentPage=getIntent().getIntExtra(Stores.CurrentPage, 0);
+            currentPage=getIntent().getIntExtra(Stores.TYPE_OF_ACTION, 0);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        sect=SectionsPagerAdapter.fragmentTitles[currentPage];
+        sect=currentPage;
         toolbar.setTitle(sect);
         context=SearchAct.this;
         frameLayout=(FrameLayout)findViewById(R.id.search_framecontent);
@@ -104,13 +104,11 @@ public class SearchAct extends AppCompatActivity {
         toolbar.setTitle(sect);
         switch (sect){
             case R.string.posts:
-                /*if(query.isEmpty()){
-                    frag= Discover.newInstance(query);
+                if(query.isEmpty()){
+                    frag= Posts.newInstance(query, Posts.DISCOVER);
                 }else{
-                    frag= Posts.newInstance(query);
-                }*/
-
-                frag= Posts.newInstance(query);
+                    frag= Posts.newInstance(query, Posts.SEARCHPOSTS);
+                }
                 break;
             case R.string.chats:
                 frag= Chats.newInstance(query);

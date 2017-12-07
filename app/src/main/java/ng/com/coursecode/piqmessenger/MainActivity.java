@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 intent.putExtra(Stores.CurrentPage, curr);
+                intent.putExtra(Stores.TYPE_OF_ACTION, sect);
                 startActivity(intent);
             }
         });
@@ -131,8 +132,10 @@ public class MainActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_search:
                 int curr=mViewPager.getCurrentItem();
+                int sect=SectionsPagerAdapter.fragmentTitles[curr];
                 intent=new Intent(this, SearchAct.class);
                 intent.putExtra(Stores.CurrentPage, curr);
+                intent.putExtra(Stores.TYPE_OF_ACTION, sect);
                 startActivity(intent);
                 return true;
             case R.id.action_more:

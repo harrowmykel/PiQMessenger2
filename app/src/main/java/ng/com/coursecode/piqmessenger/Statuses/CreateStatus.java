@@ -44,6 +44,7 @@ import java.util.List;
 import br.com.goncalves.pugnotification.notification.PugNotification;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
@@ -61,7 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class CreateStatus extends AppCompatActivity implements View.OnClickListener {
+public class CreateStatus extends FullScreenActivity implements View.OnClickListener {
 
 
     private static final int IMGREQUESTCODE = 234;
@@ -244,16 +245,5 @@ public class CreateStatus extends AppCompatActivity implements View.OnClickListe
             }
         });
         googleUpload.sendToGoogle();
-    }
-
-    private void setFullscreen() {
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else {
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
     }
 }

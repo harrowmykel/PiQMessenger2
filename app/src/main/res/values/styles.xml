@@ -247,6 +247,9 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="headerr" parent="sub_titles">
+        </style>
+
     <style name="previous_post" parent="warning">
         <item name="android:background">@color/colorAccent</item>
         <item name="android:textColor">@color/white</item>
@@ -307,5 +310,23 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
         <!--<item name="android:textAlignment">center</item>-->
+    </style>
+
+    <style name="txtButtons__">
+        <item name="android:paddingRight">7dp</item>
+        <item name="android:paddingLeft">7dp</item><!--
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingEnd">3dp</item>-->
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="mfb_textSize">16sp</item>
+        <item name="mfb_textColor">@color/white</item>
+        <item name="mfb_iconPosition">left</item>
+        <item name="mfb_borderWidth">1dp</item>
+        <!--<item namme="fb_defaultColor">@color/cardview_shadow_end_color</item>-->
+        <item name="mfb_defaultColor">@color/cardview_shadow_start_color</item>
+        <item name="mfb_radius">4dp</item>
+        <item name="mfb_borderColor">#FFF</item>
     </style>
 </resources>

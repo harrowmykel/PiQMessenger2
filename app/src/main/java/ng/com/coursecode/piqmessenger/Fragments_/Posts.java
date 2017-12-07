@@ -3,23 +3,18 @@ package ng.com.coursecode.piqmessenger.Fragments_;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,26 +22,20 @@ import java.util.List;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
-import ng.com.coursecode.piqmessenger.Contacts_.StatusAct;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.Dialog_.LikeDialog;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
-import ng.com.coursecode.piqmessenger.File.CFile;
-import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.Interfaces.PostItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Model__2;
 import ng.com.coursecode.piqmessenger.Model__.Pagination;
-import ng.com.coursecode.piqmessenger.Model__.PostModelParcel;
 import ng.com.coursecode.piqmessenger.Model__.PostsModel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
@@ -64,6 +53,11 @@ import retrofit2.Retrofit;
  */
 
 public class Posts extends Fragment {
+    public static final String REPLIES = "lddlld";
+    public static final String SEARCHPOSTS = "fff";
+    public static final String PROFILE = "dwdd";
+    private static final String TYPE_OF_ACTION = "dddd";
+    public static final String DISCOVER = "ass";
     View view;
     Context context;
     Stores stores;
@@ -86,7 +80,7 @@ public class Posts extends Fragment {
 
     ApiInterface apiInterface;
     PostsAdapter postsAdapter2;
-    String postid;
+    String postid, what_to_do="";
 
     Posts_tab posts_tab_;
     boolean do_once=true;
@@ -108,6 +102,7 @@ public class Posts extends Fragment {
             query = (getArguments().getString(Stores.SearchQuery, ""));
             who = (getArguments().getString(Stores.USERNAME, ""));
             postid = (getArguments().getString(PostsAct.POSTID, ""));
+            what_to_do = (getArguments().getString(TYPE_OF_ACTION, ""));
         }
         loadPostFrag();
         return view;
@@ -166,8 +161,6 @@ public class Posts extends Fragment {
         }
         recommendedrecyclerView.setItemAnimator(new DefaultItemAnimator());
         recommendedrecyclerView.setAdapter(postsAdapter3);
-
-
     }
 
     public void setVLists() {
@@ -183,13 +176,25 @@ public class Posts extends Fragment {
         apiInterface = retrofit.create(ApiInterface.class);
         String where=query;
 
-        Call<PostsModel> call;
-        if(who!=null && !who.isEmpty()){
-            call=apiInterface.getUsersPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
-        }else if(postid!=null && !postid.isEmpty()){
-            call=apiInterface.getPostsReplies(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, ""+page);
-        }else{
-            call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
+        Call<PostsModel> call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
+
+        switch(what_to_do){
+            case PROFILE:
+                if(who!=null && !who.isEmpty()){
+                    call=apiInterface.getUsersPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
+                }
+                break;
+            case REPLIES:
+                if(postid!=null && !postid.isEmpty()){
+                    call=apiInterface.getPostsReplies(stores.getUsername(), stores.getPass(), stores.getApiKey(), postid, ""+page);
+                }
+                break;
+            case DISCOVER:
+                call=apiInterface.getAllDiscover(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
+                break;
+            default:
+                call=apiInterface.getAllPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), where, ""+page);
+                break;
         }
         call.enqueue(new Callback<PostsModel>() {
             @Override
@@ -233,9 +238,9 @@ public class Posts extends Fragment {
         main_post=model_lisj.getMain_post();
 
         if(main_post!=null){
-            sendData sendData=(sendData) context;
-            if(sendData!=null){
-                sendData.send(main_post);
+            SendDatum SendDatum =(SendDatum) context;
+            if(SendDatum !=null){
+                SendDatum.send(main_post);
             }
         }
 
@@ -353,21 +358,20 @@ public class Posts extends Fragment {
         return  new Posts();
     }
 
-    public static Posts newInstance(String query) {
+    public static Posts newInstance(String query, String type) {
         Bundle bundle = new Bundle();
         bundle.putString(Stores.SearchQuery, query);
+        bundle.putString(TYPE_OF_ACTION, type);
         Posts chat=new Posts();
         chat.setArguments(bundle);
         return chat;
     }
 
-    public static Posts newInstance(String query, boolean df) {
+    public static Posts newInstance(String query, boolean df, String type) {
         Bundle bundle = new Bundle();
-        if(df){
-            bundle.putString(PostsAct.POSTID, query);
-        }else{
-            bundle.putString(Stores.USERNAME, query);
-        }
+        bundle.putString(PostsAct.POSTID, query);
+        bundle.putString(Stores.USERNAME, query);
+        bundle.putString(TYPE_OF_ACTION, type);
         Posts chat=new Posts();
         chat.setArguments(bundle);
         return chat;
@@ -467,7 +471,7 @@ public class Posts extends Fragment {
 
         @Override
         public void onShowMoreLikeOptions(final int position) {
-           LikeDialog likeDialog=new LikeDialog(context, new sendData() {
+           LikeDialog likeDialog=new LikeDialog(context, new SendDatum() {
                 @Override
                 public void send(Object object) {
                     String tobe=(String) object;

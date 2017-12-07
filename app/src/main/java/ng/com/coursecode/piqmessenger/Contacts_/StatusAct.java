@@ -134,7 +134,7 @@ public class StatusAct extends AppCompatActivity {
 
     public void setSearchQuery(String query) {
         searchQuery =query;
-        newFragment=ContactLists.newInstance(true, status_code, query);
+        newFragment=ContactLists.newInstance(true, status_code, query, ContactLists.STATUSACT);
         replaceFrag(newFragment);
     }
 
@@ -166,7 +166,7 @@ public class StatusAct extends AppCompatActivity {
                 if(getIntent().getExtras()!=null)
                     args=getIntent().getExtras();
                 // Create a new Fragment to be placed in the activity layout
-                ContactLists firstFragment = ContactLists.newInstance(true, status_code, "");
+                ContactLists firstFragment = ContactLists.newInstance(true, status_code, "", ContactLists.STATUSACT);
                 oldFragment=firstFragment;
                 // In case this activity was started with special instructions from an
                 // Intent, pass the Intent's extras to the fragment as arguments

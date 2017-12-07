@@ -1,52 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
     tools:context="ng.com.coursecode.piqmessenger.Mmenu.Menu_"
     tools:showIn="@layout/activity_menu_">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/this_user">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/txtButtons_"
-            android:textAlignment="center"
-            android:background="@color/colorAccent"
-            android:id="@+id/edit_post"
-            android:textSize="16sp"
-            android:text="@string/edit"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:id="@+id/this_user">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:id="@+id/prof_pic"
+                android:src="@drawable/user_sample"
+                android:layout_margin="@dimen/mrgin_ppic"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:background="@color/colorAccent"
+                android:id="@+id/username"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headerr"/>
+
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/txtButtons_"
-            android:textAlignment="center"
-            android:background="@color/colorAccent"
-            android:id="@+id/delete_post"
-            android:textSize="16sp"
-            android:text="@string/action_delete"/>
+            android:id="@+id/list1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headerr"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headerr"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list3"/>
+
+        <com.rilixtech.materialfancybutton.MaterialFancyButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/txtButtons__"
+            android:background="@color/red500"
+            android:text="@string/log_out"
+
+            android:layout_margin="15dp"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/nt_this_user">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/txtButtons_"
-            android:textAlignment="center"
-            android:background="@color/colorAccent"
-            android:id="@+id/action_report"
-            android:textSize="16sp"
-            android:text="@string/report"/>
-    </LinearLayout>
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

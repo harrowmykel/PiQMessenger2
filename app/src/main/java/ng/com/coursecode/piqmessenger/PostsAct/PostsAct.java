@@ -19,7 +19,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Dialog_.LikeDialog;
@@ -27,7 +26,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.PostModelParcel;
@@ -47,7 +46,7 @@ import retrofit2.Retrofit;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class PostsAct extends AppCompatActivity implements sendData {
+public class PostsAct extends AppCompatActivity implements SendDatum {
 
     public static final String RECIPIENT = "";
     public static String POSTID="lkresdkltj;kf";
@@ -111,7 +110,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
     private void doNetworkCall() {
         swipeRefresh.setRefreshing(true);
         // Create a new Fragment to be placed in the activity layout
-        Posts firstFragment = Posts.newInstance(postid, true);
+        Posts firstFragment = Posts.newInstance(postid, true, Posts.REPLIES);
         // In case this activity was started with special instructions from an
         // Intent, pass the Intent's extras to the fragment as arguments
         if (fromSavedState) {
@@ -250,7 +249,7 @@ public class PostsAct extends AppCompatActivity implements sendData {
             @Override
             public boolean onLongClick(View v) {
                 //todo postItemClicked.onShowMoreLikeOptions(position);
-                LikeDialog likeDialog=new LikeDialog(context, new sendData() {
+                LikeDialog likeDialog=new LikeDialog(context, new SendDatum() {
                     @Override
                     public void send(Object object) {
                         likeMainPost((String) object);

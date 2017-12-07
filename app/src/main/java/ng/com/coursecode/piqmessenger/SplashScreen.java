@@ -18,6 +18,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Random;
 
+import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
@@ -29,7 +30,7 @@ import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import ng.com.coursecode.piqmessenger.Signin.LoginActivity;
 import ng.com.coursecode.piqmessenger.Signin.SignActivity;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreen extends FullScreenActivity {
 
     public static String IS_NT_FIRST_TRIAL="is_first_trial";
     Context context;

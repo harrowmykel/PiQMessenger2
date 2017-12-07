@@ -2,16 +2,9 @@ package ng.com.coursecode.piqmessenger.Dialog_;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Interfaces.sendData;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
 
@@ -21,13 +14,13 @@ import ng.com.coursecode.piqmessenger.R;
 
 public class LikeDialog implements View.OnClickListener{
 
-    sendData sendData;
+    SendDatum SendDatum;
     Context context;
     Dialog dialog;
 
-    public LikeDialog(Context context, sendData sendData_) {
+    public LikeDialog(Context context, SendDatum sendDatum_) {
         this.context=context;
-        sendData = sendData_;
+        SendDatum = sendDatum_;
         dialog=new Dialog(context);
         dialog.setContentView(R.layout.likes);
         View view=dialog.findViewById(R.id.parent_view);
@@ -74,7 +67,7 @@ public class LikeDialog implements View.OnClickListener{
 
     public void joyOut(String postAngry) {
         LikeDialog.playLikeSound(context);
-        sendData.send(postAngry);
+        SendDatum.send(postAngry);
         dialog.dismiss();
     }
 
