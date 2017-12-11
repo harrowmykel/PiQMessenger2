@@ -127,4 +127,5 @@ public class Piccassa {
                 .load(image_to_load)
                 .into(view);
     }
+
 }

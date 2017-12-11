@@ -68,7 +68,7 @@ public class StatusAdapterRecommended extends RecyclerView.Adapter<StatusViewHol
                 Piccassa.loadStatus(context, image_to_load, user_dp, holder.status_dp);
                 int valueInPixels;
 
-                if (users_posts.getSeen()) {
+                if (!users_posts.getSeen()) {
                     holder.status_dp.setBorderColor(ContextCompat.getColor(context, R.color.border_color_));
                     valueInPixels = (int) context.getResources().getDimension(R.dimen.border_width);
                     holder.status_dp.setBorderWidth(valueInPixels);

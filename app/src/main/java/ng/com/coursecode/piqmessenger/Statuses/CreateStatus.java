@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -139,9 +140,35 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
                 counter.setText("" + len);
             }
         });
-        showSelector();
 
         setDefaults();
+    }
+
+    private void showSelector2() {
+        // Find the last picture
+        String[] projection = new String[]{
+                MediaStore.Images.ImageColumns._ID,
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.ImageColumns.DATE_TAKEN,
+                MediaStore.Images.ImageColumns.MIME_TYPE
+        };
+        Cursor cursor = context.getContentResolver()
+                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        if(cursor==null){
+            showSelector();
+        }
+// Put it in the image view
+        if (cursor.moveToFirst()) {
+            String imageLocation = cursor.getString(1);
+            File imageFile = new File(imageLocation);
+            if (imageFile.exists()) {   // TODO: is there a better way to do this?
+                tempUri=Uri.fromFile(imageFile);
+                Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+            }
+        }
+        cursor.close();
     }
 
     private void setDefaults() {
@@ -153,6 +180,7 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
             defaultText=intent.getStringExtra(Intent.EXTRA_TEXT);
             if(uri!=null){
                 defaultImgUrl=uri.toString();
+//                tempUri=
             }
         }else if(!Prefs.getBoolean(LAST_POST_WAS_SENT, false)){
             defaultText= Prefs.getString(LAST_POST, "");
@@ -162,6 +190,8 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
         if(!defaultImgUrl.isEmpty()){
             tempUri=Uri.parse(defaultImgUrl);
             Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+        }else{
+            showSelector2();
         }
     }
 
@@ -258,6 +288,12 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
     }
 
     @Override
+    protected void onStop() {
+        saveUp();
+        super.onStop();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setFullscreen();
@@ -267,6 +303,7 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
             Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
+            Piccassa.load(context, R.drawable.ic_add_black_24dp, img);
         }
     }
 

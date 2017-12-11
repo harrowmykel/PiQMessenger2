@@ -1,7 +1,9 @@
 package ng.com.coursecode.piqmessenger.ExtLib;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -19,6 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import br.com.goncalves.pugnotification.notification.PugNotification;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
+import ng.com.coursecode.piqmessenger.Searches.ConvoSearchAct;
 
 /**
  * Created by harro on 24/11/2017.
@@ -32,6 +35,7 @@ public class GoogleUpload {
     Stores stores;
     String Store_loc;
     GoogleUploadListener googleUploadListener;
+    PendingIntent pendingIntent;
 
     public GoogleUpload() {
 
@@ -45,6 +49,8 @@ public class GoogleUpload {
         tempUri=tempUri1;
         googleUploadListener=googleUploadListener1;
         stores=new Stores(context);
+        Intent intent1=new Intent(context, context.getClass());
+        pendingIntent=PendingIntent.getActivity(context, NOT_INT, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void alert(final int Resid) {
@@ -56,6 +62,7 @@ public class GoogleUpload {
                     .title(Resid)
                     .smallIcon(small_icon)
                     .largeIcon(bitmap)
+                    .click(pendingIntent)
                     .flags(Notification.DEFAULT_ALL)
                     .autoCancel(true)
                     .simple()
@@ -95,6 +102,7 @@ public class GoogleUpload {
                             .title(R.string.uploading_status)
                             .smallIcon(small_icon)
                             .largeIcon(bitmap)
+                            .click(pendingIntent)
                             .progress()
                             .value(progress, 100, false)
                             .build();

@@ -43,14 +43,16 @@
         <activity
             android:name=".Statuses.CreateStatus"
             android:label="@string/create_status"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*"/>
                 <data android:mimeType="text/*"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
@@ -60,11 +62,13 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*"/>
                 <data android:mimeType="text/*"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>

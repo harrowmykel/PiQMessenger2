@@ -111,9 +111,9 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         context=CreatePost.this;
-
-        postid=unNull(getIntent().getStringExtra(PostsAct.POSTID));
-        recipient=unNull(getIntent().getStringExtra(PostsAct.RECIPIENT));
+        intent=getIntent();
+        postid=unNull(intent.getStringExtra(PostsAct.POSTID));
+        recipient=unNull(intent.getStringExtra(PostsAct.RECIPIENT));
 
         stores=new Stores(context);
         POST_FOLDER=stores.getFolderPosts();
@@ -124,14 +124,14 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
         user_prof=(LinearLayout)findViewById(R.id.newpost_user);
         emojiconEditText=(EditText)findViewById(R.id.newpost_edit);
         camera_Post=img=(ImageView)findViewById(R.id.newpost_img_show);
-        TextView fulln=(TextView)findViewById(R.id.crt_fullname);
-        TextView username=(TextView)findViewById(R.id.crt_user);
+//        TextView fulln=(TextView)findViewById(R.id.crt_fullname);
+//        TextView username=(TextView)findViewById(R.id.crt_user);
         ImageView user_dp=(CircleImageView)findViewById(R.id.crt_dp);
         String uiser=stores.getUsername();
         Users_prof users_prof=Users_prof.getInfo(context, uiser);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
-        fulln.setText(users_prof.getFullname());
-        username.setText(uiser);
+//        fulln.setText(users_prof.getFullname());
+//        username.setText(uiser);
 
         counter.setText("" + NUMBER_OF_WORDS);
 
@@ -173,12 +173,6 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
     }
 
     private void setDefaults() {
-        /*
-
-        Prefs.putString(LAST_POST, text);
-        Prefs.putString(LAST_IMG, urltoImage);
-        Prefs.putBoolean(LAST_POST_WAS_SENT, false);
-        */
         String defaultText= "";
         String defaultImgUrl="";
         if(intent!=null) {
@@ -280,6 +274,12 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
                 Toasta.makeText(context, R.string.text_and_image_must_not_be_empty, Toast.LENGTH_SHORT);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        saveUp();
+        super.onStop();
     }
 
     public void sendToGoogle() {
