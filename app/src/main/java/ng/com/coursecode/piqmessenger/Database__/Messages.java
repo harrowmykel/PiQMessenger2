@@ -538,4 +538,16 @@ public class Messages{
         dbHelper.close();
         return msgs+"]";
     }
+
+    public void delete(Context context) {
+            dbHelper = new DB_Aro(context);
+            rdbleDb = dbHelper.getReadableDatabase();
+
+            String selection = null;
+            String[] selectionArgs = null;
+
+            rdbleDb.delete(Stores2.messagesTable,  // The table to query
+                    selection,                                // The columns for the WHERE clause
+                    selectionArgs);
+    }
 }

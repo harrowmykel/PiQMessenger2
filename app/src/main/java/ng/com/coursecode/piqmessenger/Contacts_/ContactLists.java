@@ -58,9 +58,9 @@ public class ContactLists extends Fragment {
     private static final String TYPE_OF_ACTION = Stores.TYPE_OF_ACTION;
     public static final String CONTACTS = "Kldmklm";
     public static final String LIKESACT = "KLdmkdmk;,md";
-    public static final String STATUSACT = "ld;dlkdkdk";
-    private static final String ONLINES = "hjbkedjffjkxk";
-    private static final String BIRTHDAY = "hjbke";
+    public static final String STATUSACT = "lddlkdkdk";
+    private static final String ONLINES = "online";
+    private static final String BIRTHDAY = "birthday";
     View view;
     Context context;
     Stores stores;

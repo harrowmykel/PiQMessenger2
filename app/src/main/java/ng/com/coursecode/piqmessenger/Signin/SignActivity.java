@@ -81,10 +81,10 @@ public class SignActivity extends FullScreenActivity {
             return;
         }
 
-        if(login)
+        if(!login)
             call = apiInterface.createUser(username_, pass, stores.getApiKey(), "");
         else
-            call = apiInterface.createUser(username_, pass, stores.getApiKey(), "djfn");
+            call = apiInterface.checkUser(username_, pass, stores.getApiKey(), "djfn");
 
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -132,5 +132,6 @@ public class SignActivity extends FullScreenActivity {
         Intent intent=new Intent(SignActivity.this, LoginActivity.class);
         intent.putExtra(SignActivity.IS_LOGIN, true);
         startActivity(intent);
+        finish();
     }
 }

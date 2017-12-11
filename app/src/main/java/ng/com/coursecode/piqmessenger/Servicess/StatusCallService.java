@@ -3,6 +3,7 @@ package ng.com.coursecode.piqmessenger.Servicess;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -40,6 +41,9 @@ public class StatusCallService extends Service {
 
     public static final String CHECKUPDATE = "sdjbdfjnjklbsdf";
     public static final String DEL = "Jddkl";
+    public static final String CLEAR = "Jdkkeke";
+    public static final String HAS_VIEWED = "dllsfl";
+    public static final String STATCODES = "kdfdk";
     List<Model__> model_list;
     Stores stores;
 
@@ -49,6 +53,7 @@ public class StatusCallService extends Service {
     String STATCALL="Hbdfnzbjd";
     private FetchMore fetchMore;
     Context context;
+    ArrayList<String> arrayList;
 
     public StatusCallService() {
         super();
@@ -70,6 +75,14 @@ public class StatusCallService extends Service {
         if(intent!=null){
             if(intent.getBooleanExtra(DEL, false)){
                 getAllDeletedMessages();
+            }else if(intent.getBooleanExtra(CLEAR, false)){
+                DeleteAllMessages();
+            }else if(intent.getBooleanExtra(HAS_VIEWED, false)){
+                arrayList=intent.getStringArrayListExtra(STATCODES);
+                if(arrayList==null){
+                    arrayList=new ArrayList<>();
+                }
+                HasViewedAllMessages();
             }else{
                 getAllMessages();
             }
@@ -78,6 +91,59 @@ public class StatusCallService extends Service {
         }
         ans=super.onStartCommand(intent, flags, startId);
         return ans;
+    }
+
+    private void HasViewedAllMessages() {
+        Status_tab messages_=new Status_tab();
+        SQLiteDatabase db=messages_.getDb(context);
+        for (String code:arrayList){
+            messages_.viewed(db, code);
+        }
+        pushAllViewed(messages_, db);
+    }
+
+    private void pushAllViewed(final Status_tab smg, final SQLiteDatabase db) {
+        final ArrayList<String> kl=smg.getOld(db);
+        final String type=smg.mkString(kl);
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Call<Model__> call= apiInterface.saveStatus(stores.getUsername(), stores.getPass(), stores.getApiKey(), type);
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
+
+                if(modelll.getError()!=null) {
+                    stores.handleError(modelll.getError(), context, serverError);
+                }else if(modelll.getSuccess() !=null){
+                    for (String code:arrayList){
+                        smg.sent(db, code);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                stores.reportThrowable(t, "show stat");
+            }
+        });
+    }
+
+    ServerError serverError=new ServerError() {
+        @Override
+        public void onEmptyArray() {
+        }
+
+        @Override
+        public void onShowOtherResult(int res__) {
+        }
+    };
+
+    private void DeleteAllMessages() {
+        Status_tab messages_=new Status_tab();
+        messages_.delete(context);
     }
 
     public void getAllMessages(){

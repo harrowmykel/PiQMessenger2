@@ -60,6 +60,11 @@ public class MessagesCall {
         context.startService(intent);
     }
 
+    public void clear() {
+        intent.putExtra(MessageCallService.CLEAR, "Jnd");
+        context.startService(intent);
+    }
+
 
     private void checkMsg(boolean b) {
         MessagesCall messagesCall=new MessagesCall(context);

@@ -35,6 +35,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -69,6 +70,10 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
     private static final int IMGREQUESTCODE = 234;
     private static final int GALLERYREQUESTCODE = 287;
     private static final int GIFREQUESTCODE = 1233;
+    private static final String LAST_POST_WAS_SENT = "fihfihfi";
+    private static final String LAST_POST = "jdhjfhfjlhlj";
+    private static final String LAST_IMG = "hdfoufhu";
+    private static final String LAST_PRIVACY = "gfkcjbj";
     Context context;
     EditText emojiconEditText;
     ImageView camera_Post;
@@ -96,6 +101,7 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
     boolean isReady=false;
 
     String postid;
+    private int privacyId=R.id.public_p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +169,34 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
         }
         replying.setVisibility(View.VISIBLE);
 
+        setDefaults();
+    }
+
+    private void setDefaults() {
+        /*
+
+        Prefs.putString(LAST_POST, text);
+        Prefs.putString(LAST_IMG, urltoImage);
+        Prefs.putBoolean(LAST_POST_WAS_SENT, false);
+        */
+        String defaultText= "";
+        String defaultImgUrl="";
+        if(intent!=null) {
+            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            defaultText=intent.getStringExtra(Intent.EXTRA_TEXT);
+            if(uri!=null){
+                defaultImgUrl=uri.toString();
+            }
+        }else if(!Prefs.getBoolean(LAST_POST_WAS_SENT, false)){
+            defaultText= Prefs.getString(LAST_POST, "");
+            defaultImgUrl=Prefs.getString(LAST_IMG, "");
+            setToDefault(Prefs.getInt(LAST_PRIVACY, R.id.public_p));
+        }
+        emojiconEditText.setText(defaultText);
+        if(!defaultImgUrl.isEmpty()){
+            tempUri=Uri.parse(defaultImgUrl);
+            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+        }
     }
 
     private String unNull(String stringExtra) {
@@ -216,6 +250,16 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
         return super.onOptionsItemSelected(item);
     }
 
+    public void saveUp(){
+        text=emojiconEditText.getText().toString();
+        String urltoImage=tempUri.toString();
+
+        Prefs.putString(LAST_POST, text);
+        Prefs.putString(LAST_IMG, urltoImage);
+        Prefs.putBoolean(LAST_POST_WAS_SENT, false);
+        Prefs.putInt(LAST_PRIVACY, privacyId);
+    }
+
     public void validateBeforeSend(){
         text=emojiconEditText.getText().toString();
         if(isReady){
@@ -239,6 +283,7 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
     }
 
     public void sendToGoogle() {
+        saveUp();
         GoogleUpload googleUpload=new GoogleUpload(context, Stores.POST_STORE, NOT_INT, small_icon, tempUri, new GoogleUpload.GoogleUploadListener() {
             @Override
             public void onError() {
@@ -255,6 +300,7 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
     }
 
     public void sendToServer(String urltoImage){
+        saveUp();
         text=emojiconEditText.getText().toString();
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
@@ -292,6 +338,7 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
                     });
                 }else if(modelll.getSuccess() !=null){
                     Toasta.makeText(context, R.string.post_sent, Toast.LENGTH_SHORT);
+                    Prefs.putBoolean(LAST_POST_WAS_SENT, true);
                 }
             }
 
@@ -324,22 +371,27 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
                 showSelector();
                 break;
             case R.id.private_p:
-                setToDefault(id);
-                privacy=privacy_private;
-                break;
             case R.id.public_p:
-                setToDefault(id);
-                privacy=privacy_public;
-                break;
             case R.id.friends_p:
                 setToDefault(id);
-                privacy=privacy_friends;
                 break;
         }
     }
 
 
     public void setToDefault(int id){
+        switch (id){
+            case R.id.private_p:
+                privacy=privacy_private;
+                break;
+            case R.id.public_p:
+                privacy=privacy_public;
+                break;
+            case R.id.friends_p:
+                privacy=privacy_friends;
+                break;
+        }
+        privacyId=id;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ((FancyButton)findViewById(R.id.private_p)).setBackgroundColor(getResources().getColor(R.color.cardview_shadow_start_color, getTheme()));
             ((FancyButton)findViewById(R.id.public_p)).setBackgroundColor(getResources().getColor(R.color.cardview_shadow_start_color, getTheme()));

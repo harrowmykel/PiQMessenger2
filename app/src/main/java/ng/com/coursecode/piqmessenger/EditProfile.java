@@ -75,6 +75,7 @@ public class EditProfile extends PiccMaqCompatActivity {
     private int small_icon=R.drawable.profile_add_photo;
     private String POST_FOLDER;//="solder/";
     boolean isReady=false;
+    private boolean isLoaded=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class EditProfile extends PiccMaqCompatActivity {
                         fullname.setText(fullnames);
                         Piccassa.load(context, image, R.drawable.user_sample, user_dp);
                         bio.setText(bioo);
+                        isLoaded=true;
                     }
                 }
             }
@@ -185,10 +187,18 @@ public class EditProfile extends PiccMaqCompatActivity {
     }
 
     private void validateBeforeSend() {
-        if(tempUri!=Uri.EMPTY && !stores.isExtUrl(tempUri.toString())){
-            sendToGoogle();
+        if(isLoaded){
+            if(tempUri!=Uri.EMPTY && !stores.isExtUrl(tempUri.toString())){
+                sendToGoogle();
+            }else{
+                if(tempUri!=Uri.EMPTY && stores.isExtUrl(tempUri.toString())){
+                    sendToServer(tempUri.toString());
+                }else{
+                    sendToServer("");
+                }
+            }
         }else{
-            sendToServer("");
+            Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
         }
     }
 

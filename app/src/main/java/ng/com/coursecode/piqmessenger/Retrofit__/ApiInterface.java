@@ -58,6 +58,10 @@ public interface ApiInterface {
     @POST("status/index.php?req=getallviewers")
     Call<Model__> searchStatusUsers(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("status_code") String status_code, @Field("page") String page);
 
+    @FormUrlEncoded
+    @POST("status/index.php?req=viewstat")
+    Call<Model__> saveStatus(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("status_code") String status_code);
+
     @GET("search?as=wq")
     Call<Gif__> searchGifs(@Query("q") String search, @Query("key") String key,  @Query("pos") String pos,  @Query("limit") String limit,  @Query("safesearch") String safesearch);
 
@@ -138,10 +142,15 @@ public interface ApiInterface {
     Call<Model__> createUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("check") String postid);
 
     @FormUrlEncoded
+    @POST("profile/index.php?req=checkuser")
+    Call<Model__> checkUser(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("check") String postid);
+
+    @FormUrlEncoded
     @POST("posts/index.php?req=fetchthis")
     Call<PostsModel> getThisPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q);
 
     @FormUrlEncoded
-    @POST("profile/index.php?req=search")
+    @POST("profile/index.php?req=searchonline")
     Call<Model__> getOnlineFriends(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
+
 }

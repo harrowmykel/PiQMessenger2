@@ -159,5 +159,10 @@
     <string name="create_avatar">Create Avatar</string>
     <string name="log_out">Log Out</string>
     <string name="birthday_celebrants">Birthday Celebrant</string>
+    <string name="log_out_sure">This will log you out.</string>
+    <string name="home">Home</string>
+    <string name="more_option">More options</string>
+    <string name="spend_time">Spend time</string>
+    <string name="favourites">Favourites</string>
 
 </resources>

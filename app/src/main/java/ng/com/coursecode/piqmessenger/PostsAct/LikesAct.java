@@ -49,8 +49,9 @@ public class LikesAct extends PiccMaqCompatActivity {
     private static final String STAV = "hjefasfkjfjk";
     public static final String POST_ID = PostsAct.POSTID;
     public static final String TYPE_OF_ACTION = Stores.TYPE_OF_ACTION;
-    public static final String ONLINE_FRIENDS = "klwdfdnkmg";//must alwayzs be lowercase
-    public static final String BIRTHDAY = "fkldofkfkfkfk";
+    public static final String ONLINE_FRIENDS = "online";//must alwayzs be lowercase
+    public static final String BIRTHDAY = "birthday";
+    public static final String VIEWSTATUS = ContactLists.STATUSACT;
     private static String contacts="kwrnefeksj;nfsk";
     private TextView mTextMessage;
     FrameLayout frameLayout;
@@ -69,7 +70,7 @@ public class LikesAct extends PiccMaqCompatActivity {
     boolean submitted = false;
     MaterialSearchView searchView;
     public String searchQuery;
-    public String action_type, jumk;
+    public String action_type, jumk, cc_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +81,23 @@ public class LikesAct extends PiccMaqCompatActivity {
         frameLayout = (FrameLayout) findViewById(R.id.cont_framecontent);
         status_code = getIntent().getStringExtra(PostsAct.POSTID);
 
+        action_type = ContactLists.LIKESACT;
         jumk=getIntent().getStringExtra(TYPE_OF_ACTION);
+        cc_title=getString(R.string.likes);
         if(jumk!=null){
             jumk=jumk.toLowerCase();
             switch (jumk){
                 case ONLINE_FRIENDS:
                     action_type = ONLINE_FRIENDS;
+                    cc_title=getString(R.string.online_friends);
                     break;
                 case BIRTHDAY:
                     action_type = BIRTHDAY;
+                    cc_title=getString(R.string.birthday_celebrants);
+                    break;
+                case VIEWSTATUS:
+                    action_type = VIEWSTATUS;
+                    cc_title=getString(R.string.view_users);
                     break;
                 default:
                     action_type = ContactLists.LIKESACT;
@@ -143,6 +152,7 @@ public class LikesAct extends PiccMaqCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         startFragmentTransactions();
+        setTitle(cc_title);
     }
 
 

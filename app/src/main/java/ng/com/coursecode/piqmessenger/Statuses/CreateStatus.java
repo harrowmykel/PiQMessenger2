@@ -36,6 +36,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -68,6 +69,9 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
     private static final int IMGREQUESTCODE = 234;
     private static final int GALLERYREQUESTCODE = 287;
     private static final int GIFREQUESTCODE = 2345;
+    private static final String LAST_POST_WAS_SENT = "fidfshfihfi";
+    private static final String LAST_POST = "jdhjfhfddjlhlj";
+    private static final String LAST_IMG = "hdfouddsfhu";
     Context context;
     EditText emojiconEditText;
     ImageView camera_Post;
@@ -136,9 +140,43 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
             }
         });
         showSelector();
+
+        setDefaults();
+    }
+
+    private void setDefaults() {
+        intent=getIntent();
+        String defaultText= "";
+        String defaultImgUrl="";
+        if(intent!=null) {
+            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            defaultText=intent.getStringExtra(Intent.EXTRA_TEXT);
+            if(uri!=null){
+                defaultImgUrl=uri.toString();
+            }
+        }else if(!Prefs.getBoolean(LAST_POST_WAS_SENT, false)){
+            defaultText= Prefs.getString(LAST_POST, "");
+            defaultImgUrl=Prefs.getString(LAST_IMG, "");
+        }
+        emojiconEditText.setText(defaultText);
+        if(!defaultImgUrl.isEmpty()){
+            tempUri=Uri.parse(defaultImgUrl);
+            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+        }
+    }
+
+
+    public void saveUp(){
+        text=emojiconEditText.getText().toString();
+        String urltoImage=tempUri.toString();
+
+        Prefs.putString(LAST_POST, text);
+        Prefs.putString(LAST_IMG, urltoImage);
+        Prefs.putBoolean(LAST_POST_WAS_SENT, false);
     }
 
     public void sendToServer(String urltoImage){
+        saveUp();
         text=emojiconEditText.getText().toString();
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
@@ -170,6 +208,7 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
                     });
                 }else if(modelll.getSuccess() !=null){
                     Toasta.makeText(context, R.string.post_sent, Toast.LENGTH_SHORT);
+                    Prefs.putBoolean(LAST_POST_WAS_SENT, true);
                 }
             }
 
@@ -232,6 +271,7 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
     }
 
     public void sendToGoogle() {
+        saveUp();
         GoogleUpload googleUpload=new GoogleUpload(context, Stores.STATUS_STORE, NOT_INT, small_icon, tempUri, new GoogleUpload.GoogleUploadListener() {
             @Override
             public void onError() {

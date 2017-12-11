@@ -29,7 +29,7 @@ public class PiccMaqCompatActivity extends AppCompatActivity {
     }
 
     public void checkLogined(){
-        if(StartUp.isLogined(this)){
+        if(!StartUp.isLogined(this)){
             startActivity(new Intent(this, SplashScreen.class));
             finish();
         }

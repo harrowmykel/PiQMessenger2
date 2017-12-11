@@ -25,4 +25,5 @@
     <dimen name="descSize_msg">13sp</dimen>
     <dimen name="headsize_msg_date">12sp</dimen>
     <dimen name="appbar_padding_topa">2dp</dimen>
+    <dimen name="mrginleft_">10dp</dimen>
 </resources>

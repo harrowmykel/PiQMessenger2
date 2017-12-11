@@ -143,7 +143,7 @@ public class MainActivity extends PiccMaqCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_people:
-                startActivity(new Intent(context, ContactAct.class));
+                startActivity(new Intent(context, Profile.class));
                  return true;
         }
 

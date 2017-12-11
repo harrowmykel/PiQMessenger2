@@ -3,7 +3,13 @@ package ng.com.coursecode.piqmessenger.Statuses;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
+import android.support.v7.app.AppCompatActivity;
+
+import icepick.Icepick;
+import icepick.State;
+import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
+import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,14 +18,25 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Adapters__.StatusPagerAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
+import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
+import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
 import ng.com.coursecode.piqmessenger.R;
+import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
+import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
-public class Show_Status extends PiccMaqCompatActivity implements SendDatum {
+public class Show_Status extends FullScreenActivity implements SendDatum {
 
     public static final String TYPE_ = "HJkwsdjknjkfsj";
     public static final String POSITION = "kejwdasnrfznkfl";
@@ -45,13 +62,28 @@ public class Show_Status extends PiccMaqCompatActivity implements SendDatum {
     String type_= Status_tab.SEEN;
     int position_=0;
     Context context;
+Stores stores;
+
+    @State
+    ArrayList<String> sent_updates;
+    @State
+    ArrayList<String> unsent_updates; // This will be automatically saved and restored
+
+    ArrayList<String> all_updates;
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setFullscreen();
         setContentView(R.layout.activity_show__status);
         context=Show_Status.this;
+        stores=new Stores(context);
         Intent intent=getIntent();
         if(intent!=null){
             data=intent.getParcelableArrayListExtra(DATA_);
@@ -92,17 +124,33 @@ public class Show_Status extends PiccMaqCompatActivity implements SendDatum {
             setFullscreen();
         }else if(obj.equalsIgnoreCase(FINISH_)){
             finir();
+        }else{
+            //status code
+            if(sent_updates==null){
+                sent_updates=new ArrayList<>();
+            }
+            if(unsent_updates==null){
+                unsent_updates=new ArrayList<>();
+            }
+            if(all_updates==null){
+                all_updates=new ArrayList<>();
+            }
+
+            if(!sent_updates.contains(obj)){
+                sendToServer(obj);
+            }
         }
     }
 
-    private void setFullscreen() {
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else {
-            View decorView = getWindow().getDecorView();
-            // Hide the status bar.
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
+    public void sendToServer(final String type){
+        unsent_updates.add(type);
+        all_updates.add(type);
+    }
+
+    @Override
+    protected void onStop() {
+        StatusCall statusCall=new StatusCall(context);
+        statusCall.hasViewed(all_updates);
+        super.onStop();
     }
 }

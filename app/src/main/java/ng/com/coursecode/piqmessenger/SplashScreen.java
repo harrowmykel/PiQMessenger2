@@ -56,7 +56,7 @@ public class SplashScreen extends FullScreenActivity {
 
     public void reqPerm(){
         String[] perms = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, perms, new PermissionsResultAction() {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
 
             @Override
             public void onGranted() {

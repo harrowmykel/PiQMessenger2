@@ -34,6 +34,8 @@ import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
+import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
@@ -80,7 +82,7 @@ public class StatusFragment  extends Fragment {
      Model__3 messages;
     String thisUser="";
     String stry;
-    boolean thisUser_;
+    boolean thisUser_=false;
 
     public StatusFragment() {
     }
@@ -112,12 +114,12 @@ public class StatusFragment  extends Fragment {
         user_img_=users_posts.getUser_img();
 
         status_tabs=users_posts.getStatData();
-
-        setViewsUp();
         String az="@"+ username_;
 
         thisUser=store.getUsername();
         thisUser_=username_.equalsIgnoreCase(thisUser);
+
+        setViewsUp();
 
         Piccassa.load(context, user_img_, R.drawable.user_sample, stat_dp);
         stat_username.setText(az);
@@ -196,12 +198,12 @@ public class StatusFragment  extends Fragment {
             @Override
             public void onClick(View v) {
                 if(thisUser_){
+                    goToViewUsers();
+                }else{
                     String postid = username_;
                     Intent intent = new Intent(context, Converse.class);
                     intent.putExtra(Converse.USERNAME, postid);
                     startActivity(intent);
-                }else{
-                    goToViewUsers();
                 }
             }
         });
@@ -259,8 +261,10 @@ public class StatusFragment  extends Fragment {
     }
 
     private void goToViewUsers() {
-        Intent intent=new Intent(context, StatusAct.class);
+        Intent intent=new Intent(context, LikesAct.class);
         intent.putExtra(StatusAct.STATUS_CODE, status_code);
+        intent.putExtra(PostsAct.POSTID, status_code);
+        intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.VIEWSTATUS);
         startActivity(intent);
     }
 
@@ -335,6 +339,7 @@ public class StatusFragment  extends Fragment {
                         img_ring.setVisibility(View.GONE);
                         startTimer();
                         imgLoaded=true;
+                        sendToActivity(status_code);
                     }
 
                     @Override

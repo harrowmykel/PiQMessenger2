@@ -49,14 +49,12 @@
             android:textSize="@dimen/headsize"
             android:textStyle="bold"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:text="TextView" />
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/convo_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textSize="@dimen/descSize"
             android:ellipsize="end"
             android:maxLines="1"/>
@@ -74,17 +72,20 @@
             android:layout_marginRight="12dp"
             android:textSize="12sp"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/app_name"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dark_divider_color"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginTop="8dp"/>
+            android:maxLines="1"/>
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dark_divider_color"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/convo_dp"
+        android:layout_toRightOf="@+id/convo_dp"
+        android:layout_toEndOf="@+id/convo_dp"
+        android:layout_alignRight="@+id/convo_dp"
+        android:layout_alignEnd="@+id/convo_dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="8dp"/>
 </RelativeLayout>

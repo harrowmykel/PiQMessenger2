@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
+import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 
@@ -45,7 +46,7 @@ public class Status_tab {
     }
 
     public Status_tab(String user_name, String status_id,
-                       String time, String text, String image, String seen){
+                      String time, String text, String image, String seen){
         setUser_name(user_name);
         setStatus_id(status_id);
         setTime(time);
@@ -67,6 +68,7 @@ public class Status_tab {
             contentValues.put(Stores2.text, getText());
             contentValues.put(Stores2.image, getImage());
             contentValues.put(Stores2.seen, getSeen());
+            contentValues.put(Stores2.sent, "0");
             contentValues.put(Stores2.fav, getFav());
 
             String toFind=Stores2.status_id + " = ?";
@@ -83,7 +85,8 @@ public class Status_tab {
             );
             if (result != null && result.getCount() > 0) {
                 String[] sf=sArray;
-                wrtable.update(sTable, contentValues, toFind, sf);
+                //no need to update
+//                wrtable.update(sTable, contentValues, toFind, sf);
                 result.close();
             }else{
                 wrtable.insert(sTable, null, contentValues);
@@ -331,7 +334,94 @@ public class Status_tab {
         String[] selectionArgs = {string__};
 
         rdbleDb.delete(Stores2.statusTable,  // The table to query
-               selection,                                // The columns for the WHERE clause
+                selection,                                // The columns for the WHERE clause
                 selectionArgs);
+    }
+
+    public void viewed(SQLiteDatabase rdbleDb, String string__) {
+
+        String selection = Stores2.status_id + " = ?";
+        String[] selectionArgs = {string__};
+
+        contentValues = new ContentValues();
+        contentValues.put(Stores2.seen, "1");
+
+        rdbleDb.update(Stores2.statusTable, contentValues, selection, selectionArgs);
+    }
+
+    public void delete(Context context_) {
+        context = context_;
+        dbHelper = new DB_Aro(context);
+        rdbleDb = dbHelper.getReadableDatabase();
+
+        String selection = null;
+        String[] selectionArgs = null;
+
+        rdbleDb.delete(Stores2.statusTable,  // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
+    }
+
+    public SQLiteDatabase getDb(Context context_) {
+        context = context_;
+        dbHelper = new DB_Aro(context);
+        rdbleDb = dbHelper.getWritableDatabase();
+        return rdbleDb;
+    }
+
+    public ArrayList<String> getOld(SQLiteDatabase rdbleDb) {
+        ArrayList<String> strings=new ArrayList<>();
+        Stores store=new Stores(context);
+
+        String[] projection = {Stores2.status_id};
+
+        String selection = Stores2.seen + " = ? AND "+Stores2.sent + " = ? ";
+        String[] selectionArgs = {"1", "0"};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.time_db + " ASC ";
+
+        cursor = rdbleDb.query(Stores2.statusTable,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder);
+
+        int num = cursor.getCount();
+
+        for (int i = 0; i < num; i++) {
+            cursor.moveToPosition(i);
+
+            String auth = cursor.getString(cursor.getColumnIndex(Stores2.status_id));
+            strings.add(auth);
+        }
+        cursor.close();
+        return strings;
+    }
+
+    public String mkString(ArrayList<String> kl) {
+        String msgs = "[";
+        int num = kl.size();//.getCount();
+
+        for (int i = 0; i < num; i++) {
+            if(i!=0){
+                msgs+=", ";
+            }
+            String auth = kl.get(i);
+            msgs+="{'status_code':'"+auth+"'}";
+        }
+        return msgs+"]";
+    }
+
+    public void sent(SQLiteDatabase rdbleDb, String string__) {
+        String selection = Stores2.status_id + " = ?";
+        String[] selectionArgs = {string__};
+
+        contentValues = new ContentValues();
+        contentValues.put(Stores2.sent, "1");
+
+        rdbleDb.update(Stores2.statusTable, contentValues, selection, selectionArgs);
     }
 }

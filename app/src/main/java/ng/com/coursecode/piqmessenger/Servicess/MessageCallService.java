@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Database__.Messages;
+import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
@@ -38,6 +39,7 @@ import retrofit2.Retrofit;
 public class MessageCallService extends Service {
     public static final String CHECKUPDATE = "fd,bkjfdkfbhfsjkbhskb vjhknb";
     public static final String SEND_NEW = "jdklnksnd";
+    public static final String CLEAR = "d.nkne";
     Context context;
     List<Model__> model_list;
     Stores stores;
@@ -69,6 +71,11 @@ public class MessageCallService extends Service {
             if(intent.getStringExtra(SEND_NEW)!=null){
                 if(!intent.getStringExtra(SEND_NEW).isEmpty()){
                     joshua=intent.getStringExtra(SEND_NEW);
+                }
+            }
+            if(intent.getStringExtra(CLEAR)!=null){
+                if(!intent.getStringExtra(CLEAR).isEmpty()){
+                    DeleteAllMessages();
                 }
             }
         }
@@ -130,6 +137,11 @@ public void sendAllMessages(){
     });
 
 }
+
+    private void DeleteAllMessages() {
+        Messages messages_=new Messages();
+        messages_.delete(context);
+    }
 
     public void getAllMessages(){
         Prefs.putBoolean(CHECKUPDATE, true);

@@ -133,10 +133,14 @@ public class Status extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            if(!requestCreate)
+            Toast.makeText(context, "recvd", Toast.LENGTH_SHORT).show();
+            if(!requestCreate) {
                 setOLists();
-            else
+                Toast.makeText(context, "olist", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "rlist", Toast.LENGTH_SHORT).show();
                 setLists();
+            }
         }
     };
 

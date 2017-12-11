@@ -318,11 +318,11 @@ public class Profile extends PiccMaqCompatActivity {
                 intent=new Intent(context, Profile.class);
                 intent.putExtra(Profile.USERNAME, username);
                 startActivity(intent);
-                break;
+                break;/*;
             case R.id.edit_profile:
                 intent=new Intent(context, EditProfile.class);
                 startActivity(intent);
-                break;
+                break;*/
             case R.id.more_:
                 intent=new Intent(context, Menu_.class);
                 startActivity(intent);

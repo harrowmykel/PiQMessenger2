@@ -7,7 +7,11 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
+import android.support.v7.app.AppCompatActivity;
+
+import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
+import ng.com.coursecode.piqmessenger.Contacts_.ContactAct;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -135,6 +139,24 @@ public class ConvoSearchAct extends PiccMaqCompatActivity {
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        Intent intent;//Intent intent;
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_people:
+                intent = new Intent(this, ContactAct.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
     }
 
     public void setSearchQuery(String query) {

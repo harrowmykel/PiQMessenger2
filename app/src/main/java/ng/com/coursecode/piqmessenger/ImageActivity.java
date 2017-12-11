@@ -77,7 +77,6 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
     }
 
     private void showSelector() {
-        tempUri= CFile.getTempUri(CFile.IMG_DIR);
         AlertDialog.Builder alert=new AlertDialog.Builder(context);
         alert.setItems(R.array.NewPost_array, new DialogInterface.OnClickListener() {
             @Override
@@ -85,6 +84,7 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
                 Intent intentq;
                 switch(which){
                     case 0:
+                        tempUri= CFile.getTempUri(CFile.IMG_DIR);
                         CFile.setUp();
                         intentq=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         intentq.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
