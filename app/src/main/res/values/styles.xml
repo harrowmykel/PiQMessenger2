@@ -247,8 +247,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="headerr" parent="sub_titles">
-        </style>
+    <style name="headerr" parent="sub_titles"></style>
 
     <style name="previous_post" parent="warning">
         <item name="android:background">@color/colorAccent</item>

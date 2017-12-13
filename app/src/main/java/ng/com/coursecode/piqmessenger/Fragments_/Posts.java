@@ -58,6 +58,7 @@ public class Posts extends Fragment {
     public static final String PROFILE = "dwdd";
     private static final String TYPE_OF_ACTION = "dddd";
     public static final String DISCOVER = "ass";
+    public static final String GROUPS = "kenflknf";
     View view;
     Context context;
     Stores stores;
@@ -182,6 +183,11 @@ public class Posts extends Fragment {
             case PROFILE:
                 if(who!=null && !who.isEmpty()){
                     call=apiInterface.getUsersPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
+                }
+                break;
+            case GROUPS:
+                if(who!=null && !who.isEmpty()){
+                    call=apiInterface.getGroupsPosts(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page, who);
                 }
                 break;
             case REPLIES:

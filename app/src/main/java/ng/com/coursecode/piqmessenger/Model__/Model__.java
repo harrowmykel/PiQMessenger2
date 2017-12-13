@@ -191,6 +191,10 @@ public class Model__ {
     @Expose
     private FrndsData frndsData;
 
+    @SerializedName("online")
+    @Expose
+    private String online;
+
     public FrndsData getFrndsData() {
         return frndsData;
     }
@@ -256,7 +260,7 @@ public class Model__ {
     }
 
     public String getConfirm() {
-        return confirm;
+        return (confirm==null)?"0":confirm;
     }
 
     public void setConfirm(String confirm) {
@@ -671,6 +675,13 @@ public class Model__ {
         this.verified = reply_to;
     }
 
+    public void setOnline(String online) {
+        this.online = online;
+    }
+
+    public String getOnline() {
+        return (online==null)?"0":online;
+    }
 
 
 }

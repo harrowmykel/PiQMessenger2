@@ -36,7 +36,7 @@ public class Users_prof implements Parcelable {
 
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
-    DB_Aro dbHelper;
+    //DB_Aro dbHelper;
     Context context;
     Cursor cursor;
 
@@ -53,8 +53,7 @@ public class Users_prof implements Parcelable {
     public boolean save(Context context1){
         context=context1;
         if(context!=null){
-            dbHelper=new DB_Aro(getContext());
-            wrtable = dbHelper.getWritableDatabase();
+            wrtable = DB_Aro.getWDb(context);
             contentValues=new ContentValues();
             contentValues.put(Stores2.user_name, getUser_name().toLowerCase());
             contentValues.put(Stores2.image, getImage());
@@ -92,8 +91,8 @@ public class Users_prof implements Parcelable {
 
     public List<Users_prof> listAll(Context context_){
         context=context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         List<Users_prof> msgs=new ArrayList<>();
 
         String[] projection = {Stores2.user_name,
@@ -137,13 +136,13 @@ public class Users_prof implements Parcelable {
 
     public static String getFullname(Context context_, String username){
         SQLiteDatabase rdbleDb;
-        DB_Aro dbHelper;
+        //DB_Aro dbHelper;
         Context context;
 
         String fname=username=username.toLowerCase();
         context=context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String[] projection = {Stores2.user_name,
                 Stores2.fullname};
@@ -179,8 +178,8 @@ public class Users_prof implements Parcelable {
     public String getFullname(String username){
 
         String fname=username=username.toLowerCase();
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String[] projection = {Stores2.user_name,
                 Stores2.fullname};
@@ -208,7 +207,7 @@ public class Users_prof implements Parcelable {
             fname=cursor1.getString(cursor1.getColumnIndex(Stores2.fullname));
         }
         cursor1.close();
-        dbHelper.close();
+        //dbHelper.close();
         rdbleDb.close();
         return fname;
     }
@@ -306,15 +305,15 @@ public class Users_prof implements Parcelable {
     public static Users_prof getInfo(Context context_, String username) {
         Users_prof users_prof=new Users_prof();
         SQLiteDatabase rdbleDb;
-        DB_Aro dbHelper;
+        //DB_Aro dbHelper;
         Context context;
 
         String fname=username=username.toLowerCase();
         String img_loc=Stores.imgDefault;
         context=context_;
 
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String[] projection = {Stores2.user_name,
                 Stores2.fullname,
@@ -346,7 +345,7 @@ public class Users_prof implements Parcelable {
         cursor1.close();
         users_prof.setFullname(fname);
         users_prof.setImage(img_loc);
-        dbHelper.close();
+        //dbHelper.close();
         rdbleDb.close();
         return users_prof;
     }

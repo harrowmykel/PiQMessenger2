@@ -48,7 +48,6 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:textSize="18sp"
-            android:text="shanraisshan"
             android:textStyle="bold" />
 
         <TextView
@@ -59,7 +58,6 @@
             android:layout_marginStart="6dp"
             android:layout_weight="0.4"
             android:ellipsize="end"
-            android:text="last seen 1 hour ago"
             android:maxLines="1"
             android:textSize="15sp" />
 

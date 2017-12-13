@@ -30,9 +30,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.goncalves.pugnotification.notification.PugNotification;
@@ -52,6 +54,7 @@ import ng.com.coursecode.piqmessenger.Interfaces.ConvoInterface;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.Profile;
@@ -81,6 +84,10 @@ public class Converse extends PiccMaqCompatActivity {
     RecyclerView recyclerView;
     Stores stores;
     MaterialEditText materialEditText;
+    TextView username_,subtitle;
+    ImageView user_dp;
+
+    Model__ user_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +104,9 @@ public class Converse extends PiccMaqCompatActivity {
         recipient=username=getIntent().getStringExtra(USERNAME);
         username=(username==null)?"":username;
 
-        TextView username_=(TextView)findViewById(R.id.action_bar_title);
-        ImageView user_dp=(CircleImageView)findViewById(R.id.crt_dp);
+        username_=(TextView)findViewById(R.id.action_bar_title);
+        subtitle=(TextView)findViewById(R.id.action_bar_subtitle);
+        user_dp=(CircleImageView)findViewById(R.id.crt_dp);
         materialEditText=(MaterialEditText)findViewById(R.id.msg_edit);
         user_dp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,13 +134,16 @@ public class Converse extends PiccMaqCompatActivity {
         Users_prof users_prof=Users_prof.getInfo(context, username);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         username_.setText(users_prof.getFullname());
+        subtitle.setText(R.string.offline);
 
         startInit();
+        setUpProfile();
     }
 
     private void startInit() {
         Messages messages = new Messages();
         messages_list = messages.listAllFromUser(context, username);
+        Collections.reverse(messages_list);
 
         ConvoActAdapter convoActAdapter=new ConvoActAdapter(messages_list, context, new ConvoInterface() {
             @Override
@@ -156,6 +167,7 @@ public class Converse extends PiccMaqCompatActivity {
         recyclerView.addOnScrollListener(createInfiniteScrollListener());
         recyclerView.setAdapter(convoActAdapter);
         convoActAdapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition((messages_list.size()-1));
     }
 
 
@@ -181,10 +193,10 @@ public class Converse extends PiccMaqCompatActivity {
         messages_.setTim_e(TimeModel.getPhpTime());
         messages_.setTime_stamp(TimeModel.getPhpTime());
         messages_.setAuth(stores.getUsername());
-        messages_.setmsg_id("0");
+        messages_.setmsg_id("hsdhd"+stores.getSTime());
         messages_.setSent(0);
         messages_.setContext(context);
-        boolean fg=messages_.save(context);
+        boolean fg=messages_.saveNew(context);
 
         materialEditText.setText("");
         tempUri=Uri.EMPTY;
@@ -192,6 +204,7 @@ public class Converse extends PiccMaqCompatActivity {
         MessagesCall messagesCall=new MessagesCall(context);
         messagesCall.sendAllMessages();
         startInit();
+        messagesCall.getAllMessages();
     }
 
     private void showSelector() {
@@ -209,12 +222,11 @@ public class Converse extends PiccMaqCompatActivity {
             tempUri = data.getData();
             String urltoImage=tempUri.toString();
 
-            if(stores.isExtUrl(urltoImage)){
-                sendToServer();
-            }else{
+            if(tempUri!=Uri.EMPTY && !stores.isExtUrl(urltoImage)){
                 sendToGoogle();
+            }else{
+                sendToServer();
             }
-            finish();
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
         }
@@ -234,5 +246,69 @@ public class Converse extends PiccMaqCompatActivity {
             }
         });
         googleUpload.sendToGoogle();
+    }
+
+
+    private void setUpProfile() {
+        Retrofit retrofit = ApiClient.getClient();
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        Call<Model__> call=apiInterface.getUser(stores.getUsername(), stores.getPass(), stores.getApiKey(), recipient);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+
+                Model__ model_lisj = response.body();
+                List<Model__> model_list = model_lisj.getData();
+                Model__ model_l = model_lisj.getPagination();
+                int num = model_list.size();
+
+                String any = model_l.getPagesLeft();
+                int pgLeft = Stores.parseInt(any);
+                if (num > 0) {
+                    user_data = model_list.get(0);
+                    final TextView tx = (TextView)findViewById(R.id.warning);
+                    tx.setVisibility(Stores.initView);
+                    if (user_data.getError() != null) {
+                        stores.handleError(user_data.getError(), context, new ServerError() {
+                            @Override
+                            public void onEmptyArray() {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(R.string.empty_result);
+                            }
+
+                            @Override
+                            public void onShowOtherResult(int res__) {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(res__);
+                            }
+                        });
+                    }else{
+                        String user_name = user_data.getAuth_username();
+                        String image=user_data.getAuth_data().getAuth_img();
+                        String fullnames=user_data.getAuth_data().getFullname();
+                        String online=user_data.getOnline();
+                        if(online.trim().equalsIgnoreCase("1")){
+                            online = getString(R.string.online);
+                        }else{
+                            online=(new TimeModel(context)).getDWM(online);
+                            online = getString(R.string.last_seen, online);
+                        }
+                        subtitle.setText(online);
+
+                        username_.setText(fullnames);
+                        Piccassa.load(context, image, R.drawable.user_sample, user_dp);
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "postscall");
+            }
+        });
     }
 }

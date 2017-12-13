@@ -2,6 +2,7 @@ package ng.com.coursecode.piqmessenger.Model__;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -78,11 +79,11 @@ public class Stores2 {
             }else if(frndsData.getRRcvd()){
                 icon=R.string.accept_request;
                 iconRes=R.string.fawi_user_plus;
-//                color=R.color.black;
+                color=R.color.black;
             }else if (frndsData.getRSent()){
                 icon=R.string.request_sent;
                 iconRes=R.string.fawi_check_square_o;
-//                color=R.color.black;
+                color=R.color.black;
             }else{
                 icon=R.string.send_request;
                 iconRes=R.string.fawi_user_plus;
@@ -91,15 +92,11 @@ public class Stores2 {
             }
             users_frnd.setIcon(context.getString(iconRes));
             users_frnd.setText(context.getString(icon));
-//            users_frnd.setTextColor(textColor);
-//            users_frnd.setBorderColor(textColor);
-//            users_frnd.setIconColor(textColor);
+            users_frnd.setTextColor(getResColor(context, textColor));
+            users_frnd.setBorderColor(getResColor(context, textColor));
+            users_frnd.setIconColor(getResColor(context, textColor));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                users_frnd.setBackgroundColor(context.getResources().getColor(color, context.getTheme()));
-            }else{
-                users_frnd.setBackgroundColor(context.getResources().getColor(color));
-            }
+            users_frnd.setBackgroundColor(getResColor(context, color));
         }
     }
     public static FrndsData getFrndsData(FrndsData frndsData) {
@@ -121,5 +118,43 @@ public class Stores2 {
             frndsData1=new FrndsData("1", "0", "0");
         }
         return frndsData1;
+    }
+
+    public static void setGroupText(MaterialFancyButton frnds_req, String type, Context context) {
+        type= (type==null)?"0":type;
+        if(type.equalsIgnoreCase("1")){
+            frnds_req.setText(R.string.leave_group);
+            frnds_req.setBackgroundColor(getResColor(context, R.color.white));
+            frnds_req.setTextColor(getResColor(context, R.color.black));
+            frnds_req.setBorderColor(getResColor(context, R.color.black));
+        }else{
+            if(type.equalsIgnoreCase(Stores.DELETE_FRND) || type.equalsIgnoreCase("0")){
+                frnds_req.setText(R.string.join_group);
+            }
+            frnds_req.setText(R.string.join_group);
+            frnds_req.setBackgroundColor(getResColor(context, R.color.colorPrimaryDark));
+            frnds_req.setTextColor(getResColor(context, R.color.white));
+            frnds_req.setBorderColor(getResColor(context, R.color.colorPrimary));
+        }
+    }
+
+    public static void setGroupTextU(MaterialFancyButton frnds_req, String type, Context context){
+        type= (type==null)?"0":type;
+        if(type.equalsIgnoreCase("1")){
+            type="0";
+        }else{
+            type="1";
+        }
+        setGroupText(frnds_req, type, context);
+    }
+
+    public static int getResColor(Context context, @ColorRes int color){
+        int colorret;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            colorret=context.getResources().getColor(color, context.getTheme());
+        }else{
+            colorret=context.getResources().getColor(color);
+        }
+        return colorret;
     }
 }

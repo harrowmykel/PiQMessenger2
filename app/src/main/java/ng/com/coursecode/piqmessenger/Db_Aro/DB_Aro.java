@@ -22,12 +22,27 @@ public class DB_Aro extends SQLiteOpenHelper {
 
     public static final String SQLL_DATEBASE_NAME = "piqmessenger__";
     public static final String SQLL_DATABASE_TABLE = "PROVERB_TABLE";
-    private static final int SQLL_DATABASE_VERSION = 2;
+    private static final int SQLL_DATABASE_VERSION = 5;
     Context context;
+    private static DB_Aro instance;
+    private static SQLiteDatabase Dbinstance;
 
     public DB_Aro(Context context) {
         super(context, SQLL_DATEBASE_NAME, null, SQLL_DATABASE_VERSION);
         this.context=context;
+    }
+
+    public static synchronized DB_Aro getHelper(Context context){
+        if (instance == null)
+            instance = new DB_Aro(context);
+        return instance;
+    }
+
+    public static synchronized SQLiteDatabase getWDb(Context context){
+        if (Dbinstance == null || !(Dbinstance.isOpen()))
+            Dbinstance = (DB_Aro.getHelper(context)).getWritableDatabase();
+
+        return Dbinstance;
     }
 
     @Override
@@ -57,14 +72,9 @@ public class DB_Aro extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + Stores2.groupTable + "(" +
                 Stores2.id_ + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Stores2.auth + " TEXT NOT NUll, " +
-                Stores2.group_id + " TEXT NOT NUll, " +
-                Stores2.fullname + " TEXT NOT NUll, " +
-                Stores2.mess_age + " TEXT NOT NUll, " +
-                Stores2.tim_e + " TEXT NOT NUll, " +
+                Stores2.user_name + " TEXT NOT NUll, " +
                 Stores2.image + " TEXT NOT NUll, " +
-                Stores2.confirm + " TEXT NOT NUll, " +
-                Stores2.msg_id + " TEXT NOT NUll)");
+                Stores2.fullname + " TEXT NOT NUll)");
 
         db.execSQL("CREATE TABLE " + Stores2.postsTable + "(" +
                 Stores2.id_ + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -97,20 +107,23 @@ public class DB_Aro extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldversion, int newVersion) {
-        clearAll();
+        clearAll(db);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldversion, int newVersion) {
-        clearAll();
+        clearAll(db);
     }
 
     public void editValue(int pos){
     }
 
     public void clearAll() {
-        DB_Aro dbHelper = new DB_Aro(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = DB_Aro.getWDb(context);
+        clearAll(db);
+    }
+
+    public void clearAll(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.groupTable);
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.messagesTable);
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.statusTable);
@@ -119,6 +132,6 @@ public class DB_Aro extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.discoverTable);
         onCreate(db);
 //        db.close();
-//        dbHelper.close();
+//        //dbHelper.close();
     }
 }

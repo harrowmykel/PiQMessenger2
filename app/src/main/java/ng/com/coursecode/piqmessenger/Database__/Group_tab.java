@@ -1,16 +1,22 @@
 package ng.com.coursecode.piqmessenger.Database__;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.widget.Toast;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
-import ng.com.coursecode.piqmessenger.Model__.Model__2;
+import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
+import ng.com.coursecode.piqmessenger.Model__.FrndsData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 
@@ -18,51 +24,50 @@ import ng.com.coursecode.piqmessenger.Model__.Stores2;
  * Created by harro on 10/10/2017.
  */
 
-public class Group_tab {
+public class Group_tab implements Parcelable {
 
     public String user_name;
-    public String msg_id;//msg_id
-    public String mess_age;
-    public String tim_e;
-    public String time_stamp;
-    public String auth;
-    public String confirm;
+    public String user_id;
+    public String fullname;
     public String image;
-    public String group_id;
+    public String friends;
+    public FrndsData frndsData;
+    private String like;
+
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
-    Cursor cursor;
-    DB_Aro dbHelper;
     Context context;
-    int rand;
-
-    long newId;
-    private String fullname;
+    Cursor cursor;
 
     public Group_tab(){
-
+    }
+    public Group_tab(String user_name,String user_id,
+                      String fullname,String image){
+        setUser_id(user_id);
+        setUser_name(user_name);
+        setFullname(fullname);
+        setImage(image);
     }
 
     public boolean save(Context context1){
         context=context1;
         if(context!=null){
-            dbHelper=new DB_Aro(getContext());
-            wrtable = dbHelper.getWritableDatabase();
+            wrtable = DB_Aro.getWDb(context);;
             contentValues=new ContentValues();
-            contentValues.put(Stores2.auth, getAuth());
-            contentValues.put(Stores2.group_id, getGroup_id());
-            contentValues.put(Stores2.mess_age, getMess_age());
-            contentValues.put(Stores2.tim_e, getTim_e());
+            contentValues.put(Stores2.user_name, getUser_name().toLowerCase());
             contentValues.put(Stores2.image, getImage());
-            contentValues.put(Stores2.confirm, getConfirm());
-            contentValues.put(Stores2.msg_id, getmsg_id());
             contentValues.put(Stores2.fullname, getFullname());
 
-            String toFind=Stores2.msg_id + " = ?";
+            String toFind=Stores2.user_name + " = ?";
             String sTable=Stores2.groupTable;
-            String[] sArray=new String[]{getmsg_id()};
-            Cursor result = wrtable.query(
-                    sTable,
+            String[] sArray={getUser_name()};
+            String[] projection = {Stores2.user_name};
+
+            if(getUser_name()==null){
+                Toasta.makeText(context1, "null", Toast.LENGTH_SHORT);
+                return false;
+            }
+            Cursor result = wrtable.query(sTable,
                     null,
                     toFind,
                     sArray,
@@ -70,227 +75,154 @@ public class Group_tab {
                     null,
                     null
             );
-            long nuk;
             if (result != null && result.getCount() > 0) {
-                nuk=wrtable.update(sTable, contentValues, toFind, sArray);
+                String[] sf=sArray;
+                wrtable.update(sTable, contentValues, toFind, sf);
                 result.close();
             }else{
-                nuk=wrtable.insert(sTable, null, contentValues);
+                wrtable.insert(sTable, null, contentValues);
             }
-            newId=nuk;
-            return (nuk!=-1);
+            wrtable.close();
+            return true;
         }
-
         return false;
     }
 
-    public List<Group_tab> listAll(Context context) {
+    public List<Group_tab> listAll(Context context_){
+        context=context_;
+        rdbleDb = DB_Aro.getWDb(context);;
+        List<Group_tab> msgs=new ArrayList<>();
 
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
-        List<String> msgs_ = new ArrayList<>();
-
-        String[] projection = {
-                Stores2.group_id};
+        String[] projection = {Stores2.user_name,
+                Stores2.fullname,
+                Stores2.image};
 
         String selection = null;
         String[] selectionArgs = {};
 
         // How you want the results sorted in the resulting Cursor
-        String sortOrder = Stores2.tim_e + " DESC ";
-
-        cursor = rdbleDb.query(true, Stores2.groupTable,  // The table to query
-                projection,                               // The columns to return
-                selection,                                // The columns for the WHERE clause
-                selectionArgs,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                sortOrder,                                 // The sort order
-                ""
-
-        );
-        int num = cursor.getCount();
-
-        Stores store=new Stores(context);
-
-        for (int i = 0; i < num; i++) {
-            cursor.moveToPosition(i);
-
-            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-            group_id = cursor.getString(cursor.getColumnIndex(Stores2.group_id));
-
-            String keyWord=(auth.equalsIgnoreCase(store.getUsername()))?group_id:auth;
-            if(!msgs_.contains(keyWord))
-                msgs_.add(keyWord);
-        }
-        cursor.close();
-        return listAll(context,msgs_);
-    }
-
-
-    public Model__2 search(Context context, String query, int page) {
-        List<Group_tab> msgs = new ArrayList<>();
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
-        List<String> msgs_ = new ArrayList<>();
-
-        String[] projection = {Stores2.id_,
-                Stores2.auth,
-                Stores2.group_id,
-                Stores2.mess_age,
-                Stores2.tim_e,
-                Stores2.image,
-                Stores2.fullname,
-                Stores2.confirm,
-                Stores2.msg_id};
-        query="%"+query+"%";
-        String selection = Stores2.auth+" LIKE ? OR "+Stores2.group_id+" LIKE ? OR "+Stores2.mess_age+" LIKE ?";
-        String[] selectionArgs = {query, query, query};
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder = Stores2.tim_e + " DESC ";
-
+        String sortOrder = Stores2.id_ + " DESC";
+        
         cursor = rdbleDb.query(Stores2.groupTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-                sortOrder                                // The sort order
+                sortOrder                                 // The sort order
         );
-        int num = cursor.getCount();
+        int num=cursor.getCount();
 
-        int pages_left=((num/Stores.dbReqCounts))-page;
-        String limit=Stores.limitDb(num, Stores.dbReqCounts, page);
-        //offset, limit
+        for(int i=0; i<num; i++){
 
-        cursor = rdbleDb.query(false, Stores2.groupTable,  // The table to query
+            cursor.moveToNext();
+            Group_tab Group_tab=new Group_tab();
+
+            user_name=cursor.getString(cursor.getColumnIndex(Stores2.user_name));
+            fullname=cursor.getString(cursor.getColumnIndex(Stores2.fullname));
+            image=cursor.getString(cursor.getColumnIndex(Stores2.image));
+
+            Group_tab.setUser_name(user_name);
+            Group_tab.setFullname(fullname);
+            Group_tab.setFriends("1");
+            Group_tab.setImage(image);
+            msgs.add(Group_tab);
+        }
+        cursor.close();
+        return msgs;
+    }
+
+    public static String getFullname(Context context_, String username){
+        SQLiteDatabase rdbleDb;
+        //DB_Aro dbHelper;
+        Context context;
+
+        String fname=username=username.toLowerCase();
+        context=context_;
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
+
+        String[] projection = {Stores2.user_name,
+                Stores2.fullname};
+
+        String selection = Stores2.fullname+" = ? ";
+        String[] selectionArgs = {username};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.id_ + " DESC";
+
+        Cursor cursor1;
+        cursor1 = rdbleDb.query(Stores2.groupTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-                sortOrder,                                 // The sort order
-                limit
-
+                sortOrder                                 // The sort order
         );
-        num = cursor.getCount();
 
-        Stores store=new Stores(context);
-
-        for (int i = 0; i < num; i++) {
-            cursor.moveToPosition(i);
-            Group_tab group_tab = new Group_tab();
-
-            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-            group_id = cursor.getString(cursor.getColumnIndex(Stores2.group_id));
-            mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-            tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
-            image = cursor.getString(cursor.getColumnIndex(Stores2.image));
-            confirm = cursor.getString(cursor.getColumnIndex(confirm));
-            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
-            fullname= cursor.getString(cursor.getColumnIndex(Stores2.fullname));
+        int num=cursor1.getCount();
 
 
-
-            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-            group_id = cursor.getString(cursor.getColumnIndex(Stores2.group_id));
-
-            String keyWord=(auth.equalsIgnoreCase(store.getUsername()))?group_id:auth;
-            auth=keyWord;
-
-            group_tab.setAuth(auth);
-            group_tab.setGroup_id(group_id);
-
-            group_tab.setMess_age(mess_age);
-            group_tab.setTim_e(tim_e);
-            group_tab.setImage(image);
-            group_tab.setConfirm(confirm);
-            group_tab.setmsg_id(msg_id);
-            group_tab.setFullname(fullname);
-
-            if(!auth.isEmpty())
-                msgs.add(group_tab);
+        for(int i=0; i<num; i++){
+            cursor1.moveToPosition(i);
+            fname=cursor1.getString(cursor1.getColumnIndex(Stores2.fullname));
         }
-        cursor.close();
-        rdbleDb.close();
-        dbHelper.close();
-        Model__2 model=new Model__2();
-
-        model.setPagesLeft(""+pages_left);
-        model.setDb_result_group(msgs);
-        return model;
+        cursor1.close();
+        return fname;
     }
 
-    public List<Group_tab> listAll(Context context, List<String> msg_) {
-        List<Group_tab> msgs = new ArrayList<>();
-        Stores store=new Stores(context);
 
-        int msgTurn=msg_.size();
-        for (String uname:msg_ ) {
-            String[] projection = {Stores2.id_,
-                    Stores2.auth,
-                    Stores2.group_id,
-                    Stores2.mess_age,
-                    Stores2.tim_e,
-                    Stores2.image,
-                    confirm,
-                    Stores2.msg_id};
+    public String getFullname(String username){
 
-            String selection = Stores2.auth + " = ? OR "+ Stores2.group_id + "= ? ";
-            String[] selectionArgs = {uname, uname};
+        String fname=username=username.toLowerCase();
+        rdbleDb = DB_Aro.getWDb(context);
 
-            // How you want the results sorted in the resulting Cursor
-            String sortOrder = Stores2.tim_e + " DESC ";
+        String[] projection = {Stores2.user_name,
+                Stores2.fullname};
 
-            cursor = rdbleDb.query(false, Stores2.groupTable,  // The table to query
-                    projection,                               // The columns to return
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    sortOrder,                                 // The sort order
-                    "1"
-            );
-            int num = cursor.getCount();
+        String selection = Stores2.fullname+" = ? ";
+        String[] selectionArgs = {username};
 
-            for (int i = 0; i < num; i++) {
-                cursor.moveToPosition(i);
-                Group_tab group_tab = new Group_tab();
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.id_ + " DESC";
 
-                auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-                group_id = cursor.getString(cursor.getColumnIndex(Stores2.group_id));
-                mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-                tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
-                image = cursor.getString(cursor.getColumnIndex(Stores2.image));
-                confirm = cursor.getString(cursor.getColumnIndex(confirm));
-                msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
+        Cursor cursor1;
+        cursor1 = rdbleDb.query(Stores2.groupTable,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
 
+        int num=cursor1.getCount();
 
-
-                auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-                group_id = cursor.getString(cursor.getColumnIndex(Stores2.group_id));
-
-                String keyWord=(auth.equalsIgnoreCase(store.getUsername()))?group_id:auth;
-                auth=keyWord;
-
-                group_tab.setAuth(auth);
-                group_tab.setGroup_id(group_id);
-
-                group_tab.setMess_age(mess_age);
-                group_tab.setTim_e(tim_e);
-                group_tab.setImage(image);
-                group_tab.setConfirm(confirm);
-                group_tab.setmsg_id(msg_id);
-                group_tab.setFullname(Users_prof.getFullname(context, auth));
-                if(!auth.isEmpty())
-                    msgs.add(group_tab);
-            }
-            cursor.close();
+        for(int i=0; i<num; i++){
+            cursor1.moveToPosition(1);
+            fname=cursor1.getString(cursor1.getColumnIndex(Stores2.fullname));
         }
+        cursor1.close();
         rdbleDb.close();
-        dbHelper.close();
-        return msgs;
+        return fname;
+    }
+
+
+    public FrndsData getFrndsData() {
+        return frndsData;
+    }
+
+    public void setFrndsData(FrndsData frndsData) {
+        this.frndsData = frndsData;
+    }
+
+    public String getFriends() {
+        return friends;
+    }
+
+    public void setFriends(String friends) {
+        this.friends = friends;
     }
 
     public Context getContext() {
@@ -301,15 +233,6 @@ public class Group_tab {
         this.context = context;
     }
 
-    public String getGroup_id() {
-        return group_id;
-    }
-
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
-    }
-
-
     public String getUser_name() {
         return user_name;
     }
@@ -318,76 +241,127 @@ public class Group_tab {
         this.user_name = user_name;
     }
 
-    public String getmsg_id() {
-        return msg_id;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setmsg_id(String msg_id) {
-        this.msg_id = msg_id;
-    }
-
-    public String getMess_age() {
-        return mess_age;
-    }
-
-    public void setMess_age(String mess_age) {
-        this.mess_age = mess_age;
-    }
-
-    public String getTim_e() {
-        return tim_e;
-    }
-
-    public void setTim_e(String tim_e) {
-        this.tim_e = tim_e;
-    }
-
-    public String getTime_stamp() {
-        return time_stamp;
-    }
-
-    public void setTime_stamp(String time_stamp) {
-        this.time_stamp = time_stamp;
-    }
-
-    public String getAuth() {
-        return auth;
-    }
-
-    public void setAuth(String auth) {
-        this.auth = auth;
-    }
-
-    public String getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(String confirm) {
-        this.confirm = confirm;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public long getNewId() {
-        return newId;
-    }
-
-    public void setNewId(long newId) {
-        this.newId = newId;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getFullname() {
         return fullname;
     }
 
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getImage() {
+        return (image!=null && !image.isEmpty())?image:"";
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(user_name);
+        out.writeString(user_id);
+        out.writeString(fullname);
+        out.writeString(image);
+        out.writeString(friends);
+        out.writeString(like);
+    }
+
+    public static final Parcelable.Creator<Group_tab> CREATOR
+            = new Parcelable.Creator<Group_tab>() {
+        public Group_tab createFromParcel(Parcel in) {
+            return new Group_tab(in);
+        }
+
+        public Group_tab[] newArray(int size) {
+            return new Group_tab[size];
+        }
+    };
+
+    private Group_tab(Parcel in) {
+        user_name= in.readString();
+        user_id= in.readString();
+        fullname= in.readString();
+        image= in.readString();
+        friends= in.readString();
+        like= in.readString();
+    }
+
+    public static Group_tab getInfo(Context context_, String username) {
+        Group_tab Group_tab=new Group_tab();
+        SQLiteDatabase rdbleDb;
+        //DB_Aro dbHelper;
+        Context context;
+
+        String fname=username=username.toLowerCase();
+        String img_loc=Stores.imgDefault;
+        context=context_;
+
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
+
+        String[] projection = {Stores2.user_name,
+                Stores2.fullname,
+                Stores2.image};
+
+        String selection = Stores2.user_name+" = ? ";
+        String[] selectionArgs = {username};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.id_ + " DESC";
+
+        Cursor cursor1;
+        cursor1 = rdbleDb.query(Stores2.groupTable,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        int num=cursor1.getCount();
+
+        for(int i=0; i<num; i++){
+            cursor1.moveToPosition(i);
+            fname=cursor1.getString(cursor1.getColumnIndex(Stores2.fullname));
+            img_loc=cursor1.getString(cursor1.getColumnIndex(Stores2.image));
+        }
+        cursor1.close();
+        Group_tab.setFullname(fname);
+        Group_tab.setImage(img_loc);
+        //dbHelper.close();
+        rdbleDb.close();
+        return Group_tab;
+    }
+
+    public void setLike(String like) {
+        this.like = like;
+    }
+
+    public String getLike() {
+        return like;
+    }
+
+    public void delete(Context context) {
+        String fname=getUser_name();
+        rdbleDb = DB_Aro.getWDb(context);
+        
+        String selection = Stores2.user_name+" = ? ";
+        String[] selectionArgs = {fname};
+        rdbleDb.delete(Stores2.groupTable, selection, selectionArgs);
+
+        rdbleDb.close();
+    }
 }

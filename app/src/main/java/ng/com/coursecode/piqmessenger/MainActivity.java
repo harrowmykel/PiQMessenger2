@@ -16,6 +16,7 @@ import android.view.View;
 
 import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
 import ng.com.coursecode.piqmessenger.Contacts_.ContactAct;
+import ng.com.coursecode.piqmessenger.Groups.CreateGroup;
 import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Searches.ConvoSearchAct;
@@ -100,7 +101,7 @@ public class MainActivity extends PiccMaqCompatActivity {
                         intent=new Intent(context, CreateStatus.class);
                         break;
                     case R.string.groups:
-                        intent=new Intent(context, JoinGroups.class);
+                        intent=(new Intent(context, CreateGroup.class));
                         break;
                     default:
                         intent=new Intent(context, SearchAct.class);
@@ -150,4 +151,12 @@ public class MainActivity extends PiccMaqCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(mViewPager.getCurrentItem()!=0){
+            mViewPager.setCurrentItem(0, true);
+        }else{
+            super.onBackPressed();
+        }
+    }
 }

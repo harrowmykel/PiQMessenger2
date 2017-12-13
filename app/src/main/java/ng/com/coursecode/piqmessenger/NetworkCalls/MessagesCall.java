@@ -57,11 +57,13 @@ public class MessagesCall {
 
     public void sendAllMessages() {
         intent.putExtra(MessageCallService.SEND_NEW, "Jnd");
+        intent.putExtra(Stores.TYPE_OF_ACTION, MessageCallService.SEND_NEW);
         context.startService(intent);
     }
 
     public void clear() {
         intent.putExtra(MessageCallService.CLEAR, "Jnd");
+        intent.putExtra(Stores.TYPE_OF_ACTION, MessageCallService.CLEAR);
         context.startService(intent);
     }
 

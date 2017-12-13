@@ -214,7 +214,6 @@ public class Profile extends PiccMaqCompatActivity {
     }
 
     private void setUpProfile() {
-
         swipeRefresh.setRefreshing(true);
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
@@ -281,6 +280,7 @@ public class Profile extends PiccMaqCompatActivity {
                             Prefs.putString(USERS_IMAGE, image);
                         }
 
+                        setTitle(fullnames);
                     }
                 }
                 swipeRefresh.setRefreshing(false);

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,6 @@ public class Messages{
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
     Cursor cursor;
-    DB_Aro dbHelper;
     Context context;
     int rand;
 
@@ -62,17 +62,9 @@ public class Messages{
     public boolean save(Context context1) {
         context = context1;
         if (context != null) {
-            dbHelper = new DB_Aro(getContext());
-            wrtable = dbHelper.getWritableDatabase();
-            contentValues = new ContentValues();
-            contentValues.put(Stores2.auth, getAuth().toLowerCase());
-            contentValues.put(Stores2.recip, getRecip().toLowerCase());
-            contentValues.put(Stores2.mess_age, getMess_age());
-            contentValues.put(Stores2.tim_e, getTim_e());
-            contentValues.put(Stores2.image, getImage());
-            contentValues.put(Stores2.confirm, getConfirm());
-            contentValues.put(Stores2.sent, getSent());
-            contentValues.put(Stores2.msg_id, getmsg_id());
+            
+            wrtable = DB_Aro.getWDb(context);
+            contentValues = getCValues();
 
             String toFind = Stores2.msg_id + " = ?";
             String sTable = Stores2.messagesTable;
@@ -100,10 +92,36 @@ public class Messages{
         return false;
     }
 
-    public List<Messages> listAll(Context context) {
+    public boolean saveNew(Context context1) {
+        context = context1;
+        if (context != null) {
+            
+            wrtable = DB_Aro.getWDb(context);
+            contentValues = getCValues();
+            String sTable = Stores2.messagesTable;
+            long nuk;
+            nuk = wrtable.insert(sTable, null, contentValues);
+            return (nuk != -1);
+        }
 
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        return false;
+    }
+
+    private ContentValues getCValues() {
+        ContentValues contentValues1 = new ContentValues();
+        contentValues1.put(Stores2.auth, getAuth().toLowerCase());
+        contentValues1.put(Stores2.recip, getRecip().toLowerCase());
+        contentValues1.put(Stores2.mess_age, getMess_age());
+        contentValues1.put(Stores2.tim_e, getTim_e());
+        contentValues1.put(Stores2.image, getImage());
+        contentValues1.put(Stores2.confirm, getConfirm());
+        contentValues1.put(Stores2.sent, getSent());
+        contentValues1.put(Stores2.msg_id, getmsg_id());
+        return contentValues1;
+    }
+
+    public List<Messages> listAll(Context context) {
+        rdbleDb = DB_Aro.getWDb(context);
         List<String> msgs_ = new ArrayList<>();
 
         String[] projection = {
@@ -147,8 +165,8 @@ public class Messages{
 
     public Model__2 search(Context context, String query, int page) {
         List<Messages> msgs = new ArrayList<>();
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         List<String> msgs_ = new ArrayList<>();
 
         String[] projection = {Stores2.id_,
@@ -229,7 +247,6 @@ public class Messages{
         }
         cursor.close();
         rdbleDb.close();
-        dbHelper.close();
         Model__2 model=new Model__2();
 
         model.setPagesLeft(""+pages_left);
@@ -307,7 +324,7 @@ public class Messages{
             cursor.close();
         }
         rdbleDb.close();
-        dbHelper.close();
+        //dbHelper.close();
         return msgs;
     }
 
@@ -408,11 +425,12 @@ public class Messages{
         return fullname;
     }
 
-    public List<Messages> listAllFromUser(Context context, String username) {
+    public List<Messages> listAllFromUser(Context context, String recipp) {
         List<Messages> msgs = new ArrayList<>();
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         List<String> msgs_ = new ArrayList<>();
+        String thisUser=(new Stores(context)).getUsername();
 
         String[] projection = {Stores2.id_,
                 Stores2.auth,
@@ -423,8 +441,8 @@ public class Messages{
                 Stores2.confirm,
                 Stores2.msg_id};
 
-        String selection = Stores2.auth+" = ? OR "+Stores2.auth+" = ? ";
-        String[] selectionArgs = {username, username};
+        String selection = "("+Stores2.auth+" = ? AND "+Stores2.recip+" = ?) OR ("+Stores2.auth+" = ? AND "+Stores2.recip+" = ? )";
+        String[] selectionArgs = {thisUser, recipp, recipp, thisUser};// username};
 
         // How you want the results sorted in the resulting Cursor
         String sortOrder = Stores2.tim_e + " DESC ";
@@ -484,10 +502,11 @@ public class Messages{
         sent=sentt;
     }
 
-    public String getOldMess(Context context) {
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+    public String[] getOldMess(Context context) {
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         String msgs = "[";
+        String msgs1 = "";
         Stores store=new Stores(context);
 
         String[] projection = {Stores2.id_,
@@ -505,15 +524,13 @@ public class Messages{
         // How you want the results sorted in the resulting Cursor
         String sortOrder = Stores2.tim_e + " ASC ";
 
-        cursor = rdbleDb.query(false, Stores2.messagesTable,  // The table to query
+        cursor = rdbleDb.query(Stores2.messagesTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-                sortOrder,                                 // The sort order
-                "1"
-        );
+                sortOrder);
         int num = cursor.getCount();
 
         for (int i = 0; i < num; i++) {
@@ -529,25 +546,52 @@ public class Messages{
             image = cursor.getString(cursor.getColumnIndex(Stores2.image));
             confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
             msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
+            String hmsg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
             msgs+="{'recip':'"+recip+"', 'message':'"+mess_age+
                     "', 'image':'"+image+"'}";
+
+            if(i!=(num-1)){
+                msgs1=msgs1+Stores2.msg_id;
+            }
         }
         cursor.close();
 
         rdbleDb.close();
-        dbHelper.close();
-        return msgs+"]";
+        //dbHelper.close();
+        msgs=msgs+"]";
+        return new String[]{msgs, msgs1};
     }
 
     public void delete(Context context) {
-            dbHelper = new DB_Aro(context);
-            rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
-            String selection = null;
-            String[] selectionArgs = null;
+        String selection = null;
+        String[] selectionArgs = null;
 
-            rdbleDb.delete(Stores2.messagesTable,  // The table to query
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs);
+        rdbleDb.delete(Stores2.messagesTable,  // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
+    }
+
+    public void delete(Context context, String text1) {
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
+        text1=text1.trim();
+        String[] array = text1.split(",", -1);
+
+        String msgs1="";
+        int num=array.length;
+
+        for (int i = 0; i <num; i++) {
+            if(i!=(num-1)){
+                msgs1=msgs1+Stores2.msg_id+"= ? OR  ";
+            }else{
+                msgs1=msgs1+Stores2.msg_id+"=  ? ";
+            }
+        }
+        String queryy="Delete from "+Stores2.messagesTable+" WHERE "+msgs1;
+
+        rdbleDb.rawQuery(queryy, array);
     }
 }

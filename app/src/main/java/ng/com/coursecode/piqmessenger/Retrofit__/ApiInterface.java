@@ -153,4 +153,20 @@ public interface ApiInterface {
     @POST("profile/index.php?req=searchonline")
     Call<Model__> getOnlineFriends(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
 
+    @FormUrlEncoded
+    @POST("groups/index.php?req=reqfrnd")
+    Call<Model__> joinGroup(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String postid, @Field("type") String type);
+
+    @FormUrlEncoded
+    @POST("groups/index.php?req=about")
+    Call<Model__> getGroup(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String who);
+
+    @FormUrlEncoded
+    @POST("posts/index.php?req=groupposts")
+    Call<PostsModel> getGroupsPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("page") String page, @Field("who") String who);
+
+    @FormUrlEncoded
+    @POST("profile/index.php?req=creategroup")
+    Call<Model__> createGroup(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("fullname") String fname, @Field("who") String g_username, @Field("bio") String bio, @Field("imgurl") String q);
+
 }

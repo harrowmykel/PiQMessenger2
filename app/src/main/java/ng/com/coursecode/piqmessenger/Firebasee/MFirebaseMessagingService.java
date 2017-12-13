@@ -174,22 +174,14 @@ public class MFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void saveGroupMessage(NotificationData.Data data) {
-
         NotificationData.Message modelll=data.getMessage();
-        Group_tab messages_=new Group_tab();
+        //TODO msgs here
 
-        messages_.setConfirm(getString__(modelll.getConfirm()));
-        messages_.setImage(getString__(modelll.getImage()));
-        messages_.setMess_age(getString__(modelll.getSubtitle()));
-        messages_.setTim_e(getString__(modelll.getTimestamp()));
-        messages_.setTime_stamp(getString__(modelll.getTimestamp()));
-        messages_.setFullname(getString__(modelll.getRecivData().getReciv()));
-        messages_.setAuth(getString__(modelll.getAuthData().getAuth()));
-        messages_.setGroup_id(getString__(modelll.getRecivUsername()));
-        messages_.setAuth(getString__(modelll.getAuthUsername()));
-        messages_.setmsg_id(getString__(modelll.getId()));
-        messages_.save(context);
-
+        /*Group_tab usertab=new Group_tab();
+        usertab.setUser_name(getString__(modelll.getAuthUsername()));
+        usertab.setFullname(getString__(modelll.getAuthData().getAuth()));
+        usertab.setImage(getString__(modelll.getImage()));
+        usertab.save(context);*/
     }
 
     private void saveStatus(NotificationData.Data data) {

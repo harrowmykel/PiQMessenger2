@@ -52,9 +52,9 @@ import retrofit2.Retrofit;
 public class ContactLists extends Fragment {
 
     public static final String STAV = "hjefasfkjfjk";
-    public static final String DELETE_FRND = "delete_frnd";
-    public static final String ACCEPT_FRND = "accept_frnd";
-    public static final String SEND_FRND = "send_frnd";
+    public static final String DELETE_FRND = Stores.DELETE_FRND;
+    public static final String ACCEPT_FRND = Stores.ACCEPT_FRND;
+    public static final String SEND_FRND = Stores.SEND_FRND;
     private static final String TYPE_OF_ACTION = Stores.TYPE_OF_ACTION;
     public static final String CONTACTS = "Kldmklm";
     public static final String LIKESACT = "KLdmkdmk;,md";

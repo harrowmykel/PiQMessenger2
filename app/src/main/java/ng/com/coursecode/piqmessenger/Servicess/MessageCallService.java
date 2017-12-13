@@ -66,26 +66,27 @@ public class MessageCallService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       String joshua="";
         if(intent!=null){
-            if(intent.getStringExtra(SEND_NEW)!=null){
-                if(!intent.getStringExtra(SEND_NEW).isEmpty()){
-                    joshua=intent.getStringExtra(SEND_NEW);
+            String action_type=intent.getStringExtra(Stores.TYPE_OF_ACTION);
+            if(action_type!=null){
+                switch (action_type){
+                    case SEND_NEW:
+                        sendAllMessages();
+                        break;
+                    case CLEAR:
+                        DeleteAllMessages();
+                        break;
+                    default:
+                        getAllMessages();
+                        break;
                 }
+            }else{
+                getAllMessages();
             }
-            if(intent.getStringExtra(CLEAR)!=null){
-                if(!intent.getStringExtra(CLEAR).isEmpty()){
-                    DeleteAllMessages();
-                }
-            }
+        }else{
+            getAllMessages();
         }
-       if(joshua==null || joshua.isEmpty()){
-           getAllMessages();
-       }else{
-           sendAllMessages();
-       }
-        int ans=super.onStartCommand(intent, flags, startId);
-        return ans;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Nullable
@@ -98,7 +99,9 @@ public void sendAllMessages(){
     Prefs.putBoolean(SEND_NEW, true);
 
     Messages messages_=new Messages();
-    String text=messages_.getOldMess(context);
+    String[] combo=messages_.getOldMess(context);
+    String text=combo[0];
+    final String text1=combo[1];
 
     Retrofit retrofit = ApiClient.getClient();
     stores = new Stores(context);
@@ -127,6 +130,8 @@ public void sendAllMessages(){
                 });
             }else if(modelll.getSuccess() !=null){
                 Prefs.putBoolean(SEND_NEW, false);
+                Messages msggdg=new Messages();
+                msggdg.delete(context, text1);
             }
         }
 

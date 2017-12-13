@@ -26,7 +26,7 @@ public class Discover_tab {
     public String seen;
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
-    DB_Aro dbHelper;
+    //DB_Aro dbHelper;
     Context context;
     Cursor cursor;
 
@@ -47,8 +47,7 @@ public class Discover_tab {
     public boolean save(Context context1){
         context=context1;
         if(context!=null){
-            dbHelper=new DB_Aro(getContext());
-            wrtable = dbHelper.getWritableDatabase();
+            wrtable = DB_Aro.getWDb(context);
             contentValues=new ContentValues();
             contentValues.put(Stores2.discover_id, getDiscover_id());
             contentValues.put(Stores2.time, getTime());
@@ -83,8 +82,8 @@ public class Discover_tab {
 
     public List<Discover_tab> listAll(Context context_){
         context=context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         List<Discover_tab> msgs=new ArrayList<>();
         
         String[] projection = {Stores2.user_name,

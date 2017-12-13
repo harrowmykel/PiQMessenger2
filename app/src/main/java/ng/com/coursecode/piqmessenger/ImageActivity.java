@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.File;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
@@ -50,7 +53,13 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
         select.setOnClickListener(this);
         done.setOnClickListener(this);
         cancel.setOnClickListener(this);
-        showSelector();
+
+        tempUri=getLastImage(context);
+        if(tempUri!=Uri.EMPTY){
+            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+        }else{
+            showSelector();
+        }
     }
 
     @Override
@@ -126,4 +135,33 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
         }
     }
+
+    public static Uri getLastImage(Context context){
+
+        // Find the last picture
+        String[] projection = new String[]{
+                MediaStore.Images.ImageColumns._ID,
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.ImageColumns.DATE_TAKEN,
+                MediaStore.Images.ImageColumns.MIME_TYPE
+        };
+        Cursor cursor = context.getContentResolver()
+                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        if(cursor==null){
+            return Uri.EMPTY;
+        }
+// Put it in the image view
+        if (cursor.moveToFirst()) {
+            String imageLocation = cursor.getString(1);
+            File imageFile = new File(imageLocation);
+            if (imageFile.exists()) {   // TODO: is there a better way to do this?
+                return Uri.fromFile(imageFile);
+            }
+        }
+        cursor.close();
+        return Uri.EMPTY;
+    }
+
 }

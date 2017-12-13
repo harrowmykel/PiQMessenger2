@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -12,8 +11,6 @@ import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Random;
@@ -21,14 +18,9 @@ import java.util.Random;
 import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
-import ng.com.coursecode.piqmessenger.NetworkCalls.GroupsCall;
-import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
-import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
-import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
+import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import ng.com.coursecode.piqmessenger.Signin.LoginActivity;
-import ng.com.coursecode.piqmessenger.Signin.SignActivity;
 
 public class SplashScreen extends FullScreenActivity {
 
@@ -61,8 +53,14 @@ public class SplashScreen extends FullScreenActivity {
             @Override
             public void onGranted() {
                 if(!Prefs.getString(Profile.USERS_NAME, "").isEmpty()){
-                    if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, false)){
+                    if(Prefs.getBoolean(StatusCallService.CHECKUPDATE, true)){
                         (new StartUp(context)).checkStatus();
+                    }
+                    if(Prefs.getBoolean(FirebaseInstanceIdServ.TOKEN_SENT, true)){
+                        (new StartUp(context)).sendToken();
+                    }
+                    if(Prefs.getBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, false)){
+
                     }
                     (new StartUp(context)).checkMessage();
                     Intent intent=new Intent(SplashScreen.this, MainActivity.class);

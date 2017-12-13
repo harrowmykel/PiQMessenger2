@@ -34,6 +34,11 @@ public class Stores {
     public static final String MSG_STORE = "fkdlnfeskl;nr";
     public static final long WAIT_PERIOD = 200;//for handlers
     public static final String TYPE_OF_ACTION = "korwedgfgc";
+    public static final String DELETE_FRND = "delete_frnd";
+    public static final String ACCEPT_FRND = "accept_frnd";
+    public static final String SEND_FRND = "send_frnd";
+    public static final long SUB_REFRESH_TIME = 1000*60*60*24*3;//each 3 days
+    public static final String DISCOVER = "Knrknfkr";
     public static int flingVelX=1;
     public static int flingVelY=2;
     public static boolean flingEdit=true;
@@ -52,6 +57,7 @@ public class Stores {
     public static final String POST_NONE = "0";
     public static int initView= View.GONE;
     public static List<Integer> serviceError=new ArrayList<>();
+    public static String GroupTopicEND="endgroup";
 
     public List<Messages> db_result;
 
@@ -99,6 +105,9 @@ public class Stores {
     public String getTime() {
         return "1";// "" + System.currentTimeMillis();
     }
+    public String getSTime() {
+        return "" + System.currentTimeMillis();
+    }
 
     public static String SearchQuery ="searchQuerysjjsjsl";
 
@@ -113,6 +122,7 @@ public class Stores {
                 serverError.onShowOtherResult(R.string.acc_req);
                 break;
         }
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 
     public void reportException(Exception r) {
@@ -291,5 +301,10 @@ public class Stores {
 
     public static String notZero(int s) {
         return (s<1 )?"":""+s;
+    }
+
+    public static boolean isTrue(String frndsData) {
+        frndsData=(frndsData==null)?"0":frndsData;
+        return frndsData.trim().equalsIgnoreCase("1");
     }
 }

@@ -45,10 +45,12 @@ public class StatusCall {
 
     public void getAllMessages() {
         Intent intent=new Intent(context, StatusCallService.class);
+        intent.putExtra(Stores.TYPE_OF_ACTION, StatusCallService.GET_MSG);
         context.startService(intent);
     }
     public void clear() {
         Intent intent=new Intent(context, StatusCallService.class);
+        intent.putExtra(Stores.TYPE_OF_ACTION, StatusCallService.CLEAR);
         intent.putExtra(StatusCallService.CLEAR, true);
         context.startService(intent);
     }
@@ -59,6 +61,7 @@ public class StatusCall {
 
     public void getAllDelMessages() {
         Intent intent=new Intent(context, StatusCallService.class);
+        intent.putExtra(Stores.TYPE_OF_ACTION, StatusCallService.DEL);
         intent.putExtra(StatusCallService.DEL, true);
         context.startService(intent);
     }
@@ -66,6 +69,7 @@ public class StatusCall {
     public void hasViewed(ArrayList<String> all_updates) {
         Intent intent=new Intent(context, StatusCallService.class);
         intent.putExtra(StatusCallService.HAS_VIEWED, true);
+        intent.putExtra(Stores.TYPE_OF_ACTION, StatusCallService.HAS_VIEWED);
         intent.putExtra(StatusCallService.STATCODES, all_updates);
         context.startService(intent);
     }

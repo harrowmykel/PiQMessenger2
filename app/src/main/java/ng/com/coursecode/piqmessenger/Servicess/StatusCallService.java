@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
+import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
 import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.Interfaces.FetchMore;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
@@ -44,6 +46,8 @@ public class StatusCallService extends Service {
     public static final String CLEAR = "Jdkkeke";
     public static final String HAS_VIEWED = "dllsfl";
     public static final String STATCODES = "kdfdk";
+    public static final String SUBSCRIBE = "kdkfnkf";
+    public static final String GET_MSG = "Knknf";
     List<Model__> model_list;
     Stores stores;
 
@@ -54,6 +58,10 @@ public class StatusCallService extends Service {
     private FetchMore fetchMore;
     Context context;
     ArrayList<String> arrayList;
+    String token;
+    String location="1234";
+    boolean moreCanBeLoaded;
+    String username;
 
     public StatusCallService() {
         super();
@@ -73,18 +81,28 @@ public class StatusCallService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ans;
         if(intent!=null){
-            if(intent.getBooleanExtra(DEL, false)){
-                getAllDeletedMessages();
-            }else if(intent.getBooleanExtra(CLEAR, false)){
-                DeleteAllMessages();
-            }else if(intent.getBooleanExtra(HAS_VIEWED, false)){
-                arrayList=intent.getStringArrayListExtra(STATCODES);
-                if(arrayList==null){
-                    arrayList=new ArrayList<>();
-                }
-                HasViewedAllMessages();
-            }else{
-                getAllMessages();
+            String todod=intent.getStringExtra(Stores.TYPE_OF_ACTION);
+            switch (todod){
+                case DEL:
+                    getAllDeletedMessages();
+                    break;
+                case CLEAR:
+                    DeleteAllMessages();
+                    break;
+                case SUBSCRIBE:
+                    subscribeToAllFriendsPosts();
+                    break;
+                case HAS_VIEWED:
+                    arrayList=intent.getStringArrayListExtra(STATCODES);
+                    if(arrayList==null){
+                        arrayList=new ArrayList<>();
+                    }
+                    HasViewedAllMessages();
+                    break;
+                case GET_MSG:
+                default:
+                    getAllMessages();
+                    break;
             }
         }else{
             getAllMessages();
@@ -261,23 +279,7 @@ public class StatusCallService extends Service {
                             }
                         });
                         break;
-                    }/*
-
-                    messages_.setUser_name(getString__(modelll.getAuth_username()));
-                    messages_.setTime(getString__(modelll.getTime()));
-                    messages_.setText(getString__(modelll.getSubtitle()));
-                    messages_.setStatus_id();
-                    messages_.setFav(getString__(modelll.getFav()));
-                    messages_.setImage(getString__(modelll.getImage()));
-                    messages_.setSeen("0");
-
-                    Users_prof users_prof=new Users_prof();
-                    users_prof.setUser_name(modelll.getAuth_username());
-                    users_prof.setFullname(modelll.getAuth_data().getAuth());
-                    users_prof.setImage(modelll.getAuth_data().getAuth_img());
-                    users_prof.save(context);
-
-                    Stime=modelll.getTime();*/
+                    }
                     try {
                         messages_.delete(context, getString__(modelll.getStatus_code()));
                     }catch (Exception r){
@@ -310,6 +312,64 @@ public class StatusCallService extends Service {
         this.fetchMore=fetchMore;
         sendMsgAfterResult=true;
         getAllMessages();
+    }
+
+    private void subscribeToAllFriendsPosts() {
+        Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, false);
+        Retrofit retrofit = ApiClient.getClient();
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        String query="";
+        username=stores.getUsername();
+
+        Call<Model__> call=apiInterface.searchUsers(username, stores.getPass(), stores.getApiKey(), query, location, ""+page);
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ model_l=model_lisj.getPagination();
+
+                int num=model_lis.size();
+
+                for(int i=0; i<num; i++){
+                    Model__ modelll=model_lis.get(i);
+
+                    if(modelll.getError()!=null) {
+                        stores.handleError(modelll.getError(), context, new ServerError() {
+                            @Override
+                            public void onEmptyArray() {
+                            }
+
+                            @Override
+                            public void onShowOtherResult(int res__) {
+                                if (Stores.serviceError.contains(res__)) {
+                                    Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
+                                }
+                            }
+                        });
+                        break;
+                    }
+                    String user_name = modelll.getAuth_username();
+                    FirebaseMessaging.getInstance().subscribeToTopic((user_name+Stores.TopicEND).toLowerCase());//status
+                }
+
+                int pgLeft=Stores.parseInt(model_l.getPagesLeft());
+                moreCanBeLoaded = (pgLeft>0);
+                if(moreCanBeLoaded){
+                    subscribeToAllFriendsPosts();
+                }else{
+                    Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, true);
+                    Prefs.putLong(FirebaseInstanceIdServ.SUBSCRIBE_TIME, System.currentTimeMillis());
+                }
+                page++;
+            }
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "firbase subscribe");
+            }
+        });
     }
 
 

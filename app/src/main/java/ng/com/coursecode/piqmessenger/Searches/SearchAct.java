@@ -38,7 +38,7 @@ public class SearchAct extends PiccMaqCompatActivity {
     Boolean fromSavedState=false;
 
     MaterialSearchView searchView;
-    public String searchQuery;
+    public String searchQuery="";
 
     int currentPage=0;
     int sect;
@@ -93,7 +93,8 @@ public class SearchAct extends PiccMaqCompatActivity {
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                startFragmentTransactions();
+                setSearchQuery(searchQuery);
+                swiper.setRefreshing(false);
             }
         });
         startFragmentTransactions();
@@ -118,7 +119,7 @@ public class SearchAct extends PiccMaqCompatActivity {
                 break;
             case R.string.groups:
                 if(query.isEmpty()){
-                    frag= Groups.newInstance(Groups.listAll);
+                    frag= Groups.newInstance(Groups.listAll, true);
                 }else{
                     frag= Groups.newInstance(query);
                 }
@@ -210,6 +211,7 @@ public class SearchAct extends PiccMaqCompatActivity {
                 Toasta.makeText(this, "oncreate", Toast.LENGTH_SHORT);
             }
         }
+        swiper.setRefreshing(false);
     }
 
 }

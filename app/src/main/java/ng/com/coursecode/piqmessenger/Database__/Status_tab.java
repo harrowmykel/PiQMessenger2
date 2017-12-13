@@ -33,7 +33,7 @@ public class Status_tab {
     public String seen;
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
-    DB_Aro dbHelper;
+    //DB_Aro dbHelper;
     Context context;
     Cursor cursor;
     public String fav;
@@ -58,8 +58,8 @@ public class Status_tab {
     public boolean save(Context context1) {
         context = context1;
         if (context != null) {
-            dbHelper = new DB_Aro(context);
-            wrtable = dbHelper.getWritableDatabase();
+            // dbHelper = DB_Aro.getHelper(context);
+            wrtable = DB_Aro.getWDb(context);
             contentValues = new ContentValues();
             contentValues.put(Stores2.user_name, getUser_name().toLowerCase());
             contentValues.put(Stores2.status_id, getStatus_id());
@@ -99,9 +99,9 @@ public class Status_tab {
 
     public ArrayList<Model__3> listAll(Context context_) {
         context = context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
-        wrtable=dbHelper.getWritableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
+        wrtable=DB_Aro.getWDb(context);
 
         wrtable.delete(Stores2.statusTable, Stores2.time_db+" < ?", new String[]{""+TimeModel.aDayAgo_()});
         ArrayList<Model__3> statuses = new ArrayList<>();
@@ -129,8 +129,8 @@ public class Status_tab {
 
     public ArrayList<Model__3> listAllSearch(Context context_, String query) {
         context = context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String[] projection = {Stores2.user_name};
         query="%"+query+"%";
@@ -240,7 +240,7 @@ public class Status_tab {
         }
         cursor.close();
 //        wrtable.close();
-//        dbHelper.close();
+//        //dbHelper.close();
         return statuses;
     }
 
@@ -327,8 +327,8 @@ public class Status_tab {
 
     public void delete(Context context_, String string__) {
         context = context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String selection = Stores2.status_id + " = ?";
         String[] selectionArgs = {string__};
@@ -351,8 +351,8 @@ public class Status_tab {
 
     public void delete(Context context_) {
         context = context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getReadableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
 
         String selection = null;
         String[] selectionArgs = null;
@@ -364,8 +364,8 @@ public class Status_tab {
 
     public SQLiteDatabase getDb(Context context_) {
         context = context_;
-        dbHelper = new DB_Aro(context);
-        rdbleDb = dbHelper.getWritableDatabase();
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
         return rdbleDb;
     }
 
