@@ -12,16 +12,19 @@ import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
 import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
+import ng.com.coursecode.piqmessenger.Fragments_.StatusFragment;
 import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NetworkCalls.GroupsCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.Servicess.GroupCallService;
 import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import ng.com.coursecode.piqmessenger.SplashScreen;
@@ -46,20 +49,20 @@ public class StartUp {
     public void start(){
         FirebaseInstanceId.getInstance().getToken();
         Prefs.putBoolean(SplashScreen.IS_NT_FIRST_TRIAL, true);
+        Prefs.putBoolean(Stores.PLAY_LIKE, true);
         Prefs.putBoolean(GifAct.srcIsTENOR, true);
+        Prefs.putBoolean(StatusFragment.HAS_SEEN_DEF_STAT, false);
+
         fetchOldThings();
         Prefs.putBoolean(ISLOGINED, true);
     }
-
-
 
     public void fetchOldThings(){
         checkStatus();
         checkMessage();
         Prefs.putBoolean(MessageCallService.CHECKUPDATE, true);
-
-//        GroupsCall groupsCall=new GroupsCall(context);
-//        groupsCall.getAllMessages();
+        Prefs.putBoolean(GroupCallService.CHECKUPDATE, true);
+        checkGroup();
     }
 
     public void checkMessage() {
@@ -77,12 +80,12 @@ public class StartUp {
         Prefs.putString(Profile.USERS_PASS, "");
         Prefs.putBoolean(ISLOGINED, false);
         Prefs.putBoolean(SplashScreen.IS_NT_FIRST_TRIAL, false);
-        StatusCall statusCall=new StatusCall(context);
-        MessagesCall messagesCall=new MessagesCall(context);
-        statusCall.clear();
-        messagesCall.clear();
+//        StatusCall statusCall=new StatusCall(context);
+//        MessagesCall messagesCall=new MessagesCall(context);
+//        statusCall.clear();
+//        messagesCall.clear();
         context.deleteDatabase(DB_Aro.SQLL_DATEBASE_NAME);
-        (DB_Aro.getHelper(context)).clearAll();
+//        (DB_Aro.getHelper(context)).clearAll();
         Prefs.clear();
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
@@ -121,7 +124,7 @@ public class StartUp {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             if(Stores.serviceError.contains(res__)){
                                 Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                             }
@@ -149,6 +152,18 @@ public class StartUp {
             intent.putExtra(Stores.TYPE_OF_ACTION, StatusCallService.SUBSCRIBE);
             context.startService(intent);
         }
+        sub=Prefs.getBoolean(GroupCallService.SUBSCRIBED_TO_FRIENDS, false);
+        subTimeTooOld=(System.currentTimeMillis() - Prefs.getLong(GroupCallService.SUBSCRIBE_TIME, 0))>Stores.SUB_REFRESH_TIME;
+        if(!sub || subTimeTooOld){
+            Intent intent=new Intent(context, GroupCallService.class);
+            intent.putExtra(Stores.TYPE_OF_ACTION, GroupCallService.GET_MSG);
+            context.startService(intent);
+        }
+    }
+
+    public void checkGroup() {
+        GroupsCall groupsCall=new GroupsCall(context);
+        groupsCall.getAllGroups();
     }
 }
 

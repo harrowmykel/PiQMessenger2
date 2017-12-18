@@ -2,7 +2,10 @@ package ng.com.coursecode.piqmessenger.Dialog_;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.view.View;
+
+import com.pixplicity.easyprefs.library.Prefs;
 
 import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -76,6 +79,15 @@ public class LikeDialog implements View.OnClickListener{
     }
 
     public static void playLikeSound(Context context) {
-
+        if(Prefs.getBoolean(Stores.PLAY_LIKE, true)) {
+            MediaPlayer mp = MediaPlayer.create(context, R.raw.balloon_pop);
+            mp.start();
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mpo) {
+                    mpo.release();
+                }
+            });
+        }
     }
 }

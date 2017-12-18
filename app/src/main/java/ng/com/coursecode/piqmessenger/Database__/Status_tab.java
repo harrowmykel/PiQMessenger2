@@ -1,11 +1,15 @@
 package ng.com.coursecode.piqmessenger.Database__;
 
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
@@ -14,6 +18,7 @@ import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
+import ng.com.coursecode.piqmessenger.R;
 
 /**
  * Created by harro on 10/10/2017.
@@ -25,6 +30,7 @@ public class Status_tab {
     public static final String FAV = "FAV";
     public static final String SEEN = "SEEN";
     public static final String CREATE = "create";
+    public static final String INTRO = "heidkhifr";
     public String user_name;
     public String status_id="fskjbjtjktslj;tbobos";
     public String time;
@@ -40,6 +46,7 @@ public class Status_tab {
     private String fullname;
     String user_image;
     String auth;
+    private String type;
 
     public Status_tab(){
 
@@ -67,6 +74,7 @@ public class Status_tab {
             contentValues.put(Stores2.time_db, TimeModel.getLongPhpTime(getTime()));
             contentValues.put(Stores2.text, getText());
             contentValues.put(Stores2.image, getImage());
+            contentValues.put(Stores2.type, getType());
             contentValues.put(Stores2.seen, getSeen());
             contentValues.put(Stores2.sent, "0");
             contentValues.put(Stores2.fav, getFav());
@@ -130,7 +138,8 @@ public class Status_tab {
     public ArrayList<Model__3> listAllSearch(Context context_, String query) {
         context = context_;
         // dbHelper = DB_Aro.getHelper(context);
-        rdbleDb = DB_Aro.getWDb(context);
+        rdbleDb =wrtable= DB_Aro.getWDb(context);
+        wrtable.delete(Stores2.statusTable, Stores2.time_db+" < ?", new String[]{""+TimeModel.aDayAgo_()});
 
         String[] projection = {Stores2.user_name};
         query="%"+query+"%";
@@ -173,6 +182,7 @@ public class Status_tab {
                     Stores2.time,
                     Stores2.text,
                     Stores2.fav,
+                    Stores2.type,
                     Stores2.image,
                     Stores2.seen};
 
@@ -180,7 +190,7 @@ public class Status_tab {
             String[] selectionArgs1 = {auth};
             // How you want the results sorted in the resulting Cursor
             String sortOrder1 = Stores2.time + " ASC";
-
+            rdbleDb=DB_Aro.getWDb(context);
             Cursor cursor1 = rdbleDb.query(Stores2.statusTable,  // The table to query
                     projection1,                               // The columns to return
                     selection1,                                // The columns for the WHERE clause
@@ -213,11 +223,13 @@ public class Status_tab {
                 text = cursor1.getString(cursor1.getColumnIndex(Stores2.text));
                 image = cursor1.getString(cursor1.getColumnIndex(Stores2.image));
                 fav = cursor1.getString(cursor1.getColumnIndex(Stores2.fav));
+                type = cursor1.getString(cursor1.getColumnIndex(Stores2.type));
 
                 status_tab.setStatus_id(status_id);
                 status_tab.setTime(time);
                 status_tab.setText(text);
                 status_tab.setImage(image);
+                status_tab.setType(type);
 
                 status_tab.setFullname(fullname);
                 status_tab.setUser_image(user_image);
@@ -416,6 +428,7 @@ public class Status_tab {
     }
 
     public void sent(SQLiteDatabase rdbleDb, String string__) {
+        rdbleDb=DB_Aro.getWDb(context);
         String selection = Stores2.status_id + " = ?";
         String[] selectionArgs = {string__};
 
@@ -423,5 +436,91 @@ public class Status_tab {
         contentValues.put(Stores2.sent, "1");
 
         rdbleDb.update(Stores2.statusTable, contentValues, selection, selectionArgs);
+    }
+
+    public ArrayList<Model__3> fetchIntro(Context context){
+        ArrayList<Model__3> statuses = new ArrayList<>();
+        ArrayList<Model__3> status_tab_list = new ArrayList<>();
+
+        Model__3 Model__3 = new Model__3();
+        auth=fullname = context.getString(R.string.app_name);
+
+//        Uri uri = Uri.parse("android.resource://your.package.here/drawable/image_name");
+        int vid_id=R.mipmap.ic_launcher;
+
+        Uri file= (new Stores(context)).getResUri(vid_id);
+        user_image = file.toString();
+        Model__3.setFullname(fullname);
+        Model__3.setUsername(fullname);
+        Model__3.setUser_img(user_image);
+        int pos=0;
+        int[] inatARr={R.drawable.selfie, R.drawable.mlogin, R.raw.login_video, R.drawable.login_girl,  R.raw.highlights_intro_video};
+        int[] strARr={R.string.share, R.string.meet, R.string.connect, R.string.beYou, R.string.coonect_intro};
+
+        Status_tab messages_=new Status_tab();
+        for (int vid_id_ : inatARr) {
+            vid_id=vid_id_;
+            file=(new Stores(context)).getRawResUri(vid_id);
+
+            Model__3 status_tab = new Model__3();
+            status_id =(pos==4)?Stores.DEFAULT_STAT:Stores.STATUS_STORE+pos+Stores.STATUS_STORE;
+            time = ""+System.currentTimeMillis();
+            text = (context.getString(strARr[pos]));//Connect, Share, Meet...Piccmaq
+            image = file.toString();
+            fav = "1";
+
+            messages_=new Status_tab();
+            messages_.setUser_name(auth);
+            messages_.setTime(""+(System.currentTimeMillis()/1000));
+            messages_.setText(text);
+            messages_.setStatus_id(status_id);
+            messages_.setFav(fav);
+            messages_.setImage(image);
+            messages_.setSeen("1");
+
+            status_tab.setStatus_id(status_id);
+            status_tab.setTime(time);
+            status_tab.setText(text);
+            status_tab.setImage(image);
+            if(pos==2 || pos==4){
+                type=Stores.VID;
+            }else{
+                type=Stores.IMG;
+            }
+
+            messages_.setType(type);
+            messages_.save(context);
+            status_tab.setType(type);
+
+            status_tab.setFullname(fullname);
+            status_tab.setUser_image(user_image);
+
+            seen = "0";
+            status_tab_list.add(status_tab);
+            pos++;
+        }
+
+        String cd=(new Stores(context)).getResUri(R.drawable.profile_btn_superlike).toString();
+
+        Users_prof users_prof=new Users_prof();
+        users_prof.setUser_name(auth);
+        users_prof.setFullname(auth);
+        users_prof.setImage(cd);
+
+        Model__3.setSeen(false);
+        Model__3.setStatFav(true);
+        Model__3.setUsername(auth);
+
+        Model__3.setStatData(status_tab_list);
+        statuses.add(Model__3);
+        return statuses;
+    }
+
+    public String getType() {
+        return (type==null)?Stores.IMG: type;
+    }
+
+    public String setType(String type) {
+        return this.type=type;
     }
 }

@@ -392,7 +392,7 @@ public class PostsAct extends PiccMaqCompatActivity implements SendDatum {
                     }
 
                     @Override
-                    public void onShowOtherResult(int res__) {
+                    public void onShowOtherResult(String res__) {
                         Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                     }
                 });
@@ -459,7 +459,7 @@ public class PostsAct extends PiccMaqCompatActivity implements SendDatum {
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
         }
     };
 }

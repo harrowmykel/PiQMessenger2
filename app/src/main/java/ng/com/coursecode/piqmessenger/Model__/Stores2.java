@@ -55,6 +55,8 @@ public class Stores2 {
     public static String Comment="comment"+ending__;
     public static String time_db="time_db"+ending__;
     public static String sent="sent"+ending__;
+    public static String type="type"+ending__;
+    public static String notifyTable="notifyTable"+ending__;
 
     public static String toJson(Object model_lis) {
         return (new Gson()).toJson(model_lis);

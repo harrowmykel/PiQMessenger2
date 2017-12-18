@@ -46,7 +46,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(StatusViewHolder holder, final int position) {
+    public void onBindViewHolder(final StatusViewHolder holder, int position) {
         if(messages_list.size()>0){
             Model__3 users_posts=messages_list.get(position);
             String image_to_load, user_dp, time;
@@ -88,7 +88,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusViewHolder> {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    statusClicked.onStatClicked(position, statType);
+                    int positiona=holder.getAdapterPosition();
+                    statusClicked.onStatClicked(positiona, statType);
                 }
             });
         }

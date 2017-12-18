@@ -108,7 +108,7 @@ public class Posts2 extends Fragment {
             @Override
             public void onClick(View v) {
                 loadMore();
-                Toast.makeText(context, ""+page, Toast.LENGTH_SHORT).show();
+                Toasta.makeText(context, ""+page, Toast.LENGTH_SHORT).show();
             }
         });
         (view.findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
@@ -209,7 +209,7 @@ public class Posts2 extends Fragment {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 tx.setVisibility(View.VISIBLE);
                                 tx.setText(res__);
                             }
@@ -443,7 +443,7 @@ public class Posts2 extends Fragment {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }

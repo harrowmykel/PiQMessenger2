@@ -80,6 +80,7 @@ public class StatusCallService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ans;
+        page=1;
         if(intent!=null){
             String todod=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             switch (todod){
@@ -107,7 +108,7 @@ public class StatusCallService extends Service {
         }else{
             getAllMessages();
         }
-        ans=super.onStartCommand(intent, flags, startId);
+        ans=Service.START_NOT_STICKY;
         return ans;
     }
 
@@ -155,7 +156,7 @@ public class StatusCallService extends Service {
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
         }
     };
 
@@ -188,7 +189,7 @@ public class StatusCallService extends Service {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 if(Stores.serviceError.contains(res__)){
                                     Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                                 }
@@ -272,7 +273,7 @@ public class StatusCallService extends Service {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 if(Stores.serviceError.contains(res__)){
                                     Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                                 }
@@ -342,7 +343,7 @@ public class StatusCallService extends Service {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 if (Stores.serviceError.contains(res__)) {
                                     Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                                 }

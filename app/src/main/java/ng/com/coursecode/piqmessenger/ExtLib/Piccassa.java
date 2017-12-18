@@ -122,6 +122,13 @@ public class Piccassa {
 
     }
 
+    public static void loadStatusFrag(Context context, Uri image_to_load, int placeholder, ImageView view, Callback callback){
+        Picasso.with(context)
+                .load(image_to_load)
+                .into(view, callback);
+
+    }
+
     public static void load(Context context, String image_to_load, ImageView view){
         Picasso.with(context)
                 .load(image_to_load)

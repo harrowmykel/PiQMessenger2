@@ -70,6 +70,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactViewHolder> {
             if(like!=null && !like.isEmpty()){
                 holder.users_like.setImageResource(Stores.getLikeImageRes(like));
             }
+            boolean admin=messages.getIsAdmin();
+            if(admin){
+                holder.users_like.setImageResource(R.drawable.admin);
+            }
             Piccassa.load(context, messages.image, R.drawable.user_sample, holder.users_dp);
         }
     }

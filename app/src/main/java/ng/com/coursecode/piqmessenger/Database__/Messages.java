@@ -7,10 +7,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.stfalcon.chatkit.commons.models.IMessage;
+import com.stfalcon.chatkit.commons.models.IUser;
+import com.stfalcon.chatkit.commons.models.MessageContentType;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import hirondelle.date4j.DateTime;
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
+import ng.com.coursecode.piqmessenger.ExtLib.Authorss;
 import ng.com.coursecode.piqmessenger.Model__.Model__2;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
@@ -19,17 +27,19 @@ import ng.com.coursecode.piqmessenger.Model__.Stores2;
  * Created by harro on 10/10/2017.
  */
 
-public class Messages{
+public class Messages implements IMessage, MessageContentType.Image{
 
     public String user_name;
     public String msg_id;//msg_id
-    public String mess_age;
+    public String mess_age="";
     public String tim_e;
     public String time_stamp;
     public String auth;
     public String confirm="w";
-    public String image;
+    public String image="";
     public String recip;
+    String last_user="a%";
+    Users_prof users_prof;
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
     Cursor cursor;
@@ -41,6 +51,7 @@ public class Messages{
     long newId;
     private String fullname;
     private int sent=0;
+    Authorss authors;
 
     public Messages(){
 
@@ -59,10 +70,14 @@ public class Messages{
         setImage(image);
     }
 
+    public void setAuthorss(String username, String fullname, String image) {
+        authors=new Authorss(username, fullname, image);
+    }
+
     public boolean save(Context context1) {
         context = context1;
         if (context != null) {
-            
+
             wrtable = DB_Aro.getWDb(context);
             contentValues = getCValues();
 
@@ -95,7 +110,7 @@ public class Messages{
     public boolean saveNew(Context context1) {
         context = context1;
         if (context != null) {
-            
+
             wrtable = DB_Aro.getWDb(context);
             contentValues = getCValues();
             String sTable = Stores2.messagesTable;
@@ -257,9 +272,9 @@ public class Messages{
     public List<Messages> listAll(Context context, List<String> msg_) {
         List<Messages> msgs = new ArrayList<>();
         Stores store=new Stores(context);
-
         int msgTurn=msg_.size();
         for (String uname:msg_ ) {
+            rdbleDb=DB_Aro.getWDb(context);
             String[] projection = {Stores2.id_,
                     Stores2.auth,
                     Stores2.recip,
@@ -402,7 +417,7 @@ public class Messages{
     }
 
     public String getImage() {
-        return image;
+        return image==null?"":image;
     }
 
     public void setImage(String image) {
@@ -426,6 +441,7 @@ public class Messages{
     }
 
     public List<Messages> listAllFromUser(Context context, String recipp) {
+        this.context=context;
         List<Messages> msgs = new ArrayList<>();
         // dbHelper = DB_Aro.getHelper(context);
         rdbleDb = DB_Aro.getWDb(context);
@@ -473,8 +489,6 @@ public class Messages{
             confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
             msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
 
-
-
             auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
             recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
 
@@ -486,12 +500,27 @@ public class Messages{
             messages.setImage(image);
             messages.setConfirm(confirm);
             messages.setmsg_id(msg_id);
+            messages.setAuthorUp(auth, store);
 
             if(!auth.isEmpty())
                 msgs.add(messages);
         }
         cursor.close();
         return msgs;
+    }
+
+    public void setAuthorUp(String auth, Stores store) {
+        String username;
+        if(auth.equalsIgnoreCase(store.getUsername())){
+            username=recip;
+        }else {
+            username=auth;
+        }
+        if(!last_user.equalsIgnoreCase(username)){
+            users_prof=Users_prof.getInfo(context, username);
+        }
+
+        setAuthorss(username, users_prof.getFullname(), users_prof.getImage());
     }
 
     public int getSent() {
@@ -593,5 +622,37 @@ public class Messages{
         String queryy="Delete from "+Stores2.messagesTable+" WHERE "+msgs1;
 
         rdbleDb.rawQuery(queryy, array);
+    }
+
+    @Override
+    public String getId() {
+        return getMess_age();
+    }
+
+    @Override
+    public String getText() {
+        return getMess_age();
+    }
+
+    @Override
+    public Authorss getUser() {
+        return getAuthorss();
+    }
+
+    @Override
+    public Date getCreatedAt() {
+        long milli=0;//(new DateTime(getTim_e())).getMilliseconds(TimeZone.getDefault());
+        milli=milli*1000;
+        milli=System.currentTimeMillis();
+        return new Date(milli);
+    }
+
+    public Authorss getAuthorss() {
+        return authors;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getImage();
     }
 }

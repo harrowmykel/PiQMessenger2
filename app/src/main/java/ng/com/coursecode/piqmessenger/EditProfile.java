@@ -141,7 +141,7 @@ public class EditProfile extends PiccMaqCompatActivity {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 tx.setVisibility(View.VISIBLE);
                                 tx.setText(res__);
                             }
@@ -198,7 +198,7 @@ public class EditProfile extends PiccMaqCompatActivity {
                 }
             }
         }else{
-            Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
+            Toasta.makeText(context, R.string.loading, Toast.LENGTH_SHORT);
         }
     }
 
@@ -248,7 +248,7 @@ public class EditProfile extends PiccMaqCompatActivity {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }

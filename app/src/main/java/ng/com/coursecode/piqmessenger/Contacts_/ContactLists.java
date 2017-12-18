@@ -139,6 +139,11 @@ public class ContactLists extends Fragment {
                     call=apiInterface.getLikes(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, post_id, ""+page);
                 }
                 break;
+            case LikesAct.VIEW_GROUP:
+                if((post_id!=null) && !post_id.isEmpty()){
+                    call=apiInterface.getGroupMembers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, post_id, ""+page);
+                }
+                break;
             case STATUSACT:
                 if((status_code!=null) && !status_code.isEmpty()){
                     call=apiInterface.searchStatusUsers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, status_code, ""+page);
@@ -178,7 +183,7 @@ public class ContactLists extends Fragment {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 tx.setVisibility(View.VISIBLE);
                                 tx.setText(res__);
                             }
@@ -190,7 +195,7 @@ public class ContactLists extends Fragment {
                     String user_name = modelll.getAuth_username();
                     String image=modelll.getAuth_data().getAuth_img();
                     String fullname=modelll.getAuth_data().getFullname();
-                    String friends=modelll.getAuth_data().getFullname();
+                    String friends=modelll.getIs_Admin();
                     String subtitle=modelll.getSubtitle();
 
                     status.setUser_name(user_name);
@@ -200,6 +205,8 @@ public class ContactLists extends Fragment {
                     status.setFrndsData(modelll.getFrndsData());
 
                     status.setLike(modelll.getLiked());
+                    status.setIsAdmin(friends);
+
                     if(!messages.contains(status)){
                         messages.add(status);
                     }
@@ -334,7 +341,7 @@ public class ContactLists extends Fragment {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }

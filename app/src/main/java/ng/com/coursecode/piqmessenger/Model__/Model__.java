@@ -195,6 +195,10 @@ public class Model__ {
     @Expose
     private String online;
 
+    @SerializedName("is_admin")
+    @Expose
+    private String is_Admin;
+
     public FrndsData getFrndsData() {
         return frndsData;
     }
@@ -387,8 +391,8 @@ public class Model__ {
         this.place = place;
     }
 
-    public String getApproved() {
-        return approved;
+    public boolean getApproved() {
+        return (approved!=null && approved.equalsIgnoreCase("1"));
     }
 
     public void setApproved(String approved) {
@@ -684,4 +688,7 @@ public class Model__ {
     }
 
 
+    public String getIs_Admin() {
+        return is_Admin;
+    }
 }

@@ -136,6 +136,8 @@
         </service>
         <service android:name=".Servicess.MessageCallService" />
         <service android:name=".Servicess.StatusCallService" />
+        <service android:name=".Servicess.GroupCallService" />
+        <service android:name=".Servicess.NotifyCallService" />
         <!-- ./Firebase Notifications -->
         <activity
             android:name=".PostsAct.LikesAct"
@@ -174,7 +176,8 @@
         <activity
             android:name=".Conversate.Message"
             android:label="@string/title_activity_message"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".NotificationsA.NotificationsAct"></activity>
     </application>
 
 </manifest>

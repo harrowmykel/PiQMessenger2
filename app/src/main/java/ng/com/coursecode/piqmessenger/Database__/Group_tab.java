@@ -364,4 +364,12 @@ public class Group_tab implements Parcelable {
 
         rdbleDb.close();
     }
+
+    public void clear(Context context) {
+        rdbleDb = DB_Aro.getWDb(context);
+        String selection = null;
+        String[] selectionArgs = null;
+        rdbleDb.delete(Stores2.groupTable, selection, selectionArgs);
+        rdbleDb.close();
+    }
 }

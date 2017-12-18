@@ -30,6 +30,7 @@ import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
+import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
@@ -99,7 +100,7 @@ public class Profile extends PiccMaqCompatActivity {
                 if (user_data != null) {
                     sendFriendReq();
                 } else {
-                    Toast.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT).show();
+                    Toasta.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -192,7 +193,7 @@ public class Profile extends PiccMaqCompatActivity {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }
@@ -245,7 +246,7 @@ public class Profile extends PiccMaqCompatActivity {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 tx.setVisibility(View.VISIBLE);
                                 tx.setText(res__);
                             }

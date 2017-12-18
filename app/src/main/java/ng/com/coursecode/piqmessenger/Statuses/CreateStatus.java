@@ -163,9 +163,11 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
         if(!defaultImgUrl.isEmpty()){
             tempUri=Uri.parse(defaultImgUrl);
             Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+            isReady=true;
         }else{
             tempUri=ImageActivity.getLastImage(context);
             Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+            isReady=true;
         }
     }
 
@@ -205,7 +207,7 @@ public class CreateStatus extends FullScreenActivity implements View.OnClickList
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }

@@ -26,6 +26,7 @@ import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.Servicess.GroupCallService;
 import ng.com.coursecode.piqmessenger.Servicess.MessageCallService;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import retrofit2.Call;
@@ -58,6 +59,12 @@ public class MessagesCall {
     public void sendAllMessages() {
         intent.putExtra(MessageCallService.SEND_NEW, "Jnd");
         intent.putExtra(Stores.TYPE_OF_ACTION, MessageCallService.SEND_NEW);
+        context.startService(intent);
+    }
+
+    public void getAllGroups() {
+        intent=new Intent(context, GroupCallService.class);
+        intent.putExtra(Stores.TYPE_OF_ACTION, GroupCallService.GET_MSG);
         context.startService(intent);
     }
 

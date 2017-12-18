@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,10 +22,7 @@ import java.util.ArrayList;
 import ng.com.coursecode.piqmessenger.Adapters__.StatusAdapter;
 import ng.com.coursecode.piqmessenger.Adapters__.StatusAdapterRecommended;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Interfaces.FetchMore;
 import ng.com.coursecode.piqmessenger.Interfaces.StatusClicked;
-import ng.com.coursecode.piqmessenger.Model__.Model__2;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
@@ -53,7 +49,7 @@ public class Status extends Fragment {
     ArrayList<Model__3> messages=new ArrayList<>();
     ArrayList<Model__3> messagesrecommended=new ArrayList<>();
     ArrayList<Model__3> messagesseen=new ArrayList<>();
-    SwipeRefreshLayout swipeRefreshLayout;
+//    SwipeRefreshLayout swipeRefreshLayout;
 
     Status_tab status = new Status_tab();
     ArrayList<Model__3> statuses;
@@ -72,7 +68,6 @@ public class Status extends Fragment {
         stores=new Stores(context);
         status = new Status_tab();
         oldsavedInstanceState=savedInstanceState;
-        swipeRefreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
         recyclerView=(RecyclerView)view.findViewById(R.id.main_recycle);
         seenrecyclerView=(RecyclerView)view.findViewById(R.id.main_recycle1);
         recommendedrecyclerView=(RecyclerView)view.findViewById(R.id.main_recycle2);
@@ -82,16 +77,10 @@ public class Status extends Fragment {
             setLists();
         else
             setOLists();
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                StatusCall statusCall=new StatusCall(context);
-                statusCall.getAllMessages();
-            }
-        });
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
                 new IntentFilter(REFRESH_VIEW_STATUS));
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(Stores.REFRESH_ACTIVITY_STATUS));
         return view;
     }
 
@@ -133,10 +122,16 @@ public class Status extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            if(!requestCreate) {
-                setOLists();
-            }else{
-                setLists();
+            String action=intent.getAction();
+            if(action.equalsIgnoreCase(REFRESH_VIEW_STATUS)) {
+                if (!requestCreate) {
+                    setOLists();
+                } else {
+                    setLists();
+                }
+            }else if(action.equalsIgnoreCase(Stores.REFRESH_ACTIVITY_STATUS)){
+                StatusCall statusCall=new StatusCall(context);
+                statusCall.getAllMessages();
             }
         }
     };
@@ -149,7 +144,6 @@ public class Status extends Fragment {
     }
 
     public void setLists() {
-        swipeRefreshLayout.setRefreshing(true);
 
         messages = new ArrayList<>();
         messagesrecommended = new ArrayList<>();
@@ -182,7 +176,7 @@ public class Status extends Fragment {
 
         StatusAdapter statusAdapter=new StatusAdapter(messages, Status_tab.UNSEEN, statusClicked);
         StatusAdapter statusAdapterseen=new StatusAdapter(messagesseen, Status_tab.SEEN, statusClicked);
-        StatusAdapterRecommended statusAdapterrecommended=new StatusAdapterRecommended(messagesrecommended, statusClicked);
+        StatusAdapterRecommended statusAdapterrecommended=new StatusAdapterRecommended(context, messagesrecommended, statusClicked);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         RecyclerView.LayoutManager mLayoutManagerseen = new LinearLayoutManager(context);
@@ -210,7 +204,6 @@ public class Status extends Fragment {
         statusAdapter.notifyDataSetChanged();
         statusAdapterseen.notifyDataSetChanged();
         statusAdapterrecommended.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     public static Status newInstance(){
@@ -235,6 +228,10 @@ public class Status extends Fragment {
                     break;
                 case Status_tab.FAV:
                     intent.putExtra(Show_Status.DATA_, (messagesrecommended));
+                    break;
+                case Status_tab.INTRO:
+                    ArrayList<Model__3> messagesintro=(new Status_tab()).fetchIntro(context);
+                    intent.putExtra(Show_Status.DATA_, (messagesintro));
                     break;
                 case Status_tab.UNSEEN:
                     intent.putExtra(Show_Status.DATA_, (messages));

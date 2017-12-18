@@ -52,6 +52,7 @@ public class LikesAct extends PiccMaqCompatActivity {
     public static final String ONLINE_FRIENDS = "online";//must alwayzs be lowercase
     public static final String BIRTHDAY = "birthday";
     public static final String VIEWSTATUS = ContactLists.STATUSACT;
+    public static final String VIEW_GROUP = "kfnklnf";
     private static String contacts="kwrnefeksj;nfsk";
     private TextView mTextMessage;
     FrameLayout frameLayout;
@@ -98,6 +99,10 @@ public class LikesAct extends PiccMaqCompatActivity {
                 case VIEWSTATUS:
                     action_type = VIEWSTATUS;
                     cc_title=getString(R.string.view_users);
+                    break;
+                case VIEW_GROUP:
+                    action_type = VIEW_GROUP;
+                    cc_title=getString(R.string.view_members);
                     break;
                 default:
                     action_type = ContactLists.LIKESACT;

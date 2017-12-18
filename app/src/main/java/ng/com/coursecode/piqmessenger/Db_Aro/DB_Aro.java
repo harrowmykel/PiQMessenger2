@@ -22,7 +22,7 @@ public class DB_Aro extends SQLiteOpenHelper {
 
     public static final String SQLL_DATEBASE_NAME = "piqmessenger__";
     public static final String SQLL_DATABASE_TABLE = "PROVERB_TABLE";
-    private static final int SQLL_DATABASE_VERSION = 5;
+    private static final int SQLL_DATABASE_VERSION = 1;
     Context context;
     private static DB_Aro instance;
     private static SQLiteDatabase Dbinstance;
@@ -65,6 +65,7 @@ public class DB_Aro extends SQLiteOpenHelper {
                 Stores2.time + " TEXT NOT NUll, " +
                 Stores2.time_db + " INTEGER(12) NOT NUll, " +
                 Stores2.text + " TEXT NOT NUll, " +
+                Stores2.type + " TEXT NOT NUll, " +
                 Stores2.image + " TEXT NOT NUll, " +
                 Stores2.fav + " TEXT NOT NUll, " +
                 Stores2.sent + " TEXT NOT NUll, " +
@@ -131,7 +132,5 @@ public class DB_Aro extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.postsTable);
         db.execSQL("DROP TABLE IF EXISTS " + Stores2.discoverTable);
         onCreate(db);
-//        db.close();
-//        //dbHelper.close();
     }
 }

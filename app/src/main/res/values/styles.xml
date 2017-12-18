@@ -16,6 +16,7 @@
         <item name="colorPrimary">@color/red500</item>
         <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/blueGray400</item>
+        <item name="android:background">@color/cardview_shadow_start_color</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppThemeProg_sd" parent="Theme.AppCompat.Light.DarkActionBar">

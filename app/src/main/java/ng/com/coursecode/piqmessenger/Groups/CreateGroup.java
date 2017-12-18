@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Database__.Group_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.EditProfile;
 import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
@@ -27,6 +29,8 @@ import ng.com.coursecode.piqmessenger.ImageActivity;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
+import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
@@ -60,7 +64,8 @@ public class CreateGroup extends PiccMaqCompatActivity {
     private int small_icon= R.drawable.profile_add_photo;
     private String POST_FOLDER;//="solder/";
     boolean isReady=false;
-    private boolean isLoaded=false;
+    private boolean isLoaded=false, isEditing=false;
+    View prof_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,30 +73,112 @@ public class CreateGroup extends PiccMaqCompatActivity {
         setContentView(R.layout.activity_creategroup);
         context=CreateGroup.this;
         stores = new Stores(context);
-        username_= stores.getUsername();
+        username_= getIntent().getStringExtra(GroupsAct.USERNAME);
         username_=(username_==null)?(new Stores(context)).getUsername():username_;
 
         fullname=(EditText)findViewById(R.id.fullname);
         username=(EditText)findViewById(R.id.username);
+        prof_msg=findViewById(R.id.prof_msg);
         bio=(EditText)findViewById(R.id.bio_content);
         user_dp=(CircleImageView) findViewById(R.id.prof_pic);
         isLoaded=true;
-       /* String ab="@"+ username_;
-        username.setText(ab);
-
-        Users_prof users_prof=Users_prof.getInfo(context, username_);
-        Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
-        fullname.setText(users_prof.getFullname());
-        setTitle(users_prof.getFullname());*/
-
-
         user_dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelector();
             }
         });
+        prof_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent=new Intent(context, LikesAct.class);
+                intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.VIEW_GROUP);
+                intent.putExtra(PostsAct.POSTID, username_);
+                startActivity(intent);
+            }
+        });
+        Intent gIntent=getIntent();//class);
+        String type_of=gIntent.getStringExtra(Stores.TYPE_OF_ACTION);
+        type_of=(type_of==null)?"":type_of;
+        isEditing=type_of.equalsIgnoreCase(Stores.EDIT);
 
+        if(isEditing){
+            username.setEnabled(false);
+            username.setText(username_);
+            prof_msg.setVisibility(View.VISIBLE);
+            setUpProfile();
+        }else{
+            prof_msg.setVisibility(View.GONE);
+            username.setEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(isEditing){
+            setTitle(R.string.edit);
+        }
+    }
+
+    private void setUpProfile() {
+isLoaded=false;
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        Call<Model__> call=apiInterface.getGroup(stores.getUsername(), stores.getPass(), stores.getApiKey(), username_);
+
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+
+                Model__ model_lisj = response.body();
+                List<Model__> model_list = model_lisj.getData();
+                Model__ model_l = model_lisj.getPagination();
+                int num = model_list.size();
+
+                String any = model_l.getPagesLeft();
+                int pgLeft = Stores.parseInt(any);
+                if (num > 0) {
+                    Model__ modelll = model_list.get(0);
+                    final TextView tx = (TextView) findViewById(R.id.warning_);
+                    tx.setVisibility(Stores.initView);
+                    if (modelll.getError() != null) {
+                        stores.handleError(modelll.getError(), context, new ServerError() {
+                            @Override
+                            public void onEmptyArray() {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(R.string.no_result_found);
+                            }
+
+                            @Override
+                            public void onShowOtherResult(String res__) {
+                                tx.setVisibility(View.VISIBLE);
+                                tx.setText(res__);
+                            }
+                        });
+                    }else{
+                        String user_name = modelll.getAuth_username();
+                        String image=modelll.getAuth_data().getAuth_img();
+                        String fullnames=modelll.getAuth_data().getFullname();
+                        String friends=modelll.getAuth_data().getFullname();
+                        String subtitle=modelll.getSubtitle();
+                        final String bioo=modelll.getBio();
+
+                        fullname.setText(fullnames);
+                        Piccassa.load(context, image, R.drawable.user_sample, user_dp);
+                        bio.setText(bioo);
+                        isLoaded=true;
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "postscall");
+            }
+        });
     }
 
     @Override
@@ -121,6 +208,8 @@ public class CreateGroup extends PiccMaqCompatActivity {
                     sendToServer("");
                 }
             }
+        }else {
+            Toasta.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT);
         }
     }
 
@@ -149,8 +238,9 @@ public class CreateGroup extends PiccMaqCompatActivity {
         final String name=fullname.getText().toString();
 
         if(g_username.length()<3){
-            Toast.makeText(context, R.string.inv_user, Toast.LENGTH_SHORT).show();
-            Toast.makeText(context, getString(R.string.usergtThan, 3), Toast.LENGTH_SHORT).show();
+            Toasta.makeText(context, R.string.inv_user, Toast.LENGTH_SHORT);
+            Toasta.makeText(context, getString(R.string.usergtThan, 3), Toast.LENGTH_SHORT);
+            return;
         }
 
         Retrofit retrofit = ApiClient.getClient();
@@ -158,6 +248,10 @@ public class CreateGroup extends PiccMaqCompatActivity {
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
         Call<Model__> call = apiInterface.createGroup(stores.getUsername(), stores.getPass(), stores.getApiKey(), name, g_username, text, urltoImage);
+
+        if(isEditing){
+            call = apiInterface.editGroup(stores.getUsername(), stores.getPass(), stores.getApiKey(), name, g_username, text, urltoImage);
+        }
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -176,13 +270,17 @@ public class CreateGroup extends PiccMaqCompatActivity {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }
                     });
                 }else if(modelll.getSuccess() !=null){
-                    Toasta.makeText(context, getString((R.string.group_created)), Toast.LENGTH_SHORT);
+                    if(isEditing){
+                        Toasta.makeText(context, getString((R.string.group_edited)), Toast.LENGTH_SHORT);
+                    }else{
+                        Toasta.makeText(context, getString((R.string.group_created)), Toast.LENGTH_SHORT);
+                    }
                     Group_tab usertab=new Group_tab();
                     usertab.setUser_name(g_username);
                     usertab.setFullname(name);

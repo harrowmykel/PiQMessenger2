@@ -21,6 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Adapters__.ListAdapter_;
 import ng.com.coursecode.piqmessenger.Contacts_.ContactAct;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.Dialog_.LearnDialog;
 import ng.com.coursecode.piqmessenger.EditProfile;
 import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
@@ -28,6 +29,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.MainActivity;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NotificationsA.NotificationsAct;
 import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
@@ -58,12 +60,12 @@ public class Menu_ extends PiccMaqCompatActivity {
     Context context;
     String username_;
 
-    int[] list1List1={R.string.edit_profile, R.string.friends, R.string.online_friends};
+    int[] list1List1={R.string.edit_profile, R.string.friends, R.string.find_people, R.string.online_friends};
     int[] list1List2={R.string.games_and_fun,   R.string.notifications};//,R.string.birthday_celebrants, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
     int[] list1List3={R.string.home, R.string.messages, R.string.groups, R.string.help};
 
     int[] list1List1img={R.string.edit_profile, R.string.friends, R.string.online_friends};
-    int[] list1List2img={R.string.games_and_fun, R.string.birthday_celebrants,  R.string.notifications};//, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
+    int[] list1List2img={R.string.games_and_fun, R.string.birthday_celebrants,  R.string.notifications, R.string.learn_how_to_use};//, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
     int[] list1List3img={R.string.home, R.string.messages, R.string.groups, R.string.help};
 
     @Override
@@ -154,17 +156,22 @@ public class Menu_ extends PiccMaqCompatActivity {
                     intent=new Intent(context, EditProfile.class);
                     break;
                 case R.string.friends:
+                case R.string.find_people:
                     intent=new Intent(context, ContactAct.class);
                     break;
                 case R.string.online_friends:
                     intent=new Intent(context, LikesAct.class);
                     intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.ONLINE_FRIENDS);
                     break;
+                case R.string.learn_how_to_use:
+                    (new LearnDialog(context)).show();
+                    break;
                 case R.string.birthday_celebrants:
                     intent=new Intent(context, LikesAct.class);
                     intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.BIRTHDAY);
                     break;
                 case R.string.notifications:
+                    intent=new Intent(context, NotificationsAct.class);
                     break;
                 case R.string.games_and_fun:
                     break;

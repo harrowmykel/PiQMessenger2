@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -59,6 +60,7 @@ public class SignActivity extends FullScreenActivity {
         login=getIntent().getBooleanExtra(IS_LOGIN, false);
         if(!login){
             ((TextView)(findViewById(R.id.log_in))).setText(R.string.signup);
+            ((ImageView)findViewById(R.id.img_src)).setImageResource(R.drawable.mlogin);
         }
         mETxt=(MaterialEditText)findViewById(R.id.username_sign);
         mETxtPass=(MaterialEditText)findViewById(R.id.pass_sign);
@@ -100,7 +102,7 @@ public class SignActivity extends FullScreenActivity {
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             mETxt.setError(getString(R.string.inv_user));
                         }
                     });

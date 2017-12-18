@@ -54,6 +54,7 @@ public class Model__3 implements Parcelable {
     private ArrayList<Model__3> statData;
     private boolean statFav;
     public String status_id="fskjbjtjktslj;tbobos";
+    private String type;
 
     public Model__3(){
 
@@ -212,6 +213,7 @@ public class Model__3 implements Parcelable {
         user_img = in.readString();
         fullname = in.readString();
         fav = in.readString();
+        type = in.readString();
         status_code = in.readString();
         if (in.readByte() == 0x01) {
             db_resultPosts = new ArrayList<Posts_tab>();
@@ -248,6 +250,7 @@ public class Model__3 implements Parcelable {
         dest.writeString(user_img);
         dest.writeString(fullname);
         dest.writeString(fav);
+        dest.writeString(type);
         dest.writeString(status_code);
         if (db_resultPosts == null) {
             dest.writeByte((byte) (0x00));
@@ -278,4 +281,11 @@ public class Model__3 implements Parcelable {
             return new Model__3[size];
         }
     };
+
+    public String getType() {
+        return (type==null)?Stores.IMG: type;
+    }
+    public String setType(String type) {
+        return this.type=type;
+    }
 }

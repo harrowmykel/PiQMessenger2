@@ -1,12 +1,15 @@
 package ng.com.coursecode.piqmessenger.Fragments_;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,7 +72,7 @@ public class Posts extends Fragment {
     LinearLayoutManager mHoriLazout;
     int toSkip=0;
     String query="", who="";
-    FancyButton post_more;
+    View post_more;
     TextView tx;
 
     Handler handler;
@@ -106,6 +109,9 @@ public class Posts extends Fragment {
             what_to_do = (getArguments().getString(TYPE_OF_ACTION, ""));
         }
         loadPostFrag();
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(Stores.REFRESH_ACTIVITY_GROUP));
         return view;
     }
 
@@ -114,12 +120,33 @@ public class Posts extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
+    @Override
+    public void onDestroyView() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
+        super.onDestroyView();
+    }
+
+    // Our handler for received Intents. This will be called whenever an Intent
+// with an action named "custom-event-name" is broadcasted.
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String action=intent.getAction();
+            if(action.equalsIgnoreCase(Stores.REFRESH_ACTIVITY_POST)){
+                loadPostFrag();
+            }
+        }
+    };
+
     public void loadPostFrag() {
         context = getContext();
         startLoader();
         seenrecyclerView = (RecyclerView) view.findViewById(R.id.main_recycle);
         recommendedrecyclerView = (RecyclerView) view.findViewById(R.id.main_recycle2);
-        post_more = (FancyButton) view.findViewById(R.id.post_more);
+        post_more =  view.findViewById(R.id.post_more);
         post_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -587,7 +614,7 @@ public class Posts extends Fragment {
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
             tx.setVisibility(View.VISIBLE);
             tx.setText(res__);
         }

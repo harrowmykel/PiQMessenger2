@@ -21,6 +21,7 @@ import java.util.List;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import ng.com.coursecode.piqmessenger.Adapters__.ConvoAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
+import ng.com.coursecode.piqmessenger.Conversate.Message;
 import ng.com.coursecode.piqmessenger.Database__.Messages;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Interfaces.ConvoInterface;

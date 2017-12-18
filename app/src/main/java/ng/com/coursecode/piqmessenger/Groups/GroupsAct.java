@@ -22,6 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Database__.Group_tab;
 import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
+import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Fragments_.Groups;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
@@ -29,7 +30,9 @@ import ng.com.coursecode.piqmessenger.Mmenu.Menu_;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
+import ng.com.coursecode.piqmessenger.PostsAct.LikesAct;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
+import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
@@ -53,7 +56,7 @@ public class GroupsAct extends PiccMaqCompatActivity {
     String username_;
     Context context;
 
-    MaterialFancyButton frnds_req;
+    MaterialFancyButton frnds_req, prof_msg;
     TextView fullname, username, bio;
     CircleImageView user_dp;
     Stores stores;
@@ -89,7 +92,21 @@ public class GroupsAct extends PiccMaqCompatActivity {
                 if (user_data != null) {
                     sendFriendReq();
                 } else {
-                    Toast.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT).show();
+                    Toasta.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT);
+                }
+            }
+        });
+        prof_msg = (MaterialFancyButton) findViewById(R.id.prof_msg);
+        prof_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user_data != null) {
+                    Intent gIntent=new Intent(context, CreateGroup.class);
+                    gIntent.putExtra(Stores.TYPE_OF_ACTION, Stores.EDIT);
+                    gIntent.putExtra(USERNAME, username_);
+                    startActivity(gIntent);
+                } else {
+                    Toasta.makeText(context, R.string.profile_loading, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -220,6 +237,7 @@ public class GroupsAct extends PiccMaqCompatActivity {
                         String fullnames=user_data.getAuth_data().getFullname();
                         final String bioo=user_data.getBio();
                         boolean verified=user_data.getVerified();
+                        boolean approved=user_data.getApproved();
 
                         fullname_=fullnames;
                         grp_img=image;
@@ -238,6 +256,11 @@ public class GroupsAct extends PiccMaqCompatActivity {
                                 showMessage(bioo);
                             }
                         });
+                        if(!approved){
+                            prof_msg.setVisibility(View.GONE);
+                        }else{
+                            prof_msg.setVisibility(View.VISIBLE);
+                        }
 
                         type=user_data.getConfirm();
                         if(user_name.toLowerCase().equalsIgnoreCase(stores.getUsername().toLowerCase())){
@@ -279,9 +302,9 @@ public class GroupsAct extends PiccMaqCompatActivity {
         Intent intent;
         switch(item.getItemId()){
             case R.id.profile:
-                String username=stores.getUsername();
-                intent=new Intent(context, GroupsAct.class);
-                intent.putExtra(GroupsAct.USERNAME, username);
+                intent=new Intent(context, LikesAct.class);
+                intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.VIEW_GROUP);
+                intent.putExtra(PostsAct.POSTID, username_);
                 startActivity(intent);
                 break;/*;
             case R.id.edit_profile:
@@ -304,7 +327,7 @@ public class GroupsAct extends PiccMaqCompatActivity {
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
             tx.setVisibility(View.VISIBLE);
             tx.setText(res__);
         }

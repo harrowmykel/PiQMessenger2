@@ -33,6 +33,7 @@ public class Users_prof implements Parcelable {
     public String friends;
     public FrndsData frndsData;
     private String like;
+    private String isAdmin;
 
     ContentValues contentValues;
     SQLiteDatabase wrtable, rdbleDb;
@@ -279,6 +280,7 @@ public class Users_prof implements Parcelable {
         out.writeString(fullname);
         out.writeString(image);
         out.writeString(friends);
+        out.writeString(isAdmin);
         out.writeString(like);
     }
 
@@ -299,6 +301,7 @@ public class Users_prof implements Parcelable {
         fullname= in.readString();
         image= in.readString();
         friends= in.readString();
+        isAdmin= in.readString();
         like= in.readString();
     }
 
@@ -357,4 +360,13 @@ public class Users_prof implements Parcelable {
     public String getLike() {
         return like;
     }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public boolean getIsAdmin() {
+        return (isAdmin!=null && isAdmin.equalsIgnoreCase("1"));
+    }
+
 }

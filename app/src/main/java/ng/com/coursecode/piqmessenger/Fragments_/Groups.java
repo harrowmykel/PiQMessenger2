@@ -1,10 +1,13 @@
 package ng.com.coursecode.piqmessenger.Fragments_;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -21,6 +25,7 @@ import java.util.List;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import ng.com.coursecode.piqmessenger.Adapters__.GroupAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Group_tab;
+import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Groups.CreateGroup;
 import ng.com.coursecode.piqmessenger.Groups.GroupsAct;
@@ -28,6 +33,7 @@ import ng.com.coursecode.piqmessenger.Interfaces.ContactsItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
+import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
 import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
 import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
@@ -46,6 +52,7 @@ public class Groups extends Fragment {
     public static final String DELETE_FRND = Stores.DELETE_FRND;
     public static final String ACCEPT_FRND = Stores.ACCEPT_FRND;
     public static final String SEND_FRND = Stores.SEND_FRND;
+    public static final String REFRESH_VIEW_GROUP = "HJkbkfjj";
     public static String listAll="1234";
     View view;
     Context context;
@@ -66,11 +73,20 @@ public class Groups extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.recycler_layout_group, container, false);
-        context=getContext();
-        recyclerView=(RecyclerView)view.findViewById(R.id.main_recycle);
+        view = inflater.inflate(R.layout.recycler_layout_group, container, false);
+        context = getContext();
+        recyclerView = (RecyclerView) view.findViewById(R.id.main_recycle);
 
-        tx=(TextView)view.findViewById(R.id.warning);
+        tx = (TextView) view.findViewById(R.id.warning);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(REFRESH_VIEW_GROUP));
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(Stores.REFRESH_ACTIVITY_GROUP));
+        startFrag();
+        return view;
+    }
+
+    public void startFrag(){
 
         (view.findViewById(R.id.create)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,8 +112,29 @@ public class Groups extends Fragment {
         }else{
             setSearchLists();
         }
-//        HashMap
-        return view;
+    }
+
+    // Our handler for received Intents. This will be called whenever an Intent
+// with an action named "custom-event-name" is broadcasted.
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String action=intent.getAction();
+            if(action.equalsIgnoreCase(Stores.REFRESH_ACTIVITY_GROUP)){
+                (new StartUp(context)).checkGroup();
+            }else if(action.equalsIgnoreCase(REFRESH_VIEW_GROUP)){
+                startFrag();
+            }
+        }
+    };
+
+
+    @Override
+    public void onDestroyView() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
+        super.onDestroyView();
     }
 
     public void setLists(){
@@ -176,12 +213,12 @@ public class Groups extends Fragment {
             @Override
             public void onScrolledToBottom() {
                 super.onScrolledToBottom();
-                startLoader();
+               /* startLoader();
                 if(moreCanBeLoaded){
                     setLists();
                 }else{
                     closeLoader();
-                }
+                }*/
             }
         };
     }
@@ -303,7 +340,7 @@ public class Groups extends Fragment {
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
             tx.setVisibility(View.VISIBLE);
             tx.setText(res__);
         }

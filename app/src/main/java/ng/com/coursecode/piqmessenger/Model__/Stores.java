@@ -1,6 +1,9 @@
 package ng.com.coursecode.piqmessenger.Model__;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,6 +42,15 @@ public class Stores {
     public static final String SEND_FRND = "send_frnd";
     public static final long SUB_REFRESH_TIME = 1000*60*60*24*3;//each 3 days
     public static final String DISCOVER = "Knrknfkr";
+    public static final String IMG = "jfvjlkld";
+    public static final String VID = "jfvjfklflkld";
+    public static final String PLAY_LIKE = "Jendjfnjfknj";
+    public static final String REFRESH_ACTIVITY = "Knfknfknk";
+    public static final String EDIT = "jkfj";
+    public static final String DEFAULT_STAT = "iorklenl;tkwrnlr4830439ewrhdiofwuhfodb";
+    public static final String REFRESH_ACTIVITY_STATUS = "hjdbfjkf";
+    public static final String REFRESH_ACTIVITY_GROUP = "fjfjksdlj";
+    public static final String REFRESH_ACTIVITY_POST = "fhdskbfsjdbkfsj";
     public static int flingVelX=1;
     public static int flingVelY=2;
     public static boolean flingEdit=true;
@@ -56,7 +68,7 @@ public class Stores {
     public static final String POST_HAHA = "393k9rgrr95";
     public static final String POST_NONE = "0";
     public static int initView= View.GONE;
-    public static List<Integer> serviceError=new ArrayList<>();
+    public static List<String> serviceError=new ArrayList<>();
     public static String GroupTopicEND="endgroup";
 
     public List<Messages> db_result;
@@ -119,10 +131,9 @@ public class Stores {
                 serverError.onEmptyArray();
                 break;
             default:
-                serverError.onShowOtherResult(R.string.acc_req);
+                serverError.onShowOtherResult(context.getString(R.string.acc_req));
                 break;
         }
-        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 
     public void reportException(Exception r) {
@@ -306,5 +317,16 @@ public class Stores {
     public static boolean isTrue(String frndsData) {
         frndsData=(frndsData==null)?"0":frndsData;
         return frndsData.trim().equalsIgnoreCase("1");
+    }
+
+    public Uri getResUri(int vid_id) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + context.getResources().getResourcePackageName(vid_id)
+                + '/' + context.getResources().getResourceTypeName(vid_id) +
+                '/' + context.getResources().getResourceEntryName(vid_id));
+    }
+
+    public Uri getRawResUri(int vid_id) {
+        return Uri.parse("android.resource://" + context.getPackageName() + "/"+vid_id);
     }
 }

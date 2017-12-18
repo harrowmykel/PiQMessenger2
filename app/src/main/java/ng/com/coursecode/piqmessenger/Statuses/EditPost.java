@@ -196,7 +196,7 @@ public class EditPost extends PiccMaqCompatActivity implements View.OnClickListe
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }
@@ -320,7 +320,7 @@ public class EditPost extends PiccMaqCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public void onShowOtherResult(int res__) {
+        public void onShowOtherResult(String res__) {
         }
     };
 

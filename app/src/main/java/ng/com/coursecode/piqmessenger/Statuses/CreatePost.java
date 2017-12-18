@@ -331,7 +331,7 @@ public class CreatePost extends PiccMaqCompatActivity implements View.OnClickLis
                         }
 
                         @Override
-                        public void onShowOtherResult(int res__) {
+                        public void onShowOtherResult(String res__) {
                             tx.setVisibility(View.VISIBLE);
                             tx.setText(res__);
                         }

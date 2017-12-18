@@ -72,10 +72,18 @@ public class FirebaseInstanceIdServ extends FirebaseInstanceIdService {
     }
 
     private void subscribeToAllFriendsPosts() {
-        (new StartUp(context)).subsrcibe();
+        context=FirebaseInstanceIdServ.this;
+        Stores store=new Stores(context);
+        if(!store.getUsername().isEmpty()) {
+            (new StartUp(context)).subsrcibe();
+        }
     }
 
     private void sendRegistrationToServer() {
-        (new StartUp(context)).sendToken();
+        context=FirebaseInstanceIdServ.this;
+        Stores store=new Stores(context);
+        if(!store.getUsername().isEmpty()) {
+            (new StartUp(context)).sendToken();
+        }
     }
 }

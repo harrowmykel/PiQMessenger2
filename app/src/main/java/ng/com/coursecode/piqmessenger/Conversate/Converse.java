@@ -12,7 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
+import android.support.v7.app.AppCompatActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.stfalcon.chatkit.messages.MessageInput;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +52,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
+import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView;
 import ng.com.coursecode.piqmessenger.File.CFile;
 import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
 import ng.com.coursecode.piqmessenger.ImageActivity;
@@ -66,7 +72,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class Converse extends PiccMaqCompatActivity {
+public class Converse extends PiccMaqCompatActivity implements MessageInput.InputListener,
+        MessageInput.AttachmentsListener{
+
     private static final int IMGREQUESTCODE = 234;
     private static final int GALLERYREQUESTCODE = 287;
     private static final int GIFREQUESTCODE = 1233;
@@ -83,16 +91,21 @@ public class Converse extends PiccMaqCompatActivity {
     List<Messages> messages_list=new ArrayList<>();
     RecyclerView recyclerView;
     Stores stores;
-    MaterialEditText materialEditText;
+    //    MaterialEditText materialEditText;
     TextView username_,subtitle;
     ImageView user_dp;
 
     Model__ user_data;
+    @BindView(R.id.input)
+    MessageInput input;
+     ScaleImageView img_prvw;
+    private boolean nt_reversed=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_converse);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         context=Converse.this;
@@ -101,13 +114,19 @@ public class Converse extends PiccMaqCompatActivity {
         POST_FOLDER=stores.getFolderMSG();
 
         recyclerView=(RecyclerView)findViewById(R.id.main_recycle);
+        img_prvw=(ScaleImageView)findViewById(R.id.img_prvw);
+
         recipient=username=getIntent().getStringExtra(USERNAME);
         username=(username==null)?"":username;
 
         username_=(TextView)findViewById(R.id.action_bar_title);
         subtitle=(TextView)findViewById(R.id.action_bar_subtitle);
         user_dp=(CircleImageView)findViewById(R.id.crt_dp);
-        materialEditText=(MaterialEditText)findViewById(R.id.msg_edit);
+//        materialEditText=(MaterialEditText)findViewById(R.id.msg_edit);
+
+        input.setInputListener(this);
+        input.setAttachmentsListener(this);
+
         user_dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +136,7 @@ public class Converse extends PiccMaqCompatActivity {
             }
         });
 
-        (findViewById(R.id.attach_msg)).setOnClickListener(new View.OnClickListener() {
+       /* (findViewById(R.id.attach_msg)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelector();
@@ -130,22 +149,27 @@ public class Converse extends PiccMaqCompatActivity {
                 sendToServer();
             }
         });
-
+*/
         Users_prof users_prof=Users_prof.getInfo(context, username);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         username_.setText(users_prof.getFullname());
         subtitle.setText(R.string.offline);
+
+        Messages messages = new Messages();
+        messages_list = messages.listAllFromUser(context, username);
 
         startInit();
         setUpProfile();
     }
 
     private void startInit() {
-        Messages messages = new Messages();
-        messages_list = messages.listAllFromUser(context, username);
-        Collections.reverse(messages_list);
+        List<Messages> messages_lista=messages_list;
+        if(nt_reversed) {
+            Collections.reverse(messages_lista);
+            nt_reversed=false;
+        }
 
-        ConvoActAdapter convoActAdapter=new ConvoActAdapter(messages_list, context, new ConvoInterface() {
+        ConvoActAdapter convoActAdapter=new ConvoActAdapter(messages_lista, context, new ConvoInterface() {
             @Override
             public void startConvoAct(int position) {
 
@@ -182,8 +206,8 @@ public class Converse extends PiccMaqCompatActivity {
         };
     }
 
-    public void sendToServer(){
-        String text= materialEditText.getText().toString();
+    public void sendToServer(String text){
+        text= input.getInputEditText().getText().toString();
         String urltoImage=(tempUri!=Uri.EMPTY)?tempUri.toString():"";
 //        privacy
         Messages messages_=new Messages();
@@ -198,9 +222,10 @@ public class Converse extends PiccMaqCompatActivity {
         messages_.setContext(context);
         boolean fg=messages_.saveNew(context);
 
-        materialEditText.setText("");
+       input.getInputEditText().setText("");
         tempUri=Uri.EMPTY;
 
+        messages_list.add(messages_);
         MessagesCall messagesCall=new MessagesCall(context);
         messagesCall.sendAllMessages();
         startInit();
@@ -225,7 +250,7 @@ public class Converse extends PiccMaqCompatActivity {
             if(tempUri!=Uri.EMPTY && !stores.isExtUrl(urltoImage)){
                 sendToGoogle();
             }else{
-                sendToServer();
+                sendToServer("");
             }
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
@@ -242,7 +267,7 @@ public class Converse extends PiccMaqCompatActivity {
             @Override
             public void onSuccess(Uri url) {
                 tempUri=url;
-                sendToServer();
+                sendToServer("");
             }
         });
         googleUpload.sendToGoogle();
@@ -280,7 +305,7 @@ public class Converse extends PiccMaqCompatActivity {
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 tx.setVisibility(View.VISIBLE);
                                 tx.setText(res__);
                             }
@@ -310,5 +335,19 @@ public class Converse extends PiccMaqCompatActivity {
                 (new Stores(context)).reportThrowable(t, "postscall");
             }
         });
+
     }
+
+    @Override
+    public void onAddAttachments() {
+        showSelector();
+    }
+
+    @Override
+    public boolean onSubmit(CharSequence input) {
+        sendToServer(input.toString());
+        this.input.getInputEditText().setText("");
+        return false;
+    }
+
 }

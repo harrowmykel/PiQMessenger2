@@ -31,6 +31,10 @@ public interface ApiInterface {
     Call<Model__> getAllStatuses(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("time") String time, @Field("page") String page);
 
     @FormUrlEncoded
+    @POST("notify/index.php?req=fetchfrom")
+    Call<Model__> getAllNotify(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("time") String time, @Field("page") String page);
+
+    @FormUrlEncoded
     @POST("posts/index.php?req=fetchfrom")
     Call<PostsModel> getAllPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String q, @Field("page") String page);
 
@@ -169,4 +173,12 @@ public interface ApiInterface {
     @POST("profile/index.php?req=creategroup")
     Call<Model__> createGroup(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("fullname") String fname, @Field("who") String g_username, @Field("bio") String bio, @Field("imgurl") String q);
 
-}
+    @FormUrlEncoded
+    @POST("profile/index.php?req=editgroup")
+    Call<Model__> editGroup(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("fullname") String fname, @Field("who") String g_username, @Field("bio") String bio, @Field("imgurl") String q);
+
+    @FormUrlEncoded
+    @POST("profile/index.php?req=searchgroupuser")
+    Call<Model__> getGroupMembers(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
+
+ }

@@ -66,6 +66,7 @@ public class MessageCallService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        page=1;
         if(intent!=null){
             String action_type=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             if(action_type!=null){
@@ -86,7 +87,7 @@ public class MessageCallService extends Service {
         }else{
             getAllMessages();
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Nullable
@@ -122,7 +123,7 @@ public void sendAllMessages(){
                     }
 
                     @Override
-                    public void onShowOtherResult(int res__) {
+                    public void onShowOtherResult(String res__) {
                         if(Stores.serviceError.contains(res__)){
                             Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                         }
@@ -175,7 +176,7 @@ public void sendAllMessages(){
                             }
 
                             @Override
-                            public void onShowOtherResult(int res__) {
+                            public void onShowOtherResult(String res__) {
                                 if(Stores.serviceError.contains(res__)){
                                     Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
                                 }

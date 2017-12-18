@@ -174,5 +174,22 @@
     <string name="description">Description</string>
     <string name="group_created">Group created</string>
     <string name="title_activity_message">Message</string>
+    <string name="coonect_intro">Connect, Share, Meet...Piccmaq</string>
+    <string name="unable_to_load_vid">Unable to load video</string>
+    <string name="find_people">Find People</string>
+    <string name="group_edited">Group edited..</string>
+    <string name="no_result_found">No result found</string>
+    <string name="view_members">View members</string>
+    <string name="app_desc">Be weird. Share Secrets. Talk About Your Day. Everyone Is Permitted.
+        Of Course Except Bullies, Intellectual Thieves And People Younger Than 13.</string>
+    <string name="share">Share</string>
+    <string name="meet">Meet</string>
+    <string name="connect">Connect</string>
+    <string name="beYou">Be You</string>
+    <string name="storage_perm">Sorry, we need the Storage Permission to do that</string>
+    <string name="ok">Ok</string>
+    <string name="learn_how_to_use">Learn how to use this app</string>
+    <string name="dont_show_again">Dont show again</string>
+    <string name="how_to_use_app">fd</string>
 
 </resources>

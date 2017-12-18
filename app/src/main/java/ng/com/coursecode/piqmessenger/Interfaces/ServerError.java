@@ -6,5 +6,5 @@ package ng.com.coursecode.piqmessenger.Interfaces;
 
 public interface ServerError {
         public void onEmptyArray();
-        public void onShowOtherResult(int res__);
+        public void onShowOtherResult(String res__);
 }

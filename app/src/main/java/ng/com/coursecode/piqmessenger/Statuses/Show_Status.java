@@ -17,11 +17,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.pixplicity.easyprefs.library.Prefs;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Adapters__.StatusPagerAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
+import ng.com.coursecode.piqmessenger.Fragments_.StatusFragment;
 import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
@@ -126,6 +129,9 @@ Stores stores;
             finir();
         }else{
             //status code
+            if(Stores.DEFAULT_STAT.equalsIgnoreCase(obj)){
+                Prefs.putBoolean(StatusFragment.HAS_SEEN_DEF_STAT, true);
+            }
             if(sent_updates==null){
                 sent_updates=new ArrayList<>();
             }
