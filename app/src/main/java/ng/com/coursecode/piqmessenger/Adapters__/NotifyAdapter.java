@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import ng.com.coursecode.piqmessenger.Adapters__.ViewHolders.ContactViewHolder;
+import ng.com.coursecode.piqmessenger.Adapters__.ViewHolders.NotifyViewHolder;
+import ng.com.coursecode.piqmessenger.Database__.Notify;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
-import ng.com.coursecode.piqmessenger.Interfaces.ContactsItemClicked;
 import ng.com.coursecode.piqmessenger.Interfaces.NotifyItemClicked;
+import ng.com.coursecode.piqmessenger.Model__.RecivData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 import ng.com.coursecode.piqmessenger.R;
@@ -21,75 +22,67 @@ import ng.com.coursecode.piqmessenger.R;
  * Created by harro on 12/10/2017.
  */
 
-public class NotifyAdapter extends RecyclerView.Adapter<ContactViewHolder> {
+public class NotifyAdapter extends RecyclerView.Adapter<NotifyViewHolder> {
 
-    List<Users_prof> messages_list;
+    List<Notify> messages_list;
     Context context;
     boolean showFriendsIcon=false;
-    NotifyItemClicked contactsItemClicked;
+    NotifyItemClicked notifysItemClicked;
 
-    public NotifyAdapter(List<Users_prof> messages_) {
+    public NotifyAdapter(List<Notify> messages_, NotifyItemClicked notify) {
         super();
         messages_list=messages_;
-    }
-
-    public NotifyAdapter(List<Users_prof> messages_, ContactsItemClicked contact) {
-        super();
-        messages_list=messages_;
-        contactsItemClicked=contact;
+        notifysItemClicked=notify;
     }
 
     @Override
-    public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NotifyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context=parent.getContext();
-        View v= LayoutInflater.from(context).inflate(R.layout.contact_layout, parent, false);
-        return new ContactViewHolder(v);
+        View v= LayoutInflater.from(context).inflate(R.layout.notif_layout, parent, false);
+        return new NotifyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder holder, int position) {
+    public void onBindViewHolder(NotifyViewHolder holder, int position) {
         if(messages_list.size()>0){
-            Users_prof messages=messages_list.get(position);
-            String cv="@"+ messages.getUser_name();
-            holder.users_username.setText(Stores.ucWords(messages.getFullname()));
-            holder.users_subtitle.setText(cv);
-            setHolderOnClick(holder, position);
-            if(!showFriendsIcon){
-                holder.users_frnd.setVisibility(View.GONE);
-            }else{
-                holder.users_frnd.setVisibility(View.VISIBLE);
-                Stores2.setFrndText(holder.users_frnd, messages.getFrndsData(), context);
+            Notify messages=messages_list.get(position);
+            String typee=messages.getType();
+            String username=messages.getSubj();
+            String time=messages.getTime_stamp();
+            Users_prof users_prof=Users_prof.getInfo(context, username);
+
+            String fullnm=users_prof.getFullname();
+            RecivData stringset=Stores.getRecivNotif(typee);
+            int resString=stringset.getResString();
+            if(resString!=0){
+                holder.notif_text.setText(context.getString(resString, fullnm));
+                setHolderOnClick(holder);
             }
-            String like=messages.getLike();
-            if(like!=null && !like.isEmpty()){
-                holder.users_like.setImageResource(Stores.getLikeImageRes(like));
-            }
-            boolean admin=messages.getIsAdmin();
-            if(admin){
-                holder.users_like.setImageResource(R.drawable.admin);
-            }
-            Piccassa.load(context, messages.image, R.drawable.user_sample, holder.users_dp);
+            Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, holder.users_dp);
         }
     }
 
-    private void setHolderOnClick(final ContactViewHolder holder, final int position) {
+    private void setHolderOnClick(final NotifyViewHolder holder) {
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactsItemClicked.onMsgCLicked(position);
+                int position=holder.getAdapterPosition();
+                notifysItemClicked.onNotifyCLicked(position);
             }
         });
         holder.users_dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactsItemClicked.onUsernameCLicked(position);
+                int position=holder.getAdapterPosition();
+                notifysItemClicked.onUsernameCLicked(position);
             }
         });
-        holder.users_frnd.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                contactsItemClicked.onFriendCLicked(position);
-                holder.users_frnd.setText(context.getString(R.string.elipsize));
+            public boolean onLongClick(View v) {
+                int position=holder.getAdapterPosition();
+                notifysItemClicked.onDeleteCLicked(position);
+                return false;
             }
         });
     }

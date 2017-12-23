@@ -16,9 +16,10 @@ import java.util.List;
 import ng.com.coursecode.piqmessenger.Database__.Notify;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Model__.Model__;
+import ng.com.coursecode.piqmessenger.Model__.Datum;
+import ng.com.coursecode.piqmessenger.Model__.Pagination;
+import ng.com.coursecode.piqmessenger.Model__.PostsModel;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.TimeModel;
 import ng.com.coursecode.piqmessenger.NotificationsA.NotificationsAct;
@@ -34,21 +35,22 @@ import retrofit2.Retrofit;
  */
 
 public class NotifyCallService extends Service {
-    public static final String CHECKUPDATE = "fd,bkjfg gfdkfbhfsjkbhskb vjhknb";
+    public static final String CHECKUPDATE = "checknotifyupdate";
     public static final String SEND_NEW = "jdklnksnd";
     public static final String CLEAR = "d.nkgfxne";
     Context context;
-    List<Model__> model_list;
+    List<PostsModel> model_list;
     Stores stores;
     int page=1;
 
     ApiInterface apiInterface;
 
-    String MSGCALL="hdksbljzfdsgsdjbk";
+    String NOTIFCALL="hdksbljzfdsgjbmmsdjbk", sTime, sTTime;
 
     public NotifyCallService() {
         super();
     }
+    boolean redo=false;
 
     @Override
     public void onCreate() {
@@ -63,7 +65,6 @@ public class NotifyCallService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        page=1;
         if(intent!=null){
             String action_type=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             if(action_type!=null){
@@ -93,23 +94,30 @@ public class NotifyCallService extends Service {
     private void DeleteAllNotify() {
         Notify Notify_=new Notify();
         Notify_.delete(context);
+        Intent intent = new Intent(NotificationsAct.REFRESH_VIEW_STATUS);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void getAllNotify(){
+        if(!redo){
+            page=1;
+            sTTime=sTime=stores.getTime(NOTIFCALL);
+        }
+        redo=true;
         Prefs.putBoolean(CHECKUPDATE, true);
-        Call<Model__> call=apiInterface.getAllNotify(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(MSGCALL), ""+page);
-        call.enqueue(new Callback<Model__>() {
+        Call<PostsModel> call=apiInterface.getAllNotify(stores.getUsername(), stores.getPass(), stores.getApiKey(), sTime, ""+page);
+        call.enqueue(new Callback<PostsModel>() {
             @Override
-            public void onResponse(Call<Model__> call, Response<Model__> response) {
-                Model__ model_lisj=response.body();
-                List<Model__> model_lis=model_lisj.getData();
-                Model__ model_l=model_lisj.getPagination();
+            public void onResponse(Call<PostsModel> call, Response<PostsModel> response) {
+                PostsModel model_lisj=response.body();
+                List<Datum> model_lis=model_lisj.getData();
+                Pagination model_l=model_lisj.getPagination();
 
                 int num=model_lis.size();
 
                 String Stime="0";
                 for(int i=0; i<num; i++){
-                    Model__ modelll=model_lis.get(i);
+                    Datum modelll=model_lis.get(i);
                     Notify Notify_=new Notify();
                     Users_prof users_prof=new Users_prof();
 
@@ -129,53 +137,45 @@ public class NotifyCallService extends Service {
                         });
                         break;
                     }
-                    if(modelll.getReciv_data()==null){
+                    if(modelll.getAuthData()==null){
                         continue;
                     }
 
-                    users_prof.setUser_name(modelll.getReciv_username());
-                    users_prof.setFullname(modelll.getReciv_data().getReciv());
-                    users_prof.setImage(modelll.getReciv_data().getReciv_img());
-
+                    users_prof.setUser_name(modelll.getAuthUsername());
+                    users_prof.setFullname(modelll.getAuthData().getAuth());
+                    users_prof.setImage(modelll.getAuthData().getAuthImg());
                     users_prof.save(context);
 
-                    Notify_.setSubj(getString__(modelll.getAuth_username()));
+                    Notify_.setSubj(getString__(modelll.getAuthUsername()));
                     Notify_.setMsg_id(getString__(modelll.getId()));
-                    Notify_.setType(getString__(modelll.getTy));
-                    Notify_.setSeen(getString__(modelll.getTy));
+                    Notify_.setType(getString__(modelll.getNotifyId()));
+                    Notify_.setSeen(getString__(modelll.getSeen()));
                     Notify_.setTime_stamp(getString__(modelll.getTimestamp()));
-                 /*   id"=>$row["id"],
-                    "link"=>$row["link"],
-                            "subject"=>$row["subject"],
-                            "object"=>$row["object"],
-                            "notify_id"=>$row["notify_id"],
-                            "obj_id"=>$row["obj_id"],
-                            "time"=>$row["time"],
-                            "timestamp"=>$row["time"],
-                            "auth_username"=> $row["subj"],
-                            "auth_data"=>array(
-                            "auth_img"=> getUserDp($row["subj"]),
-                            "auth"=>  getFullname($row['subj'])
-						 			)
-						);*/
-                    Stime=modelll.getTimestamp();
+                    Notify_.setObj_id(getString__(modelll.getObjId()));
+                    Notify_.setLink(getString__(modelll.getLink()));
+                    sTTime=Stime=modelll.getTimestamp();
                     boolean fg=Notify_.save(context);
                 }
-                Prefs.putLong(MSGCALL, TimeModel.getLongTime(Stime));
-                int pgLeft=Stores.parseInt(model_l.getPagesLeft());
+                Prefs.putLong(NOTIFCALL, TimeModel.getLongTime(Stime));
+                int pgLeft= Stores.parseInt(model_l.getPagesLeft());
                 page++;
                 if(pgLeft>0){
                     getAllNotify();
                 }else{
+                    redo=false;
                     Prefs.putBoolean(CHECKUPDATE, false);
+                    Prefs.putLong(NOTIFCALL, TimeModel.getLongTime(sTTime));
                     Intent intent = new Intent(NotificationsAct.REFRESH_VIEW_STATUS);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             }
 
             @Override
-            public void onFailure(Call<Model__> call, Throwable t) {
+            public void onFailure(Call<PostsModel> call, Throwable t) {
                 stores.reportThrowable(t, "Notifycall.class");
+                Intent intent = new Intent(NotificationsAct.REFRESH_VIEW_STATUS);
+                Prefs.putLong(NOTIFCALL, TimeModel.getLongTime(sTTime));
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             }
         });
     }

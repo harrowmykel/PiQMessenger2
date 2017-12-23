@@ -27,15 +27,15 @@ import ng.com.coursecode.piqmessenger.Model__.Stores2;
  * Created by harro on 10/10/2017.
  */
 
-public class Messages implements IMessage, MessageContentType.Image{
+public class Messages{
 
     public String user_name;
     public String msg_id;//msg_id
     public String mess_age="";
-    public String tim_e;
+    public int tim_e;
     public String time_stamp;
     public String auth;
-    public String confirm="w";
+    public String confirm=Stores.UNREAD_MSG;
     public String image="";
     public String recip;
     String last_user="a%";
@@ -58,16 +58,19 @@ public class Messages implements IMessage, MessageContentType.Image{
     }
 
     public Messages(String msg_id, String mess_age,
-                    String tim_e, String auth,
+                    int tim_e, String auth,
                     String confirm, String image, String recip){
         setAuth(auth);
         setRecip(recip);
         setmsg_id(msg_id);
         setTim_e(tim_e);
-        setTime_stamp(tim_e);
         setConfirm(confirm);
         setMess_age(mess_age);
         setImage(image);
+    }
+
+    public Messages(Context context) {
+        setContext(context);
     }
 
     public void setAuthorss(String username, String fullname, String image) {
@@ -110,7 +113,6 @@ public class Messages implements IMessage, MessageContentType.Image{
     public boolean saveNew(Context context1) {
         context = context1;
         if (context != null) {
-
             wrtable = DB_Aro.getWDb(context);
             contentValues = getCValues();
             String sTable = Stores2.messagesTable;
@@ -118,7 +120,6 @@ public class Messages implements IMessage, MessageContentType.Image{
             nuk = wrtable.insert(sTable, null, contentValues);
             return (nuk != -1);
         }
-
         return false;
     }
 
@@ -233,7 +234,7 @@ public class Messages implements IMessage, MessageContentType.Image{
             auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
             recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
             mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-            tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
+            tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
             image = cursor.getString(cursor.getColumnIndex(Stores2.image));
             confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
             msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
@@ -308,17 +309,16 @@ public class Messages implements IMessage, MessageContentType.Image{
                 auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
                 recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
                 mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-                tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
+                tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
                 image = cursor.getString(cursor.getColumnIndex(Stores2.image));
                 confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
                 msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
 
-
-
                 auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
                 recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
 
-                String keyWord=(auth.equalsIgnoreCase(store.getUsername()))?recip:auth;
+                boolean thrwn=(auth.equalsIgnoreCase(store.getUsername()));
+                String keyWord=thrwn?recip:auth;
                 auth=keyWord;
 
                 messages.setAuth(auth);
@@ -330,7 +330,11 @@ public class Messages implements IMessage, MessageContentType.Image{
                 messages.setMess_age(mess_age);
                 messages.setTim_e(tim_e);
                 messages.setImage(image);
-                messages.setConfirm(confirm);
+                if(thrwn) {
+                    messages.setConfirm(Stores.READ_MSG);
+                }else{
+                    messages.setConfirm(confirm);
+                }
                 messages.setmsg_id(msg_id);
                 messages.setFullname(fullname);
                 if(!auth.isEmpty())
@@ -384,11 +388,11 @@ public class Messages implements IMessage, MessageContentType.Image{
         this.mess_age = mess_age;
     }
 
-    public String getTim_e() {
+    public int getTim_e() {
         return tim_e;
     }
 
-    public void setTim_e(String tim_e) {
+    public void setTim_e(int tim_e) {
         this.tim_e = tim_e;
     }
 
@@ -484,7 +488,7 @@ public class Messages implements IMessage, MessageContentType.Image{
             auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
             recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
             mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-            tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
+            tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
             image = cursor.getString(cursor.getColumnIndex(Stores2.image));
             confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
             msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
@@ -501,6 +505,14 @@ public class Messages implements IMessage, MessageContentType.Image{
             messages.setConfirm(confirm);
             messages.setmsg_id(msg_id);
             messages.setAuthorUp(auth, store);
+
+            boolean thrwn=(store.getUsername().equalsIgnoreCase(auth));
+
+            if(thrwn) {
+                messages.setConfirm(Stores.READ_MSG);
+            }else{
+                messages.setConfirm(confirm);
+            }
 
             if(!auth.isEmpty())
                 msgs.add(messages);
@@ -535,7 +547,7 @@ public class Messages implements IMessage, MessageContentType.Image{
         // dbHelper = DB_Aro.getHelper(context);
         rdbleDb = DB_Aro.getWDb(context);
         String msgs = "[";
-        String msgs1 = "";
+        String msgs1 = "0";
         Stores store=new Stores(context);
 
         String[] projection = {Stores2.id_,
@@ -571,22 +583,17 @@ public class Messages implements IMessage, MessageContentType.Image{
             auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
             recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
             mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-            tim_e = cursor.getString(cursor.getColumnIndex(Stores2.tim_e));
+            tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
             image = cursor.getString(cursor.getColumnIndex(Stores2.image));
             confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
             msg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
-            String hmsg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
+            String hmsg_id = cursor.getString(cursor.getColumnIndex(Stores2.id_));
             msgs+="{'recip':'"+recip+"', 'message':'"+mess_age+
                     "', 'image':'"+image+"'}";
 
-            if(i!=(num-1)){
-                msgs1=msgs1+Stores2.msg_id;
-            }
+            msgs1=msgs1+", "+hmsg_id;
         }
         cursor.close();
-
-        rdbleDb.close();
-        //dbHelper.close();
         msgs=msgs+"]";
         return new String[]{msgs, msgs1};
     }
@@ -603,56 +610,50 @@ public class Messages implements IMessage, MessageContentType.Image{
                 selectionArgs);
     }
 
-    public void delete(Context context, String text1) {
-        // dbHelper = DB_Aro.getHelper(context);
-        rdbleDb = DB_Aro.getWDb(context);
+    public void delete(Context context, String text1) {//this deletes only ids nt msg_id
         text1=text1.trim();
         String[] array = text1.split(",", -1);
 
-        String msgs1="";
-        int num=array.length;
-
-        for (int i = 0; i <num; i++) {
-            if(i!=(num-1)){
-                msgs1=msgs1+Stores2.msg_id+"= ? OR  ";
-            }else{
-                msgs1=msgs1+Stores2.msg_id+"=  ? ";
-            }
+        for (String anArray : array) {
+            deleteto(context, anArray);
         }
-        String queryy="Delete from "+Stores2.messagesTable+" WHERE "+msgs1;
-
-        rdbleDb.rawQuery(queryy, array);
     }
 
-    @Override
-    public String getId() {
-        return getMess_age();
+    public void deleteto(Context context, String text1) {
+        text1=text1.trim();
+        if(text1.isEmpty()){
+            return;
+        }
+        rdbleDb = DB_Aro.getWDb(context);
+        String selection = Stores2.id_+" = ?";
+        String[] selectionArgs = {text1};
+
+        int hj=rdbleDb.delete(Stores2.messagesTable,  // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
     }
 
-    @Override
-    public String getText() {
-        return getMess_age();
+    public void setLastRead(String username, String last_read, String confirm_) {
+        rdbleDb = DB_Aro.getWDb(context);
+        String selection = Stores2.recip+" = ? AND "+Stores2.tim_e+" = ? AND "+Stores2.tim_e+" < ?";
+        String[] selectionArgs = {username, last_read, last_read};
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(Stores2.confirm, confirm_);
+
+        rdbleDb.update(Stores2.messagesTable, contentValues, // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
     }
 
-    @Override
-    public Authorss getUser() {
-        return getAuthorss();
-    }
+    public void setReadAll(Context context, String username) {
+        rdbleDb = DB_Aro.getWDb(context);
+        String selection = Stores2.auth+" = ? ";
+        String[] selectionArgs = {username};
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(Stores2.confirm, Stores.READ_MSG);
 
-    @Override
-    public Date getCreatedAt() {
-        long milli=0;//(new DateTime(getTim_e())).getMilliseconds(TimeZone.getDefault());
-        milli=milli*1000;
-        milli=System.currentTimeMillis();
-        return new Date(milli);
-    }
-
-    public Authorss getAuthorss() {
-        return authors;
-    }
-
-    @Override
-    public String getImageUrl() {
-        return getImage();
+        rdbleDb.update(Stores2.messagesTable, contentValues, // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
     }
 }

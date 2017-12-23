@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Database__.Messages;
+import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.Interfaces.ConvoInterface;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -44,27 +45,31 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ConvoViewHolder holder, final int position) {
+    public void onBindViewHolder(final ConvoViewHolder holder, int position) {
         if(messages_list.size()>0){
             Messages messages=messages_list.get(position);
             holder.convo_subtitle.setText(messages.getMess_age());
             holder.convo_username.setText(Stores.ucWords(messages.getFullname()));
-            holder.convo_time.setText((new TimeModel(context)).getDWM3(messages.getTim_e()));
+            holder.convo_time.setText((new TimeModel(context)).getDWM3(""+messages.getTim_e()));
             if(!messages.image.isEmpty()) {
                 Piccassa.load(context, messages.image, R.drawable.user_sample, holder.convo_dp);
             }
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    convoInterface.startConvoAct(position);
+                    int pok=holder.getAdapterPosition();
+                    convoInterface.startConvoAct(pok);
                 }
             });
             holder.convo_dp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    convoInterface.startProfileAct(position);
+                    int pok=holder.getAdapterPosition();
+                    convoInterface.startProfileAct(pok);
                 }
             });
+            boolean thrown=messages.getConfirm().equalsIgnoreCase(Stores.UNREAD_MSG);
+            Stores.addCircleBorderMsg(holder.convo_dp, context, thrown);
         }
     }
 

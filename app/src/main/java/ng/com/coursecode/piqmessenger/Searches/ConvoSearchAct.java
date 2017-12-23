@@ -1,10 +1,12 @@
 package ng.com.coursecode.piqmessenger.Searches;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -88,13 +90,30 @@ public class ConvoSearchAct extends PiccMaqCompatActivity {
         firstFragment=frageSearch("");
         swiper=((SwipeRefreshLayout)findViewById(R.id.swipeRefresh));
 
+        setMessageReceiver(mMessageReceiver);
+        listenToBroadCast(Chats.REFRESH_NEW_MESSAGE);
+
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 (new MessagesCall(context)).getAllMessages();
-                swiper.setRefreshing(false);
             }
         });
+    }
+
+    // Our handler for received Intents. This will be called whenever an Intent
+// with an action named "custom-event-name" is broadcasted.
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            swiper.setRefreshing(false);
+        }
+    };
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         startFragmentTransactions();
     }
 
@@ -171,7 +190,7 @@ public class ConvoSearchAct extends PiccMaqCompatActivity {
 
     public void replaceFrag(Fragment fragment, int stringResId){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
+        // Replace whatever is in the fragment_container view with this PiccMaqFragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.search_framecontent, fragment);
         if(backstack)transaction.addToBackStack(null);

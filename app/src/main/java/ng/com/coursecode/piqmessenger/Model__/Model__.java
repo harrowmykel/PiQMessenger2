@@ -16,6 +16,9 @@ public class Model__ {
     @SerializedName("verified")
     public String verified;
 
+    @SerializedName("last_read")
+    public String last_read;
+
     @SerializedName("likes")
     public String likes;
 
@@ -690,5 +693,17 @@ public class Model__ {
 
     public String getIs_Admin() {
         return is_Admin;
+    }
+
+    public String getLast_read() {
+        return last_read;
+    }
+
+    public void setLast_read(String last_read) {
+        this.last_read = last_read;
+    }
+
+    public void setIs_Admin(String is_Admin) {
+        this.is_Admin = is_Admin;
     }
 }

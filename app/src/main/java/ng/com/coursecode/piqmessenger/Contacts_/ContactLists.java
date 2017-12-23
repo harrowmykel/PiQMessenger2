@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,7 +49,7 @@ import retrofit2.Retrofit;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactLists extends Fragment {
+public class ContactLists extends PiccMaqFragment {
 
     public static final String STAV = "hjefasfkjfjk";
     public static final String DELETE_FRND = Stores.DELETE_FRND;
@@ -92,7 +92,7 @@ public class ContactLists extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState_) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this PiccMaqFragment
 
         view=inflater.inflate(R.layout.fragment_contact_list, container, false);
         context=getContext();

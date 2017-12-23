@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import ng.com.coursecode.piqmessenger.Adapters__.StatusAdapter;
 import ng.com.coursecode.piqmessenger.Adapters__.StatusAdapterRecommended;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import ng.com.coursecode.piqmessenger.Interfaces.StatusClicked;
 import ng.com.coursecode.piqmessenger.Model__.Model__3;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -34,7 +35,7 @@ import ng.com.coursecode.piqmessenger.Statuses.Show_Status;
  * Created by harro on 09/10/2017.
  */
 
-public class Status extends Fragment {
+public class Status extends PiccMaqFragment {
     private static final String OLD_INSTANCE = "ejnsf;ekln";
     private static final String OLD_BUNDLE = "JKlnwlk;dnlkdl;";
     public static int NOTIFICATION_ID=33344;
@@ -77,10 +78,9 @@ public class Status extends Fragment {
             setLists();
         else
             setOLists();
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(REFRESH_VIEW_STATUS));
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(Stores.REFRESH_ACTIVITY_STATUS));
+        setMessageReceiver(mMessageReceiver);
+        listenToBroadCast(REFRESH_VIEW_STATUS);
+        listenToBroadCast(Stores.REFRESH_ACTIVITY_STATUS);
         return view;
     }
 
@@ -97,12 +97,6 @@ public class Status extends Fragment {
             }
         }
         setLists();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -135,13 +129,6 @@ public class Status extends Fragment {
             }
         }
     };
-
-    @Override
-    public void onDestroyView() {
-        // Unregister since the activity is about to be closed.
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
-        super.onDestroyView();
-    }
 
     public void setLists() {
 

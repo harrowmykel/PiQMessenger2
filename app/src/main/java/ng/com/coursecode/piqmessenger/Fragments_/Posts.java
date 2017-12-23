@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +28,7 @@ import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
+import ng.com.coursecode.piqmessenger.Dialog_.DeleteDialog;
 import ng.com.coursecode.piqmessenger.Dialog_.LikeDialog;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Interfaces.PostItemClicked;
@@ -55,7 +56,7 @@ import retrofit2.Retrofit;
  * Created by harro on 09/10/2017.
  */
 
-public class Posts extends Fragment {
+public class Posts extends PiccMaqFragment {
     public static final String REPLIES = "lddlld";
     public static final String SEARCHPOSTS = "fff";
     public static final String PROFILE = "dwdd";
@@ -109,23 +110,14 @@ public class Posts extends Fragment {
             what_to_do = (getArguments().getString(TYPE_OF_ACTION, ""));
         }
         loadPostFrag();
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(Stores.REFRESH_ACTIVITY_GROUP));
+        setMessageReceiver(mMessageReceiver);
+        listenToBroadCast(Stores.REFRESH_ACTIVITY_POST);
         return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        // Unregister since the activity is about to be closed.
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
-        super.onDestroyView();
     }
 
     // Our handler for received Intents. This will be called whenever an Intent
@@ -473,16 +465,16 @@ public class Posts extends Fragment {
                             break;
                         case 1:
                             if(userIsAuth || userIsRecip){
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                                alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
-                                        .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        delete(position);
+                                DeleteDialog deleteDialog=new DeleteDialog(context, new SendDatum() {
+                                    @Override
+                                    public void send(Object object) {
+                                        boolean sdf=(boolean)object;
+                                        if(sdf){
+                                            delete(position);
+                                        }
                                     }
-                                }).show();
+                                });
+                                deleteDialog.show();
                             }else{
                                 //neither
 

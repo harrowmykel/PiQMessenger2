@@ -8,7 +8,7 @@
     tools:context="ng.com.coursecode.piqmessenger.Conversate.Converse"
     android:orientation="vertical"
     tools:showIn="@layout/activity_converse">
-    <TextView
+    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/warning"

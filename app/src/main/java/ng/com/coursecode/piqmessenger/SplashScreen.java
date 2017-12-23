@@ -22,6 +22,7 @@ import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
 import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
+import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Servicess.GroupCallService;
 import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
 import ng.com.coursecode.piqmessenger.Signin.LoginActivity;
@@ -82,7 +83,10 @@ public class SplashScreen extends FullScreenActivity {
                 (new StartUp(context)).checkGroup();
             }
             if(!Prefs.getBoolean(FirebaseInstanceIdServ.TOKEN_SENT, false)){
-                (new StartUp(context)).sendToken();
+                Stores stores=new Stores(context);
+                if(!stores.getUsername().isEmpty()) {
+                    (new StartUp(context)).sendToken();
+                }
             }
             if(!Prefs.getBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, false)){
                 (new StartUp(context)).subsrcibe();

@@ -77,13 +77,9 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusViewHolder> {
             Piccassa.loadStatus(context, image_to_load, user_dp, holder.status_dp);
             if(statType.equals(Status_tab.UNSEEN)){
                 holder.status_username.setTypeface(Typeface.DEFAULT_BOLD);
-                holder.status_dp.setBorderColor(ContextCompat.getColor(context, R.color.border_color_));
-                valueInPixels = (int) context.getResources().getDimension(R.dimen.border_width);
-                holder.status_dp.setBorderWidth(valueInPixels);
+                Stores.addCircleBorder(holder.status_dp, context, true);
             }else{
-                holder.status_username.setTypeface(Typeface.DEFAULT);
-                valueInPixels = (int) context.getResources().getDimension(R.dimen.zero);
-                holder.status_dp.setBorderWidth(valueInPixels);
+                Stores.addCircleBorder(holder.status_dp, context, false);
             }
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override

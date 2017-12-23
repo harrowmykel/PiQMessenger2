@@ -41,7 +41,7 @@ import retrofit2.Retrofit;
 
 public class StatusCallService extends Service {
 
-    public static final String CHECKUPDATE = "sdjbdfjnjklbsdf";
+    public static final String CHECKUPDATE = "checkstatupdate";
     public static final String DEL = "Jddkl";
     public static final String CLEAR = "Jdkkeke";
     public static final String HAS_VIEWED = "dllsfl";
@@ -52,16 +52,17 @@ public class StatusCallService extends Service {
     Stores stores;
 
     ApiInterface apiInterface;
-    int page=1;
+    int page=1, frndpage=1, delpage=1;
     boolean sendMsgAfterResult=false;
-    String STATCALL="Hbdfnzbjd";
+    String STATCALL="Hbdfnzhgcvhgnvkjhbjd";
     private FetchMore fetchMore;
     Context context;
     ArrayList<String> arrayList;
     String token;
     String location="1234";
     boolean moreCanBeLoaded;
-    String username;
+    String username, sTime, sTTime;
+    boolean redo=false, frndredo=false, delredo=false;
 
     public StatusCallService() {
         super();
@@ -80,7 +81,6 @@ public class StatusCallService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ans;
-        page=1;
         if(intent!=null){
             String todod=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             switch (todod){
@@ -166,8 +166,13 @@ public class StatusCallService extends Service {
     }
 
     public void getAllMessages(){
+        if(!redo){
+            page=1;
+            sTTime=sTime=stores.getTime(STATCALL);
+        }
+        redo=true;
         Prefs.putBoolean(CHECKUPDATE, true);
-        Call<Model__> call=apiInterface.getAllStatuses(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(STATCALL), ""+page);
+        Call<Model__> call=apiInterface.getAllStatuses(stores.getUsername(), stores.getPass(), stores.getApiKey(), sTime, ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -175,7 +180,6 @@ public class StatusCallService extends Service {
                 List<Model__> model_lis=model_lisj.getData();
                 Model__ model_l=model_lisj.getPagination();
                 int num=model_lis.size();
-                String Stime="0";
                 for(int i=0; i<num; i++){
                     Model__ modelll=model_lis.get(i);
                     Status_tab messages_=new Status_tab();
@@ -212,7 +216,7 @@ public class StatusCallService extends Service {
                     users_prof.setImage(modelll.getAuth_data().getAuth_img());
                     users_prof.save(context);
 
-                    Stime=modelll.getTime();
+                    sTTime=modelll.getTime();
                     try {
                         messages_.save(context);
                     }catch (Exception r){
@@ -220,15 +224,14 @@ public class StatusCallService extends Service {
                     }
                 }
 
-
-                Prefs.putLong(STATCALL, TimeModel.getLongTime(Stime));
-
                 int pgLeft=Stores.parseInt(model_l.getPagesLeft());
                 page++;
                 if(pgLeft>0){
                     getAllMessages();
                 }else{
+                    redo=false;
                     Prefs.putBoolean(CHECKUPDATE, false);
+                    Prefs.putLong(STATCALL, TimeModel.getLongTime(sTTime));
                     sendEnd();
                 }
             }
@@ -236,6 +239,7 @@ public class StatusCallService extends Service {
             @Override
             public void onFailure(Call<Model__> call, Throwable t) {
                 stores.reportThrowable(t, "statuscall.class");
+                Prefs.putLong(STATCALL, TimeModel.getLongTime(sTTime));
                 sendEnd();
             }
         });
@@ -251,7 +255,11 @@ public class StatusCallService extends Service {
 
 
     public void getAllDeletedMessages(){
-        Call<Model__> call=apiInterface.getAllDelStatuses(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(STATCALL), ""+page);
+        if(!delredo){
+            delpage=1;
+        }
+        delredo=true;
+        Call<Model__> call=apiInterface.getAllDelStatuses(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+delpage);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -288,13 +296,13 @@ public class StatusCallService extends Service {
                     }
                 }
 
-
-                Prefs.putLong(STATCALL, TimeModel.getLongTime(Stime));
-
                 int pgLeft=Stores.parseInt(model_l.getPagesLeft());
-                page++;
+                delpage++;
                 if(pgLeft>0){
                     getAllDeletedMessages();
+                }else{
+                   delredo=false;
+                    sendEnd();
                 }
             }
 
@@ -316,6 +324,10 @@ public class StatusCallService extends Service {
     }
 
     private void subscribeToAllFriendsPosts() {
+        if(!frndredo){
+            frndpage=1;
+        }
+        frndredo=true;
         Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, false);
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
@@ -323,7 +335,10 @@ public class StatusCallService extends Service {
         String query="";
         username=stores.getUsername();
 
-        Call<Model__> call=apiInterface.searchUsers(username, stores.getPass(), stores.getApiKey(), query, location, ""+page);
+        FirebaseMessaging.getInstance().subscribeToTopic((Stores.APP_FIREBASE_TOPIC).toLowerCase());//status
+
+
+        Call<Model__> call=apiInterface.searchUsers(username, stores.getPass(), stores.getApiKey(), query, location, ""+frndpage);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -357,13 +372,14 @@ public class StatusCallService extends Service {
 
                 int pgLeft=Stores.parseInt(model_l.getPagesLeft());
                 moreCanBeLoaded = (pgLeft>0);
+                frndpage++;
                 if(moreCanBeLoaded){
                     subscribeToAllFriendsPosts();
                 }else{
+                    frndredo=false;
                     Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, true);
                     Prefs.putLong(FirebaseInstanceIdServ.SUBSCRIBE_TIME, System.currentTimeMillis());
                 }
-                page++;
             }
 
             @Override

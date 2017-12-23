@@ -131,6 +131,7 @@ Stores stores;
             //status code
             if(Stores.DEFAULT_STAT.equalsIgnoreCase(obj)){
                 Prefs.putBoolean(StatusFragment.HAS_SEEN_DEF_STAT, true);
+                (new Status_tab()).addIntro(context, true);
             }
             if(sent_updates==null){
                 sent_updates=new ArrayList<>();

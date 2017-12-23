@@ -1,6 +1,6 @@
 package ng.com.coursecode.piqmessenger.GifReplace.mViewer;
 
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 

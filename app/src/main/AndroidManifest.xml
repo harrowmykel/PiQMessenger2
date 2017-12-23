@@ -46,7 +46,12 @@
         <activity
             android:name=".Searches.ConvoSearchAct"
             android:label="@string/action_search"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="OPEN_MSG_1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Statuses.CreateStatus"
             android:label="@string/create_status"
@@ -177,7 +182,14 @@
             android:name=".Conversate.Message"
             android:label="@string/title_activity_message"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NotificationsA.NotificationsAct"></activity>
+        <activity
+            android:name=".NotificationsA.NotificationsAct"
+            android:label="@string/notifications">
+            <intent-filter>
+                <action android:name="OPEN_ACTIVITY_1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

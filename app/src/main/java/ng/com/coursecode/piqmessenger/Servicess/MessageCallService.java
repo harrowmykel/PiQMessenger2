@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import ng.com.coursecode.piqmessenger.Database__.Messages;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
 import ng.com.coursecode.piqmessenger.Database__.Users_prof;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
+import ng.com.coursecode.piqmessenger.Fragments_.Chats;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
@@ -37,7 +39,7 @@ import retrofit2.Retrofit;
  */
 
 public class MessageCallService extends Service {
-    public static final String CHECKUPDATE = "fd,bkjfdkfbhfsjkbhskb vjhknb";
+    public static final String CHECKUPDATE = "checkmsgupdate";
     public static final String SEND_NEW = "jdklnksnd";
     public static final String CLEAR = "d.nkne";
     Context context;
@@ -47,7 +49,8 @@ public class MessageCallService extends Service {
 
     ApiInterface apiInterface;
 
-    String MSGCALL="hdksbljzdjbk";
+    String MSGCALL="hdksbljzhgbnvhjdjbk", sTime, sTTime, thisUser;
+    boolean redo=false;
 
     public MessageCallService() {
         super();
@@ -61,12 +64,12 @@ public class MessageCallService extends Service {
         model_list = new ArrayList<>();
         Retrofit retrofit = ApiClient.getClient();
         stores = new Stores(context);
+        thisUser=stores.getUsername();
         apiInterface = retrofit.create(ApiInterface.class);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        page=1;
         if(intent!=null){
             String action_type=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             if(action_type!=null){
@@ -96,53 +99,53 @@ public class MessageCallService extends Service {
         return null;
     }
 
-public void sendAllMessages(){
-    Prefs.putBoolean(SEND_NEW, true);
+    public void sendAllMessages(){
+        Prefs.putBoolean(SEND_NEW, true);
 
-    Messages messages_=new Messages();
-    String[] combo=messages_.getOldMess(context);
-    String text=combo[0];
-    final String text1=combo[1];
+        Messages messages_=new Messages();
+        String[] combo=messages_.getOldMess(context);
+        String text=combo[0];
+        final String text1=combo[1];
 
-    Retrofit retrofit = ApiClient.getClient();
-    stores = new Stores(context);
-    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        Retrofit retrofit = ApiClient.getClient();
+        stores = new Stores(context);
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
-    Call<Model__> call = apiInterface.newMsg(stores.getUsername(), stores.getPass(), stores.getApiKey(), text);
-    call.enqueue(new Callback<Model__>() {
-        @Override
-        public void onResponse(Call<Model__> call, Response<Model__> response) {
-            Model__ model_lisj=response.body();
-            List<Model__> model_lis=model_lisj.getData();
-            Model__ modelll=model_lis.get(0);
+        Call<Model__> call = apiInterface.newMsg(stores.getUsername(), stores.getPass(), stores.getApiKey(), text);
+        call.enqueue(new Callback<Model__>() {
+            @Override
+            public void onResponse(Call<Model__> call, Response<Model__> response) {
+                Model__ model_lisj=response.body();
+                List<Model__> model_lis=model_lisj.getData();
+                Model__ modelll=model_lis.get(0);
 
-            if(modelll.getError()!=null) {
-                stores.handleError(modelll.getError(), context, new ServerError() {
-                    @Override
-                    public void onEmptyArray() {
-                    }
-
-                    @Override
-                    public void onShowOtherResult(String res__) {
-                        if(Stores.serviceError.contains(res__)){
-                            Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
+                if(modelll.getError()!=null) {
+                    stores.handleError(modelll.getError(), context, new ServerError() {
+                        @Override
+                        public void onEmptyArray() {
                         }
-                    }
-                });
-            }else if(modelll.getSuccess() !=null){
-                Prefs.putBoolean(SEND_NEW, false);
-                Messages msggdg=new Messages();
-                msggdg.delete(context, text1);
+
+                        @Override
+                        public void onShowOtherResult(String res__) {
+                            if(Stores.serviceError.contains(res__)){
+                                Toasta.makeText(context, res__, Toast.LENGTH_SHORT);
+                            }
+                        }
+                    });
+                }else if(modelll.getSuccess() !=null){
+                    Prefs.putBoolean(SEND_NEW, false);
+                    Messages msggdg=new Messages();
+                    msggdg.delete(context, text1);
+                }
             }
-        }
 
-        @Override
-        public void onFailure(Call<Model__> call, Throwable t) {
-            (new Stores(context)).reportThrowable(t, "converse");
-        }
-    });
+            @Override
+            public void onFailure(Call<Model__> call, Throwable t) {
+                (new Stores(context)).reportThrowable(t, "converse");
+            }
+        });
 
-}
+    }
 
     private void DeleteAllMessages() {
         Messages messages_=new Messages();
@@ -150,8 +153,13 @@ public void sendAllMessages(){
     }
 
     public void getAllMessages(){
+        if(!redo){
+            sTTime=sTime=stores.getTime(MSGCALL);
+            page=1;
+        }
+        redo=true;
         Prefs.putBoolean(CHECKUPDATE, true);
-        Call<Model__> call=apiInterface.getAllMessages(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(MSGCALL), ""+page);
+        Call<Model__> call=apiInterface.getAllMessages(stores.getUsername(), stores.getPass(), stores.getApiKey(), sTime, ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -160,8 +168,6 @@ public void sendAllMessages(){
                 Model__ model_l=model_lisj.getPagination();
 
                 int num=model_lis.size();
-
-                String Stime="0";
                 for(int i=0; i<num; i++){
                     Model__ modelll=model_lis.get(i);
                     Messages messages_=new Messages();
@@ -188,20 +194,25 @@ public void sendAllMessages(){
                         continue;
                     }
 
-                    users_prof.setUser_name(modelll.getReciv_username());
-                    users_prof.setFullname(modelll.getReciv_data().getReciv());
-                    users_prof.setImage(modelll.getReciv_data().getReciv_img());
-                    users_prof1.setUser_name(modelll.getAuth_username());
-                    users_prof1.setFullname(modelll.getAuth_data().getAuth());
-                    users_prof1.setImage(modelll.getAuth_data().getAuth_img());
+                    String auth=modelll.getAuth_username();
+                    boolean userIsAuth=(auth.equalsIgnoreCase(thisUser));
 
-                    users_prof.save(context);
-                    users_prof1.save(context);
+                    if(userIsAuth){
+                        users_prof.setUser_name(modelll.getReciv_username());
+                        users_prof.setFullname(modelll.getReciv_data().getReciv());
+                        users_prof.setImage(modelll.getReciv_data().getReciv_img());
+                        users_prof.save(context);
+                    }else {
+                        users_prof1.setUser_name(modelll.getAuth_username());
+                        users_prof1.setFullname(modelll.getAuth_data().getAuth());
+                        users_prof1.setImage(modelll.getAuth_data().getAuth_img());
+                        users_prof1.save(context);
+                    }
 
                     messages_.setConfirm(getString__(modelll.getConfirm()));
                     messages_.setImage(getString__(modelll.getImage()));
                     messages_.setMess_age(getString__(modelll.getSubtitle()));
-                    messages_.setTim_e(getString__(modelll.getTimestamp()));
+                    messages_.setTim_e(Stores.parseInt(getString__(modelll.getTimestamp())));
                     messages_.setTime_stamp(getString__(modelll.getTimestamp()));
                     messages_.setRecip(getString__(modelll.getReciv_data().getReciv()));
                     messages_.setAuth(getString__(modelll.getAuth_data().getAuth()));
@@ -210,23 +221,27 @@ public void sendAllMessages(){
                     messages_.setmsg_id(getString__(modelll.getId()));
                     messages_.setSent(1);
                     messages_.setContext(context);
-                    Stime=modelll.getTimestamp();
+                    sTTime=modelll.getTimestamp();
                     boolean fg=messages_.save(context);
                 }
-                Prefs.putLong(MSGCALL, TimeModel.getLongTime(Stime));
                 int pgLeft=Stores.parseInt(model_l.getPagesLeft());
                 page++;
                 if(pgLeft>0){
                     getAllMessages();
                 }else{
+                    redo=false;
+                    Prefs.putLong(MSGCALL, TimeModel.getLongTime(sTTime));
                     Prefs.putBoolean(CHECKUPDATE, false);
-                }
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Chats.REFRESH_NEW_MESSAGE));
+                   }
             }
 
             @Override
             public void onFailure(Call<Model__> call, Throwable t) {
                 stores.reportThrowable(t, "messagescall.class");
-            }
+                Prefs.putLong(MSGCALL, TimeModel.getLongTime(sTTime));
+                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Chats.REFRESH_NEW_MESSAGE));
+                }
         });
     }
 

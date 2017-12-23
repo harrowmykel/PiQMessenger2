@@ -61,8 +61,8 @@ public class ConvoActAdapter extends RecyclerView.Adapter<ConvoActViewHolder> {
     public void onBindViewHolder(ConvoActViewHolder holder, final int position) {
         if(messages_list.size()>0){
             Messages messages=messages_list.get(position);
-            String former_=timeModel.getDWMDay(messages.getTim_e());
-            String time_msg=timeModel.getDWMTime(messages.getTim_e());
+            String former_=timeModel.getDWMDay(""+messages.getTim_e());
+            String time_msg=timeModel.getDWMTime(""+messages.getTim_e());
 
             if(!former_.equalsIgnoreCase(former_day)){
                 holder.crdview.setVisibility(View.VISIBLE);
@@ -79,6 +79,9 @@ public class ConvoActAdapter extends RecyclerView.Adapter<ConvoActViewHolder> {
             if(!img.isEmpty() && !img.equals("0") && !img.equals("1")) {
                 Piccassa.load(context, img, R.drawable.nosong, holder.convo_dp);
             }
+/*TODO
+            boolean thrown=messages.getConfirm().equalsIgnoreCase(Stores.UNREAD_MSG);
+            Stores.addCircleBorder(holder.convo_dp, context, thrown);*/
         }
     }
 

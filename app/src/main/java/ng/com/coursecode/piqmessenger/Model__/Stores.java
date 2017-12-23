@@ -2,8 +2,10 @@ package ng.com.coursecode.piqmessenger.Model__;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,10 +17,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import hirondelle.date4j.DateTime;
 import ng.com.coursecode.piqmessenger.Database__.Messages;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.NotificationsA.NotificationsAct;
+import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 
@@ -51,6 +56,12 @@ public class Stores {
     public static final String REFRESH_ACTIVITY_STATUS = "hjdbfjkf";
     public static final String REFRESH_ACTIVITY_GROUP = "fjfjksdlj";
     public static final String REFRESH_ACTIVITY_POST = "fhdskbfsjdbkfsj";
+    public static final String NOTIFICATION_STRING = "Idniknfinfoin";
+    public static final String NOTIFICATION_DISP_ID = "Ikjdjdijidp";
+    public static final String APP_FIREBASE_TOPIC = "nefskdnkgldfndkfsnkvdndknfkdndfndld";
+    public static final String REFRESH_NEW_ACT = "erjdfsyunfk";
+    public static final String UNREAD_MSG = "w";
+    public static final String READ_MSG = "r";
     public static int flingVelX=1;
     public static int flingVelY=2;
     public static boolean flingEdit=true;
@@ -146,8 +157,8 @@ public class Stores {
 
     public void reportThrowable(Throwable t, String location) {
         Toasta.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT);
-
     }
+
     public static void _handleError(String error, Context context) {
         Toasta.makeText(context, "error", Toast.LENGTH_SHORT);
     }
@@ -289,7 +300,7 @@ public class Stores {
     }
 
     public String getTime(String msgcall) {
-        return ""+(Prefs.getLong(msgcall, 0)-6);
+        return ""+(Prefs.getLong(msgcall, 6)-6);
     }
 
     public String getFirebaseStore(String profileStore) {
@@ -328,5 +339,159 @@ public class Stores {
 
     public Uri getRawResUri(int vid_id) {
         return Uri.parse("android.resource://" + context.getPackageName() + "/"+vid_id);
+    }
+
+    public static Intent getIntentNotif(Context context, String not_id) {
+        Intent intent;
+        int not_int=232;
+        int ResString=R.string.sent_req;
+        switch (not_id){
+            case "sent_req":
+                intent=new Intent(context, Profile.class);
+                ResString=R.string.sent_req;
+                not_int=2321;
+                break;
+            case "mention_req":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.mention_req;
+                not_int=222321;
+                break;
+            case "comment_like":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.comment_like;
+                not_int=22232;
+                break;
+            case "comment_req":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.comment_req;
+                not_int=22232;
+                break;
+            case "add_reply":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.add_reply;
+                not_int=2223212;
+                break;
+            case "acc_req":
+                intent=new Intent(context, Profile.class);
+                ResString=R.string.acc_req;
+                not_int=221221;
+                break;
+            case "add_like":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.add_like;
+                not_int=220221;
+                break;
+            case "new_post_by_admin":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.new_post_by_admin;
+                not_int=229321;
+                break;
+            case "new_post_r":
+                intent=new Intent(context, PostsAct.class);
+                ResString=R.string.new_post_r;
+                not_int=2223212;
+                break;
+            case "send_piccoin":
+                intent=new Intent(context, Profile.class);
+                ResString=R.string.send_piccoin;
+                not_int=22321;
+                break;
+            case "check_prof":
+                intent=new Intent(context, Profile.class);
+                ResString=R.string.check_prof;
+                not_int=22221;
+                break;
+            default:
+                intent=new Intent(context, NotificationsAct.class);
+                ResString=R.string.new_notification;
+                not_int=22290;
+                break;
+        }
+
+        intent.putExtra(NOTIFICATION_STRING, ResString);
+        intent.putExtra(NOTIFICATION_DISP_ID, not_int);
+        return intent;
+    }
+
+
+    public static RecivData getRecivNotif(String not_id) {
+        int not_int=232;
+        int ResString=R.string.sent_req;
+        switch (not_id){
+            case "sent_req":
+                ResString=R.string.sent_req;
+                not_int=2321;
+                break;
+            case "mention_req":
+                ResString=R.string.mention_req;
+                not_int=222321;
+                break;
+            case "comment_like":
+                ResString=R.string.comment_like;
+                not_int=22232;
+                break;
+            case "comment_req":
+                ResString=R.string.comment_req;
+                not_int=22232;
+                break;
+            case "add_reply":
+                ResString=R.string.add_reply;
+                not_int=2223212;
+                break;
+            case "acc_req":
+                ResString=R.string.acc_req;
+                not_int=221221;
+                break;
+            case "add_like":
+                ResString=R.string.add_like;
+                not_int=220221;
+                break;
+            case "new_post_by_admin":
+                ResString=R.string.new_post_by_admin;
+                not_int=229321;
+                break;
+            case "new_post_r":
+                ResString=R.string.new_post_r;
+                not_int=2223212;
+                break;
+            case "send_piccoin":
+                ResString=R.string.send_piccoin;
+                not_int=22321;
+                break;
+            case "check_prof":
+                ResString=R.string.check_prof;
+                not_int=22221;
+                break;
+            default:
+                ResString=R.string.new_notification;
+                not_int=22290;
+                break;
+        }
+
+        return new RecivData(ResString, not_int);
+    }
+
+    public void reportServiceException(Exception r, String mFirename) {
+
+    }
+
+    public static void addCircleBorder(CircleImageView status_dp, Context context, boolean b) {
+        int valueInPixels = (int) context.getResources().getDimension(R.dimen.zero);
+        if (b) {
+            status_dp.setBorderColor(ContextCompat.getColor(context, R.color.border_color_));
+            valueInPixels = (int) context.getResources().getDimension(R.dimen.border_width);
+            status_dp.setBorderWidth(valueInPixels);
+        }
+        status_dp.setBorderWidth(valueInPixels);
+    }
+
+    public static void addCircleBorderMsg(CircleImageView status_dp, Context context, boolean thrown) {
+        int valueInPixels = (int) context.getResources().getDimension(R.dimen.zero);
+        if (thrown) {
+            status_dp.setBorderColor(ContextCompat.getColor(context, R.color.border_color_2));
+            valueInPixels = (int) context.getResources().getDimension(R.dimen.border_width);
+            status_dp.setBorderWidth(valueInPixels);
+        }
+        status_dp.setBorderWidth(valueInPixels);
     }
 }

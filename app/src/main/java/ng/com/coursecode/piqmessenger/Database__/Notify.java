@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.Db_Aro.DB_Aro;
+import ng.com.coursecode.piqmessenger.Model__.Datum;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.Model__.Stores2;
 
@@ -23,6 +24,7 @@ public class Notify {
     public String type;
     public String seen;
     public String time_stamp;
+    public String obj_id;
 
     String last_user="a%";
     Users_prof users_prof;
@@ -31,6 +33,7 @@ public class Notify {
     Cursor cursor;
     Context context;
     long newId;
+    private String link;
 
     public boolean save(Context context1) {
         context = context1;
@@ -65,13 +68,19 @@ public class Notify {
         return false;
     }
 
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     private ContentValues getCValues() {
         ContentValues contentValues1 = new ContentValues();
         contentValues1.put(Stores2.auth, getSubj().toLowerCase());
         contentValues1.put(Stores2.type, getType());
-        contentValues1.put(Stores2.time_stamp, getTime_stamp());
         contentValues1.put(Stores2.seen, getSeen());
         contentValues1.put(Stores2.msg_id, getMsg_id());
+        contentValues1.put(Stores2.posts_id, getObj_id());
+        contentValues1.put(Stores2.web_link, getLink());
+        contentValues1.put(Stores2.time_stamp, getTime_stamp());
         return contentValues1;
     }
 
@@ -81,11 +90,12 @@ public class Notify {
 
         String[] projection = {
                 Stores2.auth,
-                Stores2.recip,
                 Stores2.type,
-                Stores2.time_stamp,
                 Stores2.seen,
-                Stores2.msg_id};
+                Stores2.msg_id,
+                Stores2.posts_id,
+                Stores2.web_link,
+                Stores2.time_stamp};
 
         String selection = null;
         String[] selectionArgs = {};
@@ -93,7 +103,7 @@ public class Notify {
         // How you want the results sorted in the resulting Cursor
         String sortOrder = Stores2.time_stamp + " DESC ";
 
-        cursor = rdbleDb.query(true, Stores2.messagesTable,  // The table to query
+        cursor = rdbleDb.query(true, Stores2.notifyTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
@@ -109,18 +119,22 @@ public class Notify {
 
         for (int i = 0; i < num; i++) {
             cursor.moveToPosition(i);
-
             Notify notify=new Notify();
+
             subj = cursor.getString(cursor.getColumnIndex(Stores2.auth));
             type = cursor.getString(cursor.getColumnIndex(Stores2.type));
-            time_stamp = cursor.getString(cursor.getColumnIndex(Stores2.time_stamp));
-            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
             seen = cursor.getString(cursor.getColumnIndex(Stores2.seen));
+            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
+            obj_id = cursor.getString(cursor.getColumnIndex(Stores2.posts_id));
+            link = cursor.getString(cursor.getColumnIndex(Stores2.web_link));
+            time_stamp = cursor.getString(cursor.getColumnIndex(Stores2.time_stamp));
 
             notify.setSubj(subj);
-            notify.setMsg_id(msg_id);
             notify.setType(type);
             notify.setSeen(seen);
+            notify.setMsg_id(msg_id);
+            notify.setObj_id(obj_id);
+            notify.setLink(link);
             notify.setTime_stamp(time_stamp);
             msgs_.add(notify);
         }
@@ -190,5 +204,17 @@ public class Notify {
         rdbleDb.delete(Stores2.notifyTable,  // The table to query
                 selection,                                // The columns for the WHERE clause
                 selectionArgs);
+    }
+
+    public String getObj_id() {
+        return obj_id;
+    }
+
+    public void setObj_id(String obj_id) {
+        this.obj_id = obj_id;
+    }
+
+    public String getLink() {
+        return link;
     }
 }

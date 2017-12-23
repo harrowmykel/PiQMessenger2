@@ -25,7 +25,7 @@
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
+                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/warning"
@@ -66,7 +66,7 @@
                             android:layout_margin="@dimen/mrgin_ppic"
                             android:layout_centerHorizontal="true"/>
 
-                        <TextView
+                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -83,7 +83,7 @@
                             android:layout_below="@id/fullname"
                             android:id="@+id/lle"
                             android:orientation="horizontal">
-                            <TextView
+                            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:orientation="vertical">
-                        <TextView
+                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
@@ -165,7 +165,7 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -439,6 +439,18 @@ public class Status_tab {
     }
 
     public ArrayList<Model__3> fetchIntro(Context context){
+        return addIntro(context, false);
+    }
+
+    public String getType() {
+        return (type==null)?Stores.IMG: type;
+    }
+
+    public String setType(String type) {
+        return this.type=type;
+    }
+
+    public ArrayList<Model__3> addIntro(Context context, boolean savee) {
         ArrayList<Model__3> statuses = new ArrayList<>();
         ArrayList<Model__3> status_tab_list = new ArrayList<>();
 
@@ -489,7 +501,9 @@ public class Status_tab {
             }
 
             messages_.setType(type);
-            messages_.save(context);
+            if(savee) {
+                messages_.save(context);
+            }
             status_tab.setType(type);
 
             status_tab.setFullname(fullname);
@@ -514,13 +528,5 @@ public class Status_tab {
         Model__3.setStatData(status_tab_list);
         statuses.add(Model__3);
         return statuses;
-    }
-
-    public String getType() {
-        return (type==null)?Stores.IMG: type;
-    }
-
-    public String setType(String type) {
-        return this.type=type;
     }
 }

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +21,8 @@ import java.util.List;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import ng.com.coursecode.piqmessenger.Adapters__.ConvoAdapter;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
-import ng.com.coursecode.piqmessenger.Conversate.Message;
 import ng.com.coursecode.piqmessenger.Database__.Messages;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import ng.com.coursecode.piqmessenger.ExtLib.onVerticalScrollListener;
 import ng.com.coursecode.piqmessenger.Interfaces.ConvoInterface;
 import ng.com.coursecode.piqmessenger.Model__.Model__2;
@@ -34,7 +34,7 @@ import ng.com.coursecode.piqmessenger.R;
  * Created by harro on 09/10/2017.
  */
 
-public class Chats extends Fragment {
+public class Chats extends PiccMaqFragment {
     View view;
     Context context;
     Stores stores;
@@ -76,9 +76,8 @@ public class Chats extends Fragment {
         recyclerView=(RecyclerView)view.findViewById(R.id.main_recycle);
         stores=new Stores(context);
         setLists();
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(REFRESH_NEW_MESSAGE));
+        setMessageReceiver(mMessageReceiver);
+        listenToBroadCast(REFRESH_NEW_MESSAGE);
         return view;
     }
 

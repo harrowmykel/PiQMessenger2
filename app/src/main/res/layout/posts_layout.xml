@@ -34,7 +34,7 @@
                 android:id="@+id/items_all"
                 android:gravity="center_vertical">
 
-                <TextView
+                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                     android:id="@+id/posts_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -46,14 +46,14 @@
                     android:layout_alignLeft="@+id/posts_more"
                     android:layout_alignStart="@+id/posts_more"/>
 
-                <TextView
+                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                     android:id="@+id/posts_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/descSize"
                     android:layout_below="@+id/posts_username" />
 
-                <TextView
+                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                     android:id="@+id/posts_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                             android:contentDescription="@string/accept_request"
                             app:srcCompat="@drawable/ic_favorite_border_black_24dp"
                             android:id="@+id/posts_fav"/>
-                        <TextView
+                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
@@ -139,7 +139,7 @@
                         android:contentDescription="@string/accept_request"
                         app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
                         android:id="@+id/posts_reply"/>
-                    <TextView
+                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"

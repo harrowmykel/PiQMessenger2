@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -142,7 +142,7 @@ public class StatusAct extends PiccMaqCompatActivity {
     public void replaceFrag(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.remove(oldFragment).commit();
-        // Replace whatever is in the fragment_container view with this fragment,
+        // Replace whatever is in the fragment_container view with this PiccMaqFragment,
         // and add the transaction to the back stack so the user can navigate back
 
         transaction = getSupportFragmentManager().beginTransaction();

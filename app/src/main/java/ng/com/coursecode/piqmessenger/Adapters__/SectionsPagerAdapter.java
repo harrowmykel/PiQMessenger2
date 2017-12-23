@@ -9,9 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ng.com.coursecode.piqmessenger.Fragments_.Chats;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragmentPagerAdapter;
 import ng.com.coursecode.piqmessenger.Fragments_.Groups;
-import ng.com.coursecode.piqmessenger.Fragments_.Notification;
 import ng.com.coursecode.piqmessenger.Fragments_.Posts;
 import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.R;
@@ -20,7 +19,7 @@ import ng.com.coursecode.piqmessenger.R;
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends PiccMaqFragmentPagerAdapter {
 
     Context context;
 //    public static Fragment[] fragments={Posts.newInstance(),  Status.newInstance(), Groups.newInstance()};

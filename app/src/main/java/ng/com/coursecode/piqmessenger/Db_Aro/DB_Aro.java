@@ -22,7 +22,7 @@ public class DB_Aro extends SQLiteOpenHelper {
 
     public static final String SQLL_DATEBASE_NAME = "piqmessenger__";
     public static final String SQLL_DATABASE_TABLE = "PROVERB_TABLE";
-    private static final int SQLL_DATABASE_VERSION = 1;
+    private static final int SQLL_DATABASE_VERSION = 3;
     Context context;
     private static DB_Aro instance;
     private static SQLiteDatabase Dbinstance;
@@ -52,11 +52,21 @@ public class DB_Aro extends SQLiteOpenHelper {
                 Stores2.auth + " TEXT NOT NUll, " +
                 Stores2.recip + " TEXT NOT NUll, " +
                 Stores2.mess_age + " TEXT NOT NUll, " +
-                Stores2.tim_e + " TEXT NOT NUll, " +
+                Stores2.tim_e + " INTEGER(12) NOT NUll, " +
                 Stores2.image + " TEXT NOT NUll, " +
                 Stores2.confirm + " TEXT NOT NUll, " +
                 Stores2.sent + " INTEGER(2) NOT NUll, " +
                 Stores2.msg_id + " TEXT NOT NUll)");
+
+        db.execSQL("CREATE TABLE " + Stores2.notifyTable + "(" +
+                Stores2.id_ + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Stores2.auth + " TEXT NOT NUll, " +
+                Stores2.type + " TEXT NOT NUll, " +
+                Stores2.time_stamp + " TEXT NOT NUll, " +
+                Stores2.msg_id + " TEXT NOT NUll, " +
+                Stores2.posts_id + " TEXT NOT NUll, " +
+                Stores2.web_link + " TEXT NOT NUll, " +
+                Stores2.seen + " INTEGER(2) NOT NUll)");
 
         db.execSQL("CREATE TABLE " + Stores2.statusTable + "(" +
                 Stores2.id_ + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

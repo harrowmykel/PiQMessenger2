@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/like"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_like"/>
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/love"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_love"/>
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/haha"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_haha"/>
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/wow"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_wow"/>
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/sad"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_sad"/>
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/angry"
                 android:layout_marginBottom="3dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_angry"/>

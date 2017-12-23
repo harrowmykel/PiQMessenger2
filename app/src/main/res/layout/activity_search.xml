@@ -33,7 +33,7 @@
         </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/swipeRefresh"
@@ -52,6 +52,6 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh>
 
 </android.support.design.widget.CoordinatorLayout>

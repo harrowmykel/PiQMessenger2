@@ -48,7 +48,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:id="@+id/txt_push_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="26dp" />
 
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:id="@+id/txt_reg_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

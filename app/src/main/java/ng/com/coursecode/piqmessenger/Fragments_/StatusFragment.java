@@ -7,7 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -30,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Contacts_.StatusAct;
 import ng.com.coursecode.piqmessenger.Conversate.Converse;
 import ng.com.coursecode.piqmessenger.Database__.Status_tab;
+import ng.com.coursecode.piqmessenger.Dialog_.DeleteDialog;
 import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
 import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2;
@@ -53,7 +54,7 @@ import retrofit2.Retrofit;
  * Created by harro on 15/11/2017.
  */
 
-public class StatusFragment  extends Fragment {
+public class StatusFragment  extends PiccMaqFragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -93,7 +94,7 @@ public class StatusFragment  extends Fragment {
     }
 
     /**
-     * Returns a new instance of this fragment for the given section
+     * Returns a new instance of this PiccMaqFragment for the given section
      * number.
      */
     public static StatusFragment newInstance(Model__3 users_posts) {
@@ -252,17 +253,16 @@ public class StatusFragment  extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.action_delete:
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                                alertDialogBuilder.setTitle(R.string.action_delete).setMessage(R.string.delete_confirm)
-                                        .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
+                                DeleteDialog deleteDialog=new DeleteDialog(context, new SendDatum() {
+                                    @Override
+                                    public void send(Object object) {
+                                        boolean sdf=(boolean)object;
+                                        if(sdf){
+                                            deleteStatus();
+                                        }
                                     }
-                                }).setNegativeButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        deleteStatus();
-                                    }
-                                }).show();
+                                });
+                                deleteDialog.show();
                                 break;
                             case R.id.action_view:
                                 goToViewUsers();
@@ -408,6 +408,7 @@ public class StatusFragment  extends Fragment {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
                             img_ring.setVisibility(View.GONE);
+                            calUP();
                         }
                     });
                 }else{
@@ -420,6 +421,7 @@ public class StatusFragment  extends Fragment {
                             startTimer();
                             imgLoaded=true;
                             sendToActivity(status_code);
+                            calUP();
                         }
 
                         @Override
@@ -433,6 +435,7 @@ public class StatusFragment  extends Fragment {
             }
         }else{
             cancelTimer();
+            startTimer();
         }
     }
 
@@ -452,13 +455,17 @@ public class StatusFragment  extends Fragment {
             public void onFinish() {
                 ringProgress.setProgress(100);
                 setImage(position+1);
-                if(position>=(max)){
-                    sendToActivity(Show_Status.NEXT_STATUS);
-                }
+                calUP();
                 TotalTime=totalTimeImg;
             }
         };
         cTimer.start();
+    }
+
+    public void calUP(){
+        if(position>=(max)){
+            sendToActivity(Show_Status.NEXT_STATUS);
+        }
     }
 
     //cancel timer

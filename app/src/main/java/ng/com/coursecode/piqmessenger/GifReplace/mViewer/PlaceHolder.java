@@ -3,7 +3,7 @@ package ng.com.coursecode.piqmessenger.GifReplace.mViewer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,7 @@ import ng.com.coursecode.piqmessenger.R;
 /**
  * Created by User on 5/20/2017.
  */
-public class PlaceHolder  extends Fragment {
+public class PlaceHolder  extends PiccMaqFragment {
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -73,7 +73,7 @@ public class PlaceHolder  extends Fragment {
 
 
     /**
-     * Returns a new instance of this fragment for the given section
+     * Returns a new instance of this PiccMaqFragment for the given section
      * number.
      */
 

@@ -32,7 +32,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/warning"

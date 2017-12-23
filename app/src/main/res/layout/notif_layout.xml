@@ -21,11 +21,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/user_sample"/>
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:id="@+id/img_like"
-        android:layout_centerInParent="true"/>
 </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -55,47 +50,8 @@
             android:id="@+id/users_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
-            android:id="@+id/users_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp" />
+            android:textSize="13sp"/>
         </LinearLayout>
-
-     <!--   <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/users_frnds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/users_linear"
-            android:layout_alignBottom="@+id/users_linear"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="@dimen/mrgtop"
-            android:layout_marginRight="12dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:textSize="12sp"
-            app:fb_iconPosition="left"/>-->
-        <com.rilixtech.materialfancybutton.MaterialFancyButton
-            android:id="@+id/users_frnds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/users_linear"
-            android:layout_alignBottom="@+id/users_linear"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="@dimen/mrgtop"
-            android:layout_marginRight="12dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:textSize="12sp"
-            app:mfb_iconPosition="left"
-            app:mfb_radius="7dp"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

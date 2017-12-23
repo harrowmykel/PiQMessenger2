@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +35,7 @@ import ng.com.coursecode.piqmessenger.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GifLists extends Fragment {
+public class GifLists extends PiccMaqFragment {
 
     private static final String STAV = "hjefasfkjfjk";
     View view;
@@ -71,7 +71,7 @@ public class GifLists extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState_) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this PiccMaqFragment
 
         view=inflater.inflate(R.layout.fragment_gif_list, container, false);
         context=getContext();

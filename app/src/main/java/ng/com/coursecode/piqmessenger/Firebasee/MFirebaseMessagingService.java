@@ -33,6 +33,7 @@ import ng.com.coursecode.piqmessenger.Model__.Model__;
 import ng.com.coursecode.piqmessenger.Model__.NotificationData;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
+import ng.com.coursecode.piqmessenger.NetworkCalls.NotifyCall;
 import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
 import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
 import ng.com.coursecode.piqmessenger.Profile;
@@ -55,122 +56,65 @@ public class MFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage == null)
             return;
 
-        body = (body == null) ? "jnf" : body;
+        body = null;
 
         if(remoteMessage.getData()!=null){
-
-        }
-        if(remoteMessage.getNotification()!=null){
+            body = remoteMessage.getData().toString();
+        }else if(remoteMessage.getNotification()!=null) {
             body = remoteMessage.getNotification().getBody();
-            if (body==null)
-                return;
-            body = body.replace("&quot;", "\"");
+        }
 
-            Gson gson=new Gson();
-            try{
-                NotificationData model__=gson.fromJson(body, NotificationData.class);
-                NotificationData.Data data=model__.getData();
-                if(data.getGroupMessage()!=null){
-                    saveGroupMessage(data);
-                }else if(data.getMessage()!=null){
-                    saveMessage(data);
-                }else if(data.getNotify()!=null){
-                    doNotify(data);
-                }else if(data.getStatus()!=null){
-                    saveStatus(data);
-                }else if(data.getDelstatus()!=null){
-                    delStatus(data);
-                    Intent intent1=new Intent(context, ConvoSearchAct.class);
-                    notify(getString(R.string.new_message_have), MSG_NOTIFICATION_ID, intent1);
+        if (body==null)
+            return;
 
-                }
-            }catch (Exception r){
-                stores.reportException(r, MFirename);
+        body = body.replace("&quot;", "\"");
+
+        Gson gson=new Gson();
+        try{
+            NotificationData model__=gson.fromJson(body, NotificationData.class);
+            NotificationData.Data data=model__.getData();
+            if(data.getGroupMessage()!=null){
+                saveGroupMessage(data);
+            }else if(data.getMessage()!=null){
+                saveMessage(data);
+            }else if(data.getNotify()!=null){
+                doNotify(data);
+            }else if(data.getStatus()!=null){
+                saveStatus(data);
+            }else if(data.getDelstatus()!=null){
+                delStatus(data);
             }
+        }catch (Exception r){
+            stores.reportServiceException(r, MFirename);
         }
     }
 
     private void delStatus(NotificationData.Data data) {
         String code=data.getDelstatus().getStatusCode();
-
         Status_tab messages_=new Status_tab();
         messages_.delete(context, code);
-
         StatusCall statusCall=new StatusCall(context);
         statusCall.getAllDelMessages();
-
     }
 
     private void doNotify(NotificationData.Data data) {
-        Intent  intent=new Intent(context, Profile.class);
-        int not_int=232;
         int ResString=R.string.sent_req;
         NotificationData.Notify note=data.getNotify();
         String topic="";
         String not_id = note.getNotifId();
-        switch (not_id){
-            case "sent_req":
-                intent=new Intent(context, Profile.class);
-                ResString=R.string.sent_req;
-                not_int=2321;
-                break;
-            case "mention_req":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.mention_req;
-                not_int=222321;
-                break;
-            case "comment_like":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.comment_like;
-                not_int=22232;
-                break;
-            case "comment_req":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.comment_req;
-                not_int=22232;
-                break;
-            case "add_reply":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.add_reply;
-                not_int=2223212;
-                break;
-            case "acc_req":
-                intent=new Intent(context, Profile.class);
-                ResString=R.string.acc_req;
-                not_int=221221;
-                break;
-            case "add_like":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.add_like;
-                not_int=220221;
-                break;
-            case "new_post_by_admin":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.new_post_by_admin;
-                not_int=229321;
-                break;
-            case "new_post_r":
-                intent=new Intent(context, PostsAct.class);
-                ResString=R.string.new_post_r;
-                not_int=2223212;
-                break;
-            case "send_piccoin":
-                intent=new Intent(context, Profile.class);
-                ResString=R.string.send_piccoin;
-                not_int=22321;
-                break;
-            case "check_prof":
-                intent=new Intent(context, Profile.class);
-                ResString=R.string.check_prof;
-                not_int=22221;
-                break;
-        }
+        Intent  intent=Stores.getIntentNotif(context, not_id);
+        int not_int=intent.getIntExtra(Stores.NOTIFICATION_DISP_ID,  232);
+        ResString=intent.getIntExtra(Stores.NOTIFICATION_STRING, ResString);
+
         topic=getString(ResString, note.getSubj());
         intent.putExtra(PostsAct.POSTID, note.getNotifC());
         intent.putExtra(Profile.USERNAME, note.getNotifC());
         if(not_int!=232){
             notify(topic, not_int, intent);
         }
+
+        NotifyCall NotifyCall=new NotifyCall(context);
+        NotifyCall.getAllNotifys();
     }
 
     private void saveGroupMessage(NotificationData.Data data) {
@@ -191,10 +135,8 @@ public class MFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void saveMessage(NotificationData.Data data) {
-        NotificationData.Message modelll=data.getMessage();
         MessagesCall messagesCall=new MessagesCall(context);
         messagesCall.getAllMessages();
-
         Intent intent1=new Intent(context, ConvoSearchAct.class);
 
         notify(getString(R.string.new_message_have), MSG_NOTIFICATION_ID, intent1);
@@ -212,6 +154,21 @@ public class MFirebaseMessagingService extends FirebaseMessagingService {
                 .largeIcon(R.drawable.new_message)
                 .flags(Notification.DEFAULT_ALL)
                 .click(pendingIntent)
+                .autoCancel(true)
+                .simple()
+                .build();
+    }
+    public void notify(String body_){
+        NOT_INT++;
+        PugNotification.with(context)
+                .load()
+                .identifier(NOT_INT)
+                .title(R.string.app_name)
+                .message(body_)
+                .bigTextStyle(body_)
+                .smallIcon(R.drawable.message_placeholder)
+                .largeIcon(R.drawable.new_message)
+                .flags(Notification.DEFAULT_ALL)
                 .autoCancel(true)
                 .simple()
                 .build();

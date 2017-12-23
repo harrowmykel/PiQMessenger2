@@ -48,12 +48,12 @@
                         app:spbStyle="@style/linearProgressBar"
                         android:visibility="gone"
                         android:id="@+id/smooth_prog"/>
-                    <TextView
+                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/show_previous_post"
                         style="@style/previous_post"/>
-                    <TextView
+                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/warning"
@@ -77,14 +77,14 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:gravity="center_vertical">
-                            <TextView
+                            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
                                 android:layout_marginTop="2dp"
                                 android:id="@+id/crt_fullname"
                                 android:text="@string/app_name"/>
-                            <TextView
+                            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
@@ -170,7 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <TextView
+                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/sub_titles"
@@ -216,12 +216,12 @@
                                 android:layout_height="60dp"
                                 android:id="@+id/newpost_switch"
                                 style="@style/MySwitch"/>
-                            <TextView
+                            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/handle"/>
                         </LinearLayout>
-                        <TextView
+                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/number_ofwords"

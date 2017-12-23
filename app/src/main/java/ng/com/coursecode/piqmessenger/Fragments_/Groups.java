@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
  * Created by harro on 09/10/2017.
  */
 
-public class Groups extends Fragment {
+public class Groups extends PiccMaqFragment {
     private static final String AVAIL_GROUPS = "AVAIL_GROUP";
     private static final String ALL_MESSAGES = "ALL_MESSAGES";
     public static final String DELETE_FRND = Stores.DELETE_FRND;
@@ -78,10 +78,9 @@ public class Groups extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.main_recycle);
 
         tx = (TextView) view.findViewById(R.id.warning);
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(REFRESH_VIEW_GROUP));
-        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
-                new IntentFilter(Stores.REFRESH_ACTIVITY_GROUP));
+        setMessageReceiver(mMessageReceiver);
+        listenToBroadCast(REFRESH_VIEW_GROUP);
+        listenToBroadCast(Stores.REFRESH_ACTIVITY_GROUP);
         startFrag();
         return view;
     }
@@ -128,14 +127,6 @@ public class Groups extends Fragment {
             }
         }
     };
-
-
-    @Override
-    public void onDestroyView() {
-        // Unregister since the activity is about to be closed.
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
-        super.onDestroyView();
-    }
 
     public void setLists(){
         Group_tab status= new Group_tab();

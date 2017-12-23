@@ -22,12 +22,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ng.com.coursecode.piqmessenger.Adapters__.NotifyAdapter;
 import ng.com.coursecode.piqmessenger.Database__.Notify;
+import ng.com.coursecode.piqmessenger.Dialog_.DeleteDialog;
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.Interfaces.NotifyItemClicked;
+import ng.com.coursecode.piqmessenger.Interfaces.SendDatum;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.NetworkCalls.NotifyCall;
+import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
+import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
 
-public class NotificationsAct extends AppCompatActivity {
+public class NotificationsAct extends PiccMaqCompatActivity {
 
     @BindView(R.id.delete_all)
     MaterialFancyButton deleteAll;
@@ -47,17 +52,24 @@ Context context;
         setContentView(R.layout.activity_notifications);
         ButterKnife.bind(this);
         context=NotificationsAct.this;
+
+        NotifyCall NotifyCall=new NotifyCall(context);
+        NotifyCall.getAllNotifys();
+        swipeRefresh.setRefreshing(true);
         
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 NotifyCall NotifyCall=new NotifyCall(context);
                 NotifyCall.getAllNotifys();
+                swipeRefresh.setRefreshing(false);
             }
         });
 
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
                 new IntentFilter(REFRESH_VIEW_STATUS));
+
+        refreshView();
     }
     // Our handler for received Intents. This will be called whenever an Intent
 // with an action named "custom-event-name" is broadcasted.
@@ -74,6 +86,11 @@ Context context;
 
     private void refreshView() {        
         notify_list=(new Notify()).listAll(context);
+        if(notify_list.size()==0){
+            (findViewById(R.id.warning)).setVisibility(View.VISIBLE);
+        }else{
+            (findViewById(R.id.warning)).setVisibility(View.GONE);
+        }
         if(!do_once){
             NotifyAdapter2 = new NotifyAdapter(notify_list, nNotifyInterface);
             mainRecycle.setAdapter(NotifyAdapter2);
@@ -86,41 +103,88 @@ Context context;
             mainRecycle.setLayoutManager(mLayoutManager);
             mainRecycle.setItemAnimator(new DefaultItemAnimator());
 
-            if(Stores.flingEdit){
-                mainRecycle.fling(Stores.flingVelX, Stores.flingVelY);
-            }
             
             NotifyAdapter2 = new NotifyAdapter(notify_list, nNotifyInterface);
             mainRecycle.setAdapter(NotifyAdapter2);
             NotifyAdapter2.notifyDataSetChanged();
             do_once=false;
+
+            if(Stores.flingEdit){
+                mainRecycle.fling(Stores.flingVelX, Stores.flingVelY);
+            }
         }
+        swipeRefresh.setRefreshing(false);
+
+        deleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((new DeleteDialog(context, new SendDatum() {
+                    @Override
+                    public void send(Object object) {
+                        boolean cvc=(boolean)(object);
+                        if(cvc) {
+                            NotifyCall NotifyCall = new NotifyCall(context);
+                            NotifyCall.clear();
+                        }
+                    }
+                }))).show();
+            }
+        });
     }
 
-    @OnClick({R.id.delete_all})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.delete_all:
-                NotifyCall NotifyCall=new NotifyCall(context);
-                NotifyCall.clear();
-                break;
-        }
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver,
+                new IntentFilter(REFRESH_VIEW_STATUS));
+        super.onResume();
     }
 
     NotifyItemClicked nNotifyInterface=new NotifyItemClicked() {
         @Override
         public void onUsernameCLicked(int position) {
-
+            String msgId=notify_list.get(position).getSubj();
+            Intent intent=new Intent(context, Profile.class);
+            intent.putExtra(Profile.USERNAME, msgId);
+            startActivity(intent);
         }
 
         @Override
         public void onNotifyCLicked(int position) {
-
+            String msgId=notify_list.get(position).getType();
+            String data=notify_list.get(position).getObj_id();
+            Intent intent=Stores.getIntentNotif(context, msgId);
+            intent.putExtra(PostsAct.POSTID, data);
+            intent.putExtra(Profile.USERNAME, data);
+            startActivity(intent);
         }
 
         @Override
-        public void onDeleteCLicked(int position) {
-
+        public void onDeleteCLicked(final int position) {
+            DeleteDialog deleteDialog=new DeleteDialog(context, new SendDatum() {
+                @Override
+                public void send(Object object) {
+                    boolean sdf=(boolean)object;
+                    if(sdf){
+                        String msgId=notify_list.get(position).getMsg_id();
+                        (new Notify()).delete(context, msgId);
+                        notify_list.remove(position);
+                        refreshView();
+                    }
+                }
+            });
+            deleteDialog.show();
         }
     };
 

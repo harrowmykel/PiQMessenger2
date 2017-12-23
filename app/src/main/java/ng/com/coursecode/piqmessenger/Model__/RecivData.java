@@ -11,6 +11,33 @@ public class RecivData {
     @SerializedName("reciv")
     @Expose
     private String reciv;
+    @SerializedName("lowe")
+    @Expose
+    int resString;
+    @SerializedName("lowen")
+    @Expose
+    int notifInt;
+
+    public RecivData(int resString, int not_int) {
+        this.resString=resString;
+        notifInt=not_int;
+    }
+
+    public int getResString() {
+        return resString;
+    }
+
+    public void setResString(int resString) {
+        this.resString = resString;
+    }
+
+    public int getNotifInt() {
+        return notifInt;
+    }
+
+    public void setNotifInt(int notifInt) {
+        this.notifInt = notifInt;
+    }
 
     /**
      * No args constructor for use in serialization

@@ -61,11 +61,11 @@ public class Menu_ extends PiccMaqCompatActivity {
     String username_;
 
     int[] list1List1={R.string.edit_profile, R.string.friends, R.string.find_people, R.string.online_friends};
-    int[] list1List2={R.string.games_and_fun,   R.string.notifications};//,R.string.birthday_celebrants, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
+    int[] list1List2={R.string.games_and_fun,   R.string.notifications, R.string.learn_how_to_use};//,R.string.birthday_celebrants, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
     int[] list1List3={R.string.home, R.string.messages, R.string.groups, R.string.help};
 
     int[] list1List1img={R.string.edit_profile, R.string.friends, R.string.online_friends};
-    int[] list1List2img={R.string.games_and_fun, R.string.birthday_celebrants,  R.string.notifications, R.string.learn_how_to_use};//, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
+    int[] list1List2img={R.string.games_and_fun, R.string.birthday_celebrants,  R.string.notifications};//, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
     int[] list1List3img={R.string.home, R.string.messages, R.string.groups, R.string.help};
 
     @Override

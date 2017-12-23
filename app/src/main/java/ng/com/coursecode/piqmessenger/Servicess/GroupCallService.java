@@ -42,7 +42,7 @@ import retrofit2.Retrofit;
 
 public class GroupCallService extends Service {
 
-    public static final String CHECKUPDATE = "sdjbdfjnjkjnaklbsdf";
+    public static final String CHECKUPDATE = "checkgroupupdate";
     public static final String GET_MSG = "Knknf";
     public static final String CLEAR = "jkhgkjhljh";
     public static final String SUBSCRIBED_TO_FRIENDS = "jfkbfkj";
@@ -53,14 +53,16 @@ public class GroupCallService extends Service {
     ApiInterface apiInterface;
     int page=1;
     boolean sendMsgAfterResult=false;
-    String STATCALL="Hbdfnzbjd";
+    String GRPCALL="Hbdfnzbdwjd";
     private FetchMore fetchMore;
     Context context;
     ArrayList<String> arrayList;
     String token;
     String location="1234";
     boolean moreCanBeLoaded;
-    String username;
+    String username, sTime, sTTime;
+    boolean redo=false;
+
 
     public GroupCallService() {
         super();
@@ -79,7 +81,6 @@ public class GroupCallService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ans;
-        page=1;
         if(intent!=null){
             String todod=intent.getStringExtra(Stores.TYPE_OF_ACTION);
             switch (todod){
@@ -102,9 +103,13 @@ public class GroupCallService extends Service {
     }
 
     public void getAllMessages(){
+        if(!redo){
+            page=1;
+        }
+        redo=true;
         Prefs.putBoolean(CHECKUPDATE, true);
         Prefs.putBoolean(SUBSCRIBED_TO_FRIENDS, false);
-        Call<Model__> call=apiInterface.getAllGroups(stores.getUsername(), stores.getPass(), stores.getApiKey(), stores.getTime(STATCALL), ""+page);
+        Call<Model__> call=apiInterface.getAllGroups(stores.getUsername(), stores.getPass(), stores.getApiKey(), ""+page);
         call.enqueue(new Callback<Model__>() {
             @Override
             public void onResponse(Call<Model__> call, Response<Model__> response) {
@@ -144,14 +149,12 @@ public class GroupCallService extends Service {
                         Groups.subscribeTo(context, usertab, true);
                     }
                 }
-
-                Prefs.putLong(STATCALL, TimeModel.getLongTime(Stime));
-
                 int pgLeft=Stores.parseInt(model_l.getPagesLeft());
                 page++;
                 if(pgLeft>0){
                     getAllMessages();
                 }else{
+                    redo=false;
                     Prefs.putBoolean(CHECKUPDATE, false);
                     Prefs.putBoolean(SUBSCRIBED_TO_FRIENDS, true);
                     Prefs.putLong(SUBSCRIBE_TIME, System.currentTimeMillis());
@@ -174,7 +177,7 @@ public class GroupCallService extends Service {
             fetchMore.fetchNow();
         }
     }
-    
+
     private String getString__(String confirm) {
         return (confirm==null)?"":confirm;
     }

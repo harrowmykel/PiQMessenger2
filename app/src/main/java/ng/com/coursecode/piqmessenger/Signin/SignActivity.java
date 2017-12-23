@@ -16,6 +16,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.List;
 
 import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
+import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
 import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
 import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
 import ng.com.coursecode.piqmessenger.MainActivity;
@@ -58,9 +59,12 @@ public class SignActivity extends FullScreenActivity {
         });
         context=SignActivity.this;
         login=getIntent().getBooleanExtra(IS_LOGIN, false);
+        ImageView bckgrnd=((ImageView)findViewById(R.id.img_src));
         if(!login){
             ((TextView)(findViewById(R.id.log_in))).setText(R.string.signup);
-            ((ImageView)findViewById(R.id.img_src)).setImageResource(R.drawable.mlogin);
+            Piccassa.load(context, R.drawable.mlogin, bckgrnd);
+        }else{
+            Piccassa.load(context, R.drawable.login_girl, bckgrnd);
         }
         mETxt=(MaterialEditText)findViewById(R.id.username_sign);
         mETxtPass=(MaterialEditText)findViewById(R.id.pass_sign);

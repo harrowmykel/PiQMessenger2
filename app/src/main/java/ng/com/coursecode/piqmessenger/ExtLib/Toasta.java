@@ -20,9 +20,6 @@ public class Toasta {
     }
 
     public static void makeText(Context context, String res, int duration){
-//        String hj=context.getClass().getSimpleName();
         Toast.makeText(context, res, Toast.LENGTH_SHORT).show();
-//        Toasta.makeText(context, hj, Toast.LENGTH_SHORT).show();
-
     }
 }

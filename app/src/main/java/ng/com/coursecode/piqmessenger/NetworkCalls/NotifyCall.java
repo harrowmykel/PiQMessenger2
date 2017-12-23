@@ -28,42 +28,9 @@ public class NotifyCall {
         context.startService(intent);
     }
 
-
-    public void sendAllNotifys() {
-        intent.putExtra(NotifyCallService.SEND_NEW, "Jnd");
-        intent.putExtra(Stores.TYPE_OF_ACTION, NotifyCallService.SEND_NEW);
-        context.startService(intent);
-    }
-
-    public void getAllGroups() {
-        intent=new Intent(context, GroupCallService.class);
-        intent.putExtra(Stores.TYPE_OF_ACTION, GroupCallService.GET_MSG);
-        context.startService(intent);
-    }
-
     public void clear() {
         intent.putExtra(NotifyCallService.CLEAR, "Jnd");
         intent.putExtra(Stores.TYPE_OF_ACTION, NotifyCallService.CLEAR);
         context.startService(intent);
-    }
-
-
-    private void checkMsg(boolean b) {
-        NotifyCall NotifysCall=new NotifyCall(context);
-        if(b) {
-            NotifysCall.getAllNotifys();
-        }else{
-            NotifysCall.sendAllNotifys();
-        }
-    }
-
-    public void refresh() {
-        if(Prefs.getBoolean(NotifyCallService.CHECKUPDATE, false)){
-            checkMsg(true);
-        }
-
-        if(Prefs.getBoolean(NotifyCallService.SEND_NEW, false)) {
-            checkMsg(false);
-        }
     }
 }

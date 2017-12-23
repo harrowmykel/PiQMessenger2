@@ -15,7 +15,7 @@
         android:id="@+id/l1"
         app:cardBackgroundColor="@color/colorDateAccent"
         android:layout_centerHorizontal="true">
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:id="@+id/convo_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
+                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                     android:id="@+id/convo_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 android:layout_height="13dp"
                 android:id="@+id/img_icon"
                 app:srcCompat="@drawable/ic_done_black_24dp"/>
-            <TextView
+            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                 android:id="@+id/convo_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

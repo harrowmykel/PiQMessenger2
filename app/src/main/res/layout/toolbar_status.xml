@@ -37,7 +37,7 @@
         android:paddingTop="0dp" >
 
 
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:id="@+id/action_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -51,7 +51,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
+        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
             android:id="@+id/action_bar_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

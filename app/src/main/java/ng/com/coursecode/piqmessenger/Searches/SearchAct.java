@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
@@ -179,7 +179,7 @@ public class SearchAct extends PiccMaqCompatActivity {
 
     public void replaceFrag(Fragment fragment, int stringResId){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
+        // Replace whatever is in the fragment_container view with this PiccMaqFragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.search_framecontent, fragment);
         if(backstack)transaction.addToBackStack(null);

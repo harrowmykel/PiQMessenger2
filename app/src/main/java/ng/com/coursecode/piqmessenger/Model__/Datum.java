@@ -3,6 +3,8 @@ package ng.com.coursecode.piqmessenger.Model__;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Datum {
 
     @SerializedName("id")
@@ -29,12 +31,27 @@ public class Datum {
     @SerializedName("privacy")
     @Expose
     private String privacy;
+    @SerializedName("link")
+    public String link;
+    @SerializedName("subject")
+    public String subject;
+    @SerializedName("object")
+    public String object;
+    @SerializedName("notify_id")
+    public String notifyId;
+    @SerializedName("obj_id")
+    public String objId;
     @SerializedName("image")
     @Expose
     private String image;
     @SerializedName("likes")
     @Expose
     private String likes;
+
+    @SerializedName("data")
+    @Expose
+    List<Datum> data;
+
     @SerializedName("liked")
     @Expose
     private String liked;
@@ -52,6 +69,11 @@ public class Datum {
     @SerializedName("error")
     @Expose
     private String error;
+
+    @SerializedName("seen")
+    @Expose
+    private String seen;
+
     @SerializedName("time")
     @Expose
     private String time;
@@ -239,4 +261,51 @@ public class Datum {
         this.comments = comments;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getObject() {
+        return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
+    }
+
+    public String getNotifyId() {
+        return notifyId;
+    }
+
+    public void setNotifyId(String notifyId) {
+        this.notifyId = notifyId;
+    }
+
+    public String getObjId() {
+        return objId;
+    }
+
+    public void setObjId(String objId) {
+        this.objId = objId;
+    }
+
+    public String getSeen() {
+        return seen;
+    }
+
+    public void setSeen(String seen) {
+        this.seen = seen;
+    }
 }

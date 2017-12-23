@@ -22,7 +22,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/swipeRefresh"
@@ -45,7 +45,7 @@
                         android:indeterminate="true"
                         app:spbStyle="@style/linearProgressBar"
                         android:id="@+id/smooth_prog"/>
-                    <TextView
+                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/show_previous_post"
@@ -89,7 +89,7 @@
                                     android:id="@+id/items_all"
                                     android:gravity="center_vertical">
 
-                                    <TextView
+                                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                         android:id="@+id/posts_act_2username"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                                         android:layout_alignStart="@+id/posts_act_2more"
                                         android:text="@string/loading" />
 
-                                    <TextView
+                                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                         android:id="@+id/posts_act_2subtitle"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                                         android:textSize="@dimen/descSize"
                                         android:layout_below="@+id/posts_act_2username" />
 
-                                    <TextView
+                                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                         android:id="@+id/posts_act_2text"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                                         android:layout_below="@id/posts_act_2text"
                                         android:id="@+id/posts_act_2image"
                                         style="@style/imageViewCover"/>
-                                    <TextView
+                                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginBottom="2dp"
@@ -195,5 +195,5 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh>
 </android.support.design.widget.CoordinatorLayout>

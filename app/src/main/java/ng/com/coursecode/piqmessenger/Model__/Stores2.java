@@ -49,6 +49,7 @@ public class Stores2 {
     public static String discoverTable="discoverTable"+ending__;
     public static String fav="fav"+ending__;
     public static String liked="liked"+ending__;
+    public static String web_link="web_link"+ending__;
 
     public static String reciv="reciv"+ending__;
     public static String likes="likes"+ending__;

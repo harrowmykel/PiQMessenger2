@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -93,7 +93,7 @@ public class Main2Activity extends PiccMaqCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends PiccMaqFragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -104,7 +104,7 @@ public class Main2Activity extends PiccMaqCompatActivity {
         }
 
         /**
-         * Returns a new instance of this fragment for the given section
+         * Returns a new instance of this PiccMaqFragment for the given section
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {

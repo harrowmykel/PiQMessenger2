@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;  import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.os.Bundle;
@@ -205,7 +205,7 @@ public class LikesAct extends PiccMaqCompatActivity {
     public void replaceFrag(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.remove(oldFragment).commit();
-        // Replace whatever is in the fragment_container view with this fragment,
+        // Replace whatever is in the fragment_container view with this PiccMaqFragment,
         // and add the transaction to the back stack so the user can navigate back
 
         transaction = getSupportFragmentManager().beginTransaction();

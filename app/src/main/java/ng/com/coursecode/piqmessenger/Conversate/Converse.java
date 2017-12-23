@@ -136,20 +136,6 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
             }
         });
 
-       /* (findViewById(R.id.attach_msg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelector();
-            }
-        });
-
-        (findViewById(R.id.send_msg)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendToServer();
-            }
-        });
-*/
         Users_prof users_prof=Users_prof.getInfo(context, username);
         Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
         username_.setText(users_prof.getFullname());
@@ -157,7 +143,7 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
 
         Messages messages = new Messages();
         messages_list = messages.listAllFromUser(context, username);
-
+        messages.setReadAll(context, username);
         startInit();
         setUpProfile();
     }
@@ -214,7 +200,7 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
         messages_.setImage(urltoImage);
         messages_.setRecip(recipient);
         messages_.setMess_age(text);
-        messages_.setTim_e(TimeModel.getPhpTime());
+        messages_.setTim_e(TimeModel.getPhpTime2());
         messages_.setTime_stamp(TimeModel.getPhpTime());
         messages_.setAuth(stores.getUsername());
         messages_.setmsg_id("hsdhd"+stores.getSTime());
@@ -222,14 +208,14 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
         messages_.setContext(context);
         boolean fg=messages_.saveNew(context);
 
-       input.getInputEditText().setText("");
+        input.getInputEditText().setText("");
         tempUri=Uri.EMPTY;
 
         messages_list.add(messages_);
         MessagesCall messagesCall=new MessagesCall(context);
         messagesCall.sendAllMessages();
-        startInit();
         messagesCall.getAllMessages();
+        startInit();
     }
 
     private void showSelector() {
@@ -279,7 +265,7 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
         stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
-        Call<Model__> call=apiInterface.getUser(stores.getUsername(), stores.getPass(), stores.getApiKey(), recipient);
+        Call<Model__> call=apiInterface.getUserDM(stores.getUsername(), stores.getPass(), stores.getApiKey(), recipient);
 
         call.enqueue(new Callback<Model__>() {
             @Override
@@ -315,6 +301,9 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
                         String image=user_data.getAuth_data().getAuth_img();
                         String fullnames=user_data.getAuth_data().getFullname();
                         String online=user_data.getOnline();
+                        String last_read=user_data.getLast_read();
+
+                        (new Messages(context)).setLastRead(user_name, last_read, user_data.getConfirm());
                         if(online.trim().equalsIgnoreCase("1")){
                             online = getString(R.string.online);
                         }else{

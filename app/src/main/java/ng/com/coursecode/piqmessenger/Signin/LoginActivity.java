@@ -43,32 +43,43 @@ public class LoginActivity extends FullScreenActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context=LoginActivity.this;
-        statVidP.setVideoURI((new Stores(context)).getRawResUri(R.raw.login_video));
-        statVidP.start();
-        statVidP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                statVidP.setVideoURI((new Stores(context)).getRawResUri(R.raw.login_video));
-                statVidP.start();
-            }
-        });
+        Vvid();
 
         (findViewById(R.id.log_in)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignActivity.class);
-                intent.putExtra(SignActivity.IS_LOGIN, true);
-                startActivity(intent);
-                finish();
+                duro(true);
             }
         });
         (findViewById(R.id.sign_up)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignActivity.class);
-                intent.putExtra(SignActivity.IS_LOGIN, false);
-                startActivity(intent);
-                finish();
+                duro(false);
+            }
+        });
+    }
+
+    private void duro(boolean b) {
+        statVidP.stopPlayback();
+        Intent intent = new Intent(LoginActivity.this, SignActivity.class);
+        intent.putExtra(SignActivity.IS_LOGIN, b);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Vvid();
+    }
+
+    private void Vvid() {
+        statVidP.setVideoURI((new Stores(context)).getRawResUri(R.raw.login_video));
+        statVidP.start();
+        statVidP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                statVidP.start();
             }
         });
     }

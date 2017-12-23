@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ng.com.coursecode.piqmessenger.Contacts_.ContactAct$PlaceholderFragment">
 
-    <TextView
+    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

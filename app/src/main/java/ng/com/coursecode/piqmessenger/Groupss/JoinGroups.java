@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
+
+import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -19,10 +20,7 @@ import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
 import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Fragments_.Chats;
 import ng.com.coursecode.piqmessenger.Fragments_.Groups;
-import ng.com.coursecode.piqmessenger.Fragments_.Notification;
-import ng.com.coursecode.piqmessenger.Fragments_.Status;
 import ng.com.coursecode.piqmessenger.Model__.Stores;
 import ng.com.coursecode.piqmessenger.R;
 
@@ -133,7 +131,7 @@ public class JoinGroups extends PiccMaqCompatActivity {
 
     public void replaceFrag(Fragment fragment, int stringResId){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
+        // Replace whatever is in the fragment_container view with this PiccMaqFragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.jgroup_framecontent, fragment);
         if(backstack)transaction.addToBackStack(null);

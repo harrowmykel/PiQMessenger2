@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:src="@null" />
-    <TextView
+    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_src"/>
