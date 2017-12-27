@@ -4,35 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 
-import ng.com.coursecode.piqmessenger.Dialog_.LearnDialog;
-import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
+import ng.com.coursecode.piqmessenger.dialog_.LearnDialog;
+import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
-import ng.com.coursecode.piqmessenger.Contacts_.ContactAct;
-import ng.com.coursecode.piqmessenger.Fragments_.Status;
-import ng.com.coursecode.piqmessenger.Groups.CreateGroup;
-import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
-import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
-import ng.com.coursecode.piqmessenger.Searches.ConvoSearchAct;
-import ng.com.coursecode.piqmessenger.Searches.SearchAct;
-import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
-import ng.com.coursecode.piqmessenger.Statuses.CreateStatus;
+import ng.com.coursecode.piqmessenger.adapters__.SectionsPagerAdapter;
+import ng.com.coursecode.piqmessenger.groups.CreateGroup;
+import ng.com.coursecode.piqmessenger.mmenu.Menu_;
+import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.searches.ConvoSearchAct;
+import ng.com.coursecode.piqmessenger.searches.SearchAct;
+import ng.com.coursecode.piqmessenger.statuses.CreatePost;
+import ng.com.coursecode.piqmessenger.statuses.CreateStatus;
+import ng.com.coursecode.piqmessenger.statuses.StatusAll;
 
 public class MainActivity extends PiccMaqCompatActivity {
 
@@ -52,7 +48,8 @@ public class MainActivity extends PiccMaqCompatActivity {
     private ViewPager mViewPager;
     Context context;
 
-SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +71,23 @@ SwipeRefreshLayout swipeRefreshLayout;
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        (findViewById(R.id.menu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, Menu_.class));
+            }
+        });
 
+        int goTo=0;
+        int whereTo=getIntent().getIntExtra(Stores.TYPE_OF_ACTION, R.string.posts);
+        int[] scv=SectionsPagerAdapter.fragmentTitles;
+        for(int scvT : scv){
+            if(whereTo==scvT){
+                break;
+            }
+            goTo++;
+        }
+        mViewPager.setCurrentItem(goTo);
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        tabLayout.setupWithViewPager(mViewPager);
 
@@ -95,7 +108,7 @@ SwipeRefreshLayout swipeRefreshLayout;
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,13 +158,39 @@ SwipeRefreshLayout swipeRefreshLayout;
         });
         swipeRefreshLayout.setRefreshing(false);
         if(!Prefs.getBoolean(LearnDialog.DONT_SHOW_LEARN_HOW, false)){
-        Snackbar.make(mViewPager, R.string.learn_how_to_use, Snackbar.LENGTH_SHORT).setAction(R.string.ok, new View.OnClickListener() {
+            Snackbar.make(mViewPager, R.string.learn_how_to_use, Snackbar.LENGTH_SHORT).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    (new LearnDialog(context)).show();
+                }
+            });
+        }
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                (new LearnDialog(context)).show();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int curr=mViewPager.getCurrentItem();
+                int sdf=SectionsPagerAdapter.fragmentTitles[curr];
+                int fabDrwbl=R.drawable.ic_add_white_24dp;
+                if(sdf==R.string.groups){
+                    fabDrwbl=R.drawable.ic_group_add_white_24dp;
+                }else if (sdf==R.string.status){
+                    fabDrwbl=R.drawable.ic_edit_white_24dp;
+                }else if (sdf==R.string.posts){
+                    fabDrwbl=R.drawable.ic_add_white_24dp;
+                }
+                fab.setIcon(fabDrwbl);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
-        }
     }
 
     @Override
@@ -183,9 +222,9 @@ SwipeRefreshLayout swipeRefreshLayout;
                 intent=new Intent(this, ConvoSearchAct.class);
                 startActivity(intent);
                 return true;
-            case R.id.action_people:
-                startActivity(new Intent(context, Profile.class));
-                 return true;
+            case R.id.action_status:
+                startActivity(new Intent(context, StatusAll.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

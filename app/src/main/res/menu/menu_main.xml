@@ -8,10 +8,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_search_black_24dp"/>
     <item
-        android:id="@+id/action_people"
-        android:title="@string/profile"
+        android:id="@+id/action_status"
+        android:title="@string/status"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_person_black_24dp"/>
+        android:icon="@drawable/ic_forward_screen_mystory"/>
     <item
         android:id="@+id/action_more"
         android:title="@string/action_more"

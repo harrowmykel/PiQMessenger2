@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ng.com.coursecode.piqmessenger.Signin.LoginActivity">
+    tools:context="ng.com.coursecode.piqmessenger.signin.LoginActivity">
     <VideoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +25,7 @@
         android:layout_centerInParent="true"
         android:id="@+id/idf"
         android:src="@mipmap/ic_launcher"/>
-    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/idf"
@@ -35,7 +35,7 @@
         android:textStyle="bold"
         android:id="@+id/idfo"
         android:layout_centerHorizontal="true"/>
-    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/idfo"
@@ -55,7 +55,7 @@
         android:orientation="vertical"
         android:id="@+id/bttm"
         android:layout_alignParentBottom="true">
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/txtButtons"
@@ -64,7 +64,7 @@
             android:id="@+id/log_in"
             android:textSize="16sp"
             android:text="@string/log_in"/>
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/txtButtons"

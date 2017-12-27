@@ -41,7 +41,7 @@
                     android:indeterminate="true"
                     app:spbStyle="@style/linearProgressBar"
                     android:id="@+id/smooth_prog"/>
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/show_previous_post"
@@ -85,7 +85,7 @@
                                 android:id="@+id/items_all"
                                 android:gravity="center_vertical">
 
-                                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                                     android:id="@+id/posts_act_2username"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                                     android:layout_alignStart="@+id/posts_act_2more"
                                     android:text="@string/loading" />
 
-                                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                                     android:id="@+id/posts_act_2subtitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                                     android:textSize="@dimen/descSize"
                                     android:layout_below="@+id/posts_act_2username" />
 
-                                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                                     android:id="@+id/posts_act_2text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                                     android:layout_below="@id/posts_act_2text"
                                     android:id="@+id/posts_act_2image"
                                     style="@style/imageViewCover"/>
-                                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
@@ -178,7 +178,7 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/replies_"
@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:id="@+id/main_recycle"/>
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/warning"

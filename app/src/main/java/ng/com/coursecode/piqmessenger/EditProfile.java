@@ -1,50 +1,33 @@
 package ng.com.coursecode.piqmessenger;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+
+import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.util.List;
 
-import br.com.goncalves.pugnotification.notification.PugNotification;
 import de.hdodenhof.circleimageview.CircleImageView;
-import mehdi.sakout.fancybuttons.FancyButton;
-import ng.com.coursecode.piqmessenger.Conversate.Converse;
-import ng.com.coursecode.piqmessenger.Database__.Users_prof;
-import ng.com.coursecode.piqmessenger.ExtLib.GoogleUpload;
-import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Fragments_.Posts;
-import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Model__.Model__;
-import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.database__.Users_prof;
+import ng.com.coursecode.piqmessenger.extLib.GoogleUpload;
+import ng.com.coursecode.piqmessenger.extLib.Piccassa;
+import ng.com.coursecode.piqmessenger.extLib.Toasta;
+import ng.com.coursecode.piqmessenger.interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.model__.Model__;
+import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.retrofit__.ApiClient;
+import ng.com.coursecode.piqmessenger.retrofit__.ApiInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,11 +44,9 @@ public class EditProfile extends PiccMaqCompatActivity {
     TextView  username;
     EditText fullname, bio;
     CircleImageView user_dp;
-    Stores stores;
+    Stores stores;//todo password
 
     private static final int IMGREQUESTCODE = 234;
-    private static final int GALLERYREQUESTCODE = 287;
-    private static final int GIFREQUESTCODE = 1233;
     Uri tempUri=Uri.EMPTY;
     ImageView img;
     Intent intent;
@@ -95,7 +76,7 @@ public class EditProfile extends PiccMaqCompatActivity {
         username.setText(ab);
 
         Users_prof users_prof=Users_prof.getInfo(context, username_);
-        Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
+        Piccassa.loadDp(context, users_prof.getImage(), user_dp);
         fullname.setText(users_prof.getFullname());
 
         setTitle(users_prof.getFullname());
@@ -155,7 +136,7 @@ public class EditProfile extends PiccMaqCompatActivity {
                         final String bioo=modelll.getBio();
 
                         fullname.setText(fullnames);
-                        Piccassa.load(context, image, R.drawable.user_sample, user_dp);
+                        Piccassa.loadDp(context, image, user_dp);
                         bio.setText(bioo);
                         isLoaded=true;
                     }
@@ -215,7 +196,7 @@ public class EditProfile extends PiccMaqCompatActivity {
         if (resultCode == RESULT_OK) {
             isReady=true;
             tempUri = data.getData();
-            Piccassa.load(context, tempUri, user_dp);
+            Piccassa.loadDp(context, tempUri.toString(), user_dp);
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
         }

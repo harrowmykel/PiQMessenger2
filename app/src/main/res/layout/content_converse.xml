@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ng.com.coursecode.piqmessenger.Conversate.Converse"
+    tools:context="ng.com.coursecode.piqmessenger.conversate.Converse"
     android:orientation="vertical"
     tools:showIn="@layout/activity_converse">
-    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/warning"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView
+                <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxHeight="100dp"

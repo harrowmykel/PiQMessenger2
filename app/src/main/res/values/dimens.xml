@@ -26,4 +26,8 @@
     <dimen name="headsize_msg_date">12sp</dimen>
     <dimen name="appbar_padding_topa">2dp</dimen>
     <dimen name="mrginleft_">10dp</dimen>
+    <dimen name="switch_height">40dp</dimen>
+    <dimen name="switch_width">40dp</dimen>
+    <dimen name="fftn">13dp</dimen>
+    <dimen name="like_icons">30dp</dimen>
 </resources>

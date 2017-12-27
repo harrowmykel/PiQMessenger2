@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ng.com.coursecode.piqmessenger.Contacts_.StatusAct">
+    tools:context="ng.com.coursecode.piqmessenger.contacts_.StatusAct">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -48,12 +48,12 @@
                         app:spbStyle="@style/linearProgressBar"
                         android:visibility="gone"
                         android:id="@+id/smooth_prog"/>
-                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/show_previous_post"
                         style="@style/previous_post"/>
-                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/warning"
@@ -170,7 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/sub_titles"
@@ -216,12 +216,12 @@
                                 android:layout_height="60dp"
                                 android:id="@+id/newpost_switch"
                                 style="@style/MySwitch"/>
-                            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/handle"/>
                         </LinearLayout>
-                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/number_ofwords"

@@ -8,11 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,11 +19,10 @@ import android.widget.Toast;
 import java.io.File;
 
 import mehdi.sakout.fancybuttons.FancyButton;
-import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.File.CFile;
-import ng.com.coursecode.piqmessenger.GifReplace.GifAct;
-import ng.com.coursecode.piqmessenger.R;
+import ng.com.coursecode.piqmessenger.extLib.Piccassa;
+import ng.com.coursecode.piqmessenger.extLib.Toasta;
+import ng.com.coursecode.piqmessenger.file.CFile;
+import ng.com.coursecode.piqmessenger.gif_replace.GifAct;
 
 public class ImageActivity extends PiccMaqCompatActivity implements View.OnClickListener{
 
@@ -56,7 +54,7 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
 
         tempUri=getLastImage(context);
         if(tempUri!=Uri.EMPTY){
-            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img, true);
         }else{
             showSelector();
         }
@@ -105,7 +103,9 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
                         break;
                     case 2:
                         intentq = new Intent(Intent.ACTION_PICK);
-                        intentq.setType("image/*");
+                        intentq = intentq.setType("image/*");
+//                        String[] mimeTypes = {"image/jpeg", "image/png", "image/gif"};
+//                        intentq.putExtra("android.intent.extra.MIME_TYPES", mimeTypes);
                         startActivityForResult(intentq, GALLERYREQUESTCODE);
                         //cancel
                         break;
@@ -130,7 +130,7 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
                     tempUri = data.getData();
                     break;
             }
-            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img);
+            Piccassa.loadGlide(context, tempUri, R.drawable.going_out_add_status_plus, img, true);
         } else {
             Toasta.makeText(context, R.string.noImg, Toast.LENGTH_SHORT);
         }
@@ -156,7 +156,7 @@ public class ImageActivity extends PiccMaqCompatActivity implements View.OnClick
         if (cursor.moveToFirst()) {
             String imageLocation = cursor.getString(1);
             File imageFile = new File(imageLocation);
-            if (imageFile.exists()) {   // TODO: is there a better way to do this?
+            if (imageFile.exists()) {   // T O DO: is there a better way to do this?
                 return Uri.fromFile(imageFile);
             }
         }

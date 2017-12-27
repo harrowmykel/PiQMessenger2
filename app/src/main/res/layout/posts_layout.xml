@@ -34,7 +34,7 @@
                 android:id="@+id/items_all"
                 android:gravity="center_vertical">
 
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:id="@+id/posts_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -46,14 +46,14 @@
                     android:layout_alignLeft="@+id/posts_more"
                     android:layout_alignStart="@+id/posts_more"/>
 
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:id="@+id/posts_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/descSize"
                     android:layout_below="@+id/posts_username" />
 
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:id="@+id/posts_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,15 +116,16 @@
                         android:gravity="center_horizontal"
                         android:orientation="horizontal">
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/like_icons"
+                            android:layout_height="@dimen/like_icons"
                             android:contentDescription="@string/accept_request"
                             app:srcCompat="@drawable/ic_favorite_border_black_24dp"
                             android:id="@+id/posts_fav"/>
-                        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
+                            android:layout_gravity="center_vertical"
                             android:id="@+id/posts_likes_txt"/>
                     </LinearLayout>
                 <LinearLayout
@@ -134,22 +135,23 @@
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/like_icons"
+                        android:layout_height="@dimen/like_icons"
                         android:contentDescription="@string/accept_request"
-                        app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
+                        android:src="@drawable/ic_chat_bubble_outline_black_24dp"
                         android:id="@+id/posts_reply"/>
-                    <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                    <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
+                        android:layout_gravity="center_vertical"
                         android:id="@+id/posts_reply_txt"/>
                 </LinearLayout>
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="20dp"
+                        android:layout_height="@dimen/like_icons"
                         android:id="@+id/posts_msg"
-                        app:srcCompat="@drawable/ic_reply_black_24dp"
+                        android:src="@drawable/ic_reply_black_24dp"
                         android:layout_weight="1"/>
                 </LinearLayout>
             </RelativeLayout>

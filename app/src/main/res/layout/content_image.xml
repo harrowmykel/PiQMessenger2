@@ -7,7 +7,7 @@
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     tools:context="ng.com.coursecode.piqmessenger.ImageActivity"
     tools:showIn="@layout/activity_image">
-    <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2
+    <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageAct"

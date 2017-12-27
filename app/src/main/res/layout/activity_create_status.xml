@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="2dp">
-        <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView2
+        <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView2
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stat_img_p"
@@ -36,7 +36,7 @@
             android:src="@drawable/user_sample"
             android:id="@+id/stat_img"/>
 
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
@@ -51,7 +51,7 @@
             android:paddingLeft="10dp"
             android:paddingStart="10dp"
             android:orientation="vertical">
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
@@ -61,14 +61,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     android:id="@+id/stat_sub"/>
 
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"

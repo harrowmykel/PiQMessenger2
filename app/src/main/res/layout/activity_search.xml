@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ng.com.coursecode.piqmessenger.Contacts_.StatusAct">
+    tools:context="ng.com.coursecode.piqmessenger.contacts_.StatusAct">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -33,7 +33,7 @@
         </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
-    <ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh
+    <ng.com.coursecode.piqmessenger.extLib.PiccMaqSwipeRefresh
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/swipeRefresh"
@@ -52,6 +52,6 @@
 
         </LinearLayout>
 
-    </ng.com.coursecode.piqmessenger.ExtLib.PiccMaqSwipeRefresh>
+    </ng.com.coursecode.piqmessenger.extLib.PiccMaqSwipeRefresh>
 
 </android.support.design.widget.CoordinatorLayout>

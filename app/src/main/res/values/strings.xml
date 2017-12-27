@@ -16,8 +16,6 @@
     <string name="action_unaccepted_req">New Requests</string>
     <string name="title_activity_contacts_act">Friends </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contacts">Friends</string>
     <string name="new_requests">New Requests</string>
     <string name="title_activity_contacts">ContactsAct</string>
@@ -193,5 +191,34 @@
     <string name="how_to_use_app">fd</string>
     <string name="new_notification">New notification</string>
     <string name="delete_all">Delete all</string>
+    <string name="settings">Settings</string>
+    <string name="play_sound_like">Play sound on like</string>
+    <string name="load_high_quality">Load high quality image</string>
+    <string name="images_from_tenor">images will be loaded from Tenor</string>
+    <string name="images_from_giphy">images will be loaded from Giphy</string>
+    <string name="load_from_tenor">Load Images from Tenor</string>
 
+    <string name="loader0">Loader 0</string>
+    <string name="loader1">Loader 1</string>
+    <string name="loader2">Loader 2</string>
+    <string name="loader_gif_type">Loading gif type</string>
+    <string name="loader_gif_type_desc">Select a loader. This is shown while an image is loading</string>
+    <string name="load_images">Load Images</string>
+    <string name="load_warning">Cant load images. Deactivated in settings</string>
+    <string name="find_group">Find groups</string>
+    <string name="relogin">Invalid password or username, please relogin.</string>
+    <string name="no_username">No username</string>
+    <string name="no_pass">No password</string>
+    <string name="inv_app_id">Invalid appid</string>
+    <string name="no_auth">Unauthorised_req</string>
+    <string name="error_edit_prof">Error editing profile</string>
+    <string name="undef_req">Undefined Request</string>
+    <string name="inv_req">Invalid Request</string>
+    <string name="inv_file">Invalid File</string>
+    <string name="missing_var">Incomplete values</string>
+    <string name="inv_email">Invalid Email</string>
+    <string name="inv_user_or_email">Invalid Username or Email</string>
+    <string name="int_error">Internal Error</string>
+    <string name="unread_messages">Unread Messages</string>
+    <string name="text_copied_to_clipboard">Text copied to clipboard</string>
 </resources>

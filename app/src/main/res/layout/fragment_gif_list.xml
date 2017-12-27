@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:staggered="http://schemas.android.com/tools"
     android:orientation="vertical">
-    <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.StaggeredGridView
+    <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.StaggeredGridView
         android:id="@+id/staggeredGridView1"
         staggered:numColumns="2"
         staggered:drawSelectorOnTop="true"

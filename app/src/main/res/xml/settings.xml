@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/action_settings"
+        android:key="jfknfdjkfnk21"
+        android:icon="@mipmap/ic_launcher">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="@string/play_sound_like"
+            android:height="@dimen/switch_height"
+            android:width="@dimen/switch_width"
+            android:textSize="@dimen/fftn"
+            android:key="play_sound_like"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:title="@string/load_high_quality"
+            android:height="@dimen/switch_height"
+            android:width="@dimen/switch_width"
+            android:textSize="@dimen/fftn"
+            android:key="load_high_quality"/>
+        <CheckBoxPreference
+            android:key="src_is_tenor"
+            android:title="@string/load_from_tenor"
+            android:summaryOn="@string/images_from_tenor"
+            android:summaryOff="@string/images_from_giphy"
+            android:defaultValue="true"/>
+        <!--0 = all, 1=only prof_pic, only posts-->
+        <ListPreference
+            android:key="load_images1"
+            android:title="@string/load_images"
+            android:defaultValue="0"
+            android:entries="@array/load_imgs_array"
+            android:entryValues="@array/load_imgs_values_array"
+            android:dialogIcon="@drawable/ic_image_black_24dp"/>
+        <ListPreference
+            android:key="loader_type"
+            android:title="@string/loader_gif_type"
+            android:defaultValue="0"
+            android:entries="@array/loader_names_array"
+            android:entryValues="@array/loader_values_array"
+            android:summary="@string/loader_gif_type_desc"
+            android:dialogIcon="@drawable/ic_cached_black_24dp"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

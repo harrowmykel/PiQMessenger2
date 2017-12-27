@@ -20,7 +20,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ExtLib.staggeredgridviewdemo.MainActivity_r"
+            android:name=".extLib.staggeredgridviewdemo.MainActivity_r"
             android:label="@string/app_name" />
         <activity
             android:name=".HomeSta"
@@ -30,21 +30,21 @@
             android:name=".Profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Groups.GroupsAct"
+            android:name=".groups.GroupsAct"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Groups.CreateGroup"
+            android:name=".groups.CreateGroup"
             android:label="@string/create_a_new_group" />
         <activity android:name=".EditProfile" />
         <activity
-            android:name=".Contacts_.StatusAct"
+            android:name=".contacts_.StatusAct"
             android:label="@string/view_users"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Searches.SearchAct"
+            android:name=".searches.SearchAct"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Searches.ConvoSearchAct"
+            android:name=".searches.ConvoSearchAct"
             android:label="@string/action_search"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -53,107 +53,104 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Statuses.CreateStatus"
+            android:name=".settingss.SettingsActivity"
+            android:label="@string/settings" />
+        <activity
+            android:name=".statuses.CreateStatus"
             android:label="@string/create_status"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
                 <data android:mimeType="text/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Statuses.CreatePost"
+            android:name=".statuses.CreatePost"
             android:label="@string/newpost"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
                 <data android:mimeType="text/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Statuses.EditPost"
+            android:name=".statuses.EditPost"
             android:label="@string/edit_post"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Groupss.JoinGroups"
+            android:name=".groupss.JoinGroups"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GifReplace.GifAct"
+            android:name=".gif_replace.GifAct"
             android:label="@string/onlineGifs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PostsAct.PostsAct"
+            android:name=".posts_act.PostsAct"
             android:label="@string/replies_"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Contacts_.ContactAct"
+            android:name=".contacts_.ContactAct"
             android:label="@string/friends"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashScreen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".GifReplace.MediaViewer"
+            android:name=".gif_replace.MediaViewer"
             android:label="@string/onlineGifs" />
         <activity
-            android:name=".GifReplace.mViewer.MedViewer"
+            android:name=".gif_replace.mViewer.MedViewer"
             android:label="@string/onlineGifs"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <!-- Firebase Notifications -->
-        <service android:name=".Firebasee.MFirebaseMessagingService">
+        <service android:name=".firebasee.MFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Firebasee.FirebaseInstanceIdServ">
+        <service android:name=".firebasee.FirebaseInstanceIdServ">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Servicess.MessageCallService" />
-        <service android:name=".Servicess.StatusCallService" />
-        <service android:name=".Servicess.GroupCallService" />
-        <service android:name=".Servicess.NotifyCallService" />
+        <service android:name=".servicess.MessageCallService" />
+        <service android:name=".servicess.StatusCallService" />
+        <service android:name=".servicess.GroupCallService" />
+        <service android:name=".servicess.NotifyCallService" />
         <!-- ./Firebase Notifications -->
         <activity
-            android:name=".PostsAct.LikesAct"
+            android:name=".posts_act.LikesAct"
             android:label="@string/likes"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Conversate.Converse"
+            android:name=".statuses.StatusAll"
+            android:label="@string/status"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".conversate.Converse"
             android:label="@string/title_activity_converse"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Statuses.Show_Status"
+            android:name=".statuses.Show_Status"
             android:label="@string/title_activity_show__status"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -165,31 +162,29 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Signin.LoginActivity"
+            android:name=".signin.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
             android:theme="@style/FullAppTheme" />
         <activity
-            android:name=".Signin.SignActivity"
+            android:name=".signin.SignActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
             android:theme="@style/FullAppTheme" />
         <activity
-            android:name=".Mmenu.Menu_"
+            android:name=".mmenu.Menu_"
             android:label="@string/title_activity_menu_"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Conversate.Message"
-            android:label="@string/title_activity_message"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NotificationsA.NotificationsAct"
+            android:name=".notifications_a.NotificationsAct"
             android:label="@string/notifications">
             <intent-filter>
                 <action android:name="OPEN_ACTIVITY_1" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".extLib.PiccImageFull"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

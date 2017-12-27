@@ -2,58 +2,27 @@ package ng.com.coursecode.piqmessenger;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import android.widget.TextView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.pixplicity.easyprefs.library.Prefs;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
-import ng.com.coursecode.piqmessenger.Database__.Messages;
-import ng.com.coursecode.piqmessenger.Database__.Status_tab;
-import ng.com.coursecode.piqmessenger.Database__.Users_prof;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.MainActivity_r;
-import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
-import ng.com.coursecode.piqmessenger.Firebasee.NotificationAct;
-import ng.com.coursecode.piqmessenger.Model__.Model__;
-import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.Model__.Stores2;
-import ng.com.coursecode.piqmessenger.NetworkCalls.MessagesCall;
-import ng.com.coursecode.piqmessenger.NetworkCalls.PostsCall;
-import ng.com.coursecode.piqmessenger.NetworkCalls.StatusCall;
-import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import ng.com.coursecode.piqmessenger.adapters__.SectionsPagerAdapter;
+import ng.com.coursecode.piqmessenger.model__.Model__;
+import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.retrofit__.ApiInterface;
 
 public class HomeSta extends PiccMaqCompatActivity {
 
@@ -87,125 +56,81 @@ public class HomeSta extends PiccMaqCompatActivity {
     private TextView txtRegId, txtMessage;
 
     ApiInterface apiInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homesta);
         context = HomeSta.this;
-        model_list = new ArrayList<>();
-        Retrofit retrofit = ApiClient.getClient();
-        stores = new Stores(context);
-        apiInterface = retrofit.create(ApiInterface.class);
 
-        token=Prefs.getString(FirebaseInstanceIdServ.FIREBASE_KEY, "not set");
-//        setCalled();
-//        hsg();
-        (findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.pink_icon).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, MainActivity.class));
-//                setCalled();
-                Toasta.makeText(context, token, Toast.LENGTH_SHORT);
+                Toast.makeText(HomeSta.this, "Clicked pink Floating Action Button", Toast.LENGTH_SHORT).show();
             }
         });
 
-        startActivity(new Intent(context, MainActivity.class));
-//        startActivity(new Intent(context, MainActivity_r.class));
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.setter);
+        button.setSize(FloatingActionButton.SIZE_MINI);
+        button.setColorNormalResId(R.color.pink);
+        button.setColorPressedResId(R.color.pink_pressed);
+        button.setIcon(R.drawable.ic_fab_star);
+        button.setStrokeVisible(false);
 
-//        (new StatusCall(context)).getAllMessages();
+        final View actionB = findViewById(R.id.action_b);
 
-        txtRegId = (TextView) findViewById(R.id.txt_reg_id);
-        txtMessage = (TextView) findViewById(R.id.txt_push_message);
-
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+        FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
+        actionC.setTitle("Hide/Show Action above");
+        actionC.setOnClickListener(new OnClickListener() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-
-                // checking for type intent filter
-                if (intent.getAction().equals(Stores.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Stores.TOPIC_GLOBAL);
-
-                    displayFirebaseRegId();
-
-                } else if (intent.getAction().equals(Stores.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-                    Toasta.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG);
-
-                    txtMessage.setText(message);
-                }
+            public void onClick(View v) {
+                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
-        };
+        });
 
-        displayFirebaseRegId();
-    }
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        menuMultipleActions.addButton(actionC);
 
-    // Fetches reg id from shared preferences
-    // and displays on the screen
-    private void displayFirebaseRegId() {
-        Prefs.getString(FirebaseInstanceIdServ.FIREBASE_KEY, "");
-
-        Log.e(TAG, "Firebase reg id: " + FirebaseInstanceIdServ.FIREBASE_KEY);
-
-        if (!TextUtils.isEmpty(FirebaseInstanceIdServ.FIREBASE_KEY))
-            txtRegId.setText("Firebase Reg Id: " + FirebaseInstanceIdServ.FIREBASE_KEY);
-        else
-            txtRegId.setText("Firebase Reg Id is not received yet!");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Stores.REGISTRATION_COMPLETE));
-
-        // register new push message receiver
-        // by doing this, the activity will be notified each time a new message arrives
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Stores.PUSH_NOTIFICATION));
-
-        // clear the notification area when the app is opened
-        NotificationAct.clearNotifications(getApplicationContext());
-    }
-
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }
-
-    protected void setCalled(){
-/*
-
-        Retrofit retrofit = ApiClient.getClient();
-        stores = new Stores(context);
-        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-
-        Call<Model__> call = apiInterface.sendToken(stores.getUsername(), token, stores.getApiKey());
-        call.enqueue(new Callback<Model__>() {
+        final FloatingActionButton removeAction = (FloatingActionButton) findViewById(R.id.button_remove);
+        removeAction.setOnClickListener(new OnClickListener() {
             @Override
-            public void onResponse(Call<Model__> call, Response<Model__> response) {
-                Model__ model_lisj=response.body();
-                List<Model__> model_lis=model_lisj.getData();
-                Model__ modelll=model_lis.get(0);
-                if(modelll.getError()!=null){
-                    stores.handleError(modelll.getError(), context);
-                }else if(modelll.getSuccess() !=null){
-                    Toasta.makeText(context, R.string.post_sent, Toast.LENGTH_SHORT);
-                }
+            public void onClick(View v) {
+                ((FloatingActionsMenu) findViewById(R.id.multiple_actions_down)).removeButton(removeAction);
             }
+        });
 
+        ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
+        drawable.getPaint().setColor(getResources().getColor(R.color.white));
+        ((FloatingActionButton) findViewById(R.id.setter_drawable)).setIconDrawable(drawable);
+
+        final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+        actionA.setOnClickListener(new OnClickListener() {
             @Override
-            public void onFailure(Call<Model__> call, Throwable t) {
-                (new Stores(context)).reportThrowable(t, "contactlist");
-            }*/
-//        });
-    }
+            public void onClick(View view) {
+                actionA.setTitle("Action A clicked");
+            }
+        });
 
+        // Test that FAMs containing FABs with visibility GONE do not cause crashes
+        findViewById(R.id.button_gone).setVisibility(View.GONE);
+
+        final FloatingActionButton actionEnable = (FloatingActionButton) findViewById(R.id.action_enable);
+        actionEnable.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuMultipleActions.setEnabled(!menuMultipleActions.isEnabled());
+            }
+        });
+
+        FloatingActionsMenu rightLabels = (FloatingActionsMenu) findViewById(R.id.right_labels);
+        FloatingActionButton addedOnce = new FloatingActionButton(this);
+        addedOnce.setTitle("Added once");
+        rightLabels.addButton(addedOnce);
+
+        FloatingActionButton addedTwice = new FloatingActionButton(this);
+        addedTwice.setTitle("Added twice");
+        rightLabels.addButton(addedTwice);
+        rightLabels.removeButton(addedTwice);
+        rightLabels.addButton(addedTwice);
+    }
 }

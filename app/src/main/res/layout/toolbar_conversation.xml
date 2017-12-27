@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:layout_width="fill_parent"
     android:layout_height="?actionBarSize">
@@ -27,6 +28,8 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/conversation_image"
         android:layout_toEndOf="@+id/conversation_image"
+        android:layout_toLeftOf="@+id/action_more"
+        android:layout_toStartOf="@+id/action_more"
         android:orientation="vertical"
         android:paddingBottom="2dp"
         android:paddingLeft="4dp"
@@ -34,9 +37,7 @@
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
         android:paddingTop="0dp" >
-
-
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:id="@+id/action_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -47,10 +48,10 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:id="@+id/action_bar_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -59,8 +60,15 @@
             android:layout_weight="0.4"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/white"
             android:textSize="15sp" />
-
-
     </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_more_vert_white_24dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:id="@+id/action_more"/>
 </RelativeLayout>

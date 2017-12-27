@@ -46,7 +46,7 @@
             android:layout_marginStart="@dimen/mrginleft"
             android:layout_marginBottom="@dimen/mrgtop"
             android:layout_marginTop="@dimen/mrgtop">
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:id="@+id/users_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

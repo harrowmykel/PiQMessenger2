@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/main_recycle2"/>
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/new_uploads"
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/main_recycle"/>
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/seen_uploads"

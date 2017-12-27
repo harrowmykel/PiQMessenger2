@@ -10,11 +10,34 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="4dp"
+        android:visibility="gone"
         app:cardElevation="2dp"
         app:cardBackgroundColor="@color/colorDateAccent"
         android:id="@+id/l1"
         android:layout_centerHorizontal="true">
-        <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
+            android:id="@+id/convo_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/headsize_msg_date"
+            android:padding="2dp"
+            style="@style/subtitle"
+            android:text="@string/unread_messages"
+            android:layout_marginBottom="10dp"/>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/colorDateAccent"
+        android:id="@+id/l2"
+        android:layout_below="@+id/l1"
+        android:layout_centerHorizontal="true">
+        <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
             android:id="@+id/convo_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +49,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/l1"
+        android:layout_below="@+id/l2"
         android:layout_marginBottom="2dp"
         android:layout_marginTop="2dp"
         android:layout_alignParentLeft="true"
@@ -52,14 +75,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+                <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                     android:id="@+id/convo_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/headsize_msg"
                     android:textColor="@color/msg_color"
                     android:layout_marginBottom="2dp"/>
-                <ng.com.coursecode.piqmessenger.ExtLib.staggeredgridviewdemo.views.ScaleImageView
+                <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/convo_dp"/>
@@ -69,7 +92,7 @@
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:id="@+id/img_icon"/>
-            <ng.com.coursecode.piqmessenger.ExtLib.Pic_TextView
+            <ng.com.coursecode.piqmessenger.extLib.Pic_TextView
                 android:id="@+id/convo_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

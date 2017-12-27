@@ -5,10 +5,10 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="colorAccent">@color/def_text_color</item>
         <item name="spbStyle">@style/GNowProgressBar</item>
         <item name="cpbStyle">@style/CircularThemeProgressBar</item>
+        <item name="android:textColor">@color/def_text_color</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppThemeProg" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -96,7 +96,7 @@
         <item name="spb_interpolator">spb_interpolator_acceleratedecelerate</item>
         <item name="spb_mirror_mode">true</item>
         <item name="spb_reversed">true</item>
-        <!--<item name="spb_colors">@array/gplus_colors</item>-->
+        <item name="spb_color">@color/def_text_color</item>
         <item name="spb_progressiveStart_activated">true</item>
     </style>
 

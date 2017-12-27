@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity; import ng.com.coursecode.piqmessenger.ExtLib.PiccMaqCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+
+import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
+
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,28 +22,22 @@ import com.rilixtech.materialfancybutton.MaterialFancyButton;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import mehdi.sakout.fancybuttons.FancyButton;
-import ng.com.coursecode.piqmessenger.Adapters__.PostsAdapter;
-import ng.com.coursecode.piqmessenger.Adapters__.SectionsPagerAdapter;
-import ng.com.coursecode.piqmessenger.Contacts_.ContactLists;
-import ng.com.coursecode.piqmessenger.Conversate.Converse;
-import ng.com.coursecode.piqmessenger.Database__.Posts_tab;
-import ng.com.coursecode.piqmessenger.Database__.Users_prof;
-import ng.com.coursecode.piqmessenger.ExtLib.Piccassa;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Fragments_.Posts;
-import ng.com.coursecode.piqmessenger.Groupss.JoinGroups;
-import ng.com.coursecode.piqmessenger.Interfaces.ServerError;
-import ng.com.coursecode.piqmessenger.Mmenu.Menu_;
-import ng.com.coursecode.piqmessenger.Model__.FrndsData;
-import ng.com.coursecode.piqmessenger.Model__.Model__;
-import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.Model__.Stores2;
-import ng.com.coursecode.piqmessenger.PostsAct.PostsAct;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiClient;
-import ng.com.coursecode.piqmessenger.Retrofit__.ApiInterface;
-import ng.com.coursecode.piqmessenger.Statuses.CreatePost;
-import ng.com.coursecode.piqmessenger.Statuses.CreateStatus;
+import ng.com.coursecode.piqmessenger.contacts_.ContactLists;
+import ng.com.coursecode.piqmessenger.conversate.Converse;
+import ng.com.coursecode.piqmessenger.database__.Users_prof;
+import ng.com.coursecode.piqmessenger.extLib.Piccassa;
+import ng.com.coursecode.piqmessenger.extLib.Toasta;
+import ng.com.coursecode.piqmessenger.fragments_.Posts;
+import ng.com.coursecode.piqmessenger.interfaces.ServerError;
+import ng.com.coursecode.piqmessenger.mmenu.Menu_;
+import ng.com.coursecode.piqmessenger.model__.FrndsData;
+import ng.com.coursecode.piqmessenger.model__.Model__;
+import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.model__.Stores2;
+import ng.com.coursecode.piqmessenger.posts_act.PostsAct;
+import ng.com.coursecode.piqmessenger.retrofit__.ApiClient;
+import ng.com.coursecode.piqmessenger.retrofit__.ApiInterface;
+import ng.com.coursecode.piqmessenger.statuses.CreatePost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -115,7 +109,7 @@ public class Profile extends PiccMaqCompatActivity {
         username.setText(ab);
 
         Users_prof users_prof = Users_prof.getInfo(context, username_);
-        Piccassa.load(context, users_prof.getImage(), R.drawable.user_sample, user_dp);
+        Piccassa.loadDp(context, users_prof.getImage(), user_dp);
         fullname.setText(users_prof.getFullname());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -257,11 +251,17 @@ public class Profile extends PiccMaqCompatActivity {
                         String fullnames=user_data.getAuth_data().getFullname();
                         String friends=user_data.getAuth_data().getFullname();
                         String subtitle=user_data.getSubtitle();
+                        String online=user_data.getOnline();
+
+                        if(online.trim().equalsIgnoreCase("1")){
+                            (findViewById(R.id.online)).setVisibility(View.VISIBLE);
+                        }
+
                         final String bioo=user_data.getBio();
                         boolean verified=user_data.getVerified();
 
                         fullname.setText(fullnames);
-                        Piccassa.load(context, image, R.drawable.user_sample, user_dp);
+                        Piccassa.loadDp(context, image, user_dp);
                         bio.setText(bioo);
 
                         if(verified){

@@ -3,6 +3,16 @@
     <string-array name="nt_user_post">
         <item>@string/report</item>
     </string-array>
+    <string-array name="copy_del">
+        <item>@string/copy_text</item>
+        <item>@string/action_delete</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="refresh_del">
+        <item>@string/refresh</item>
+        <item>@string/clear_chat</item>
+        <item>@string/cancel</item>
+    </string-array>
     <string-array name="user_post">
         <item>@string/edit</item>
         <item>@string/action_delete</item>
@@ -35,4 +45,31 @@
         <item>@string/repor_pblic</item>
         <item>@string/report_hate</item>
     </string-array>
+    <string-array name="loader_values_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="loader_names_array">
+        <item>@string/loader0</item>
+        <item>@string/loader1</item>
+    </string-array>
+    <string-array name="load_imgs_values_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="load_imgs_array">
+        <item>@string/all_images</item>
+        <item>@string/only_prof_pic</item>
+        <item>@string/only_images_in_posts</item>
+        <item>@string/no_images</item>
+    </string-array>
+    <string name="all_images">All images</string>
+    <string name="only_prof_pic">Only profile pictures</string>
+    <string name="no_images">No images</string>
+    <string name="only_images_in_posts">Only images in posts</string>
+    <string name="copy_text">Copy text</string>
+    <string name="refresh">Refresh Chat</string>
+    <string name="clear_chat">Clear chat</string>
 </resources>

@@ -1,6 +1,5 @@
 package ng.com.coursecode.piqmessenger;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.anthonycr.grant.PermissionsManager;
-import com.anthonycr.grant.PermissionsResultAction;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.marcoscg.easypermissions.EasyPermissions;
@@ -18,14 +15,14 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Random;
 
-import ng.com.coursecode.piqmessenger.ExtLib.FullScreenActivity;
-import ng.com.coursecode.piqmessenger.ExtLib.StartUp;
-import ng.com.coursecode.piqmessenger.ExtLib.Toasta;
-import ng.com.coursecode.piqmessenger.Firebasee.FirebaseInstanceIdServ;
-import ng.com.coursecode.piqmessenger.Model__.Stores;
-import ng.com.coursecode.piqmessenger.Servicess.GroupCallService;
-import ng.com.coursecode.piqmessenger.Servicess.StatusCallService;
-import ng.com.coursecode.piqmessenger.Signin.LoginActivity;
+import ng.com.coursecode.piqmessenger.extLib.FullScreenActivity;
+import ng.com.coursecode.piqmessenger.extLib.StartUp;
+import ng.com.coursecode.piqmessenger.extLib.Toasta;
+import ng.com.coursecode.piqmessenger.firebasee.FirebaseInstanceIdServ;
+import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.servicess.GroupCallService;
+import ng.com.coursecode.piqmessenger.servicess.StatusCallService;
+import ng.com.coursecode.piqmessenger.signin.LoginActivity;
 
 public class SplashScreen extends FullScreenActivity {
 
