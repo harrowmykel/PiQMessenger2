@@ -361,6 +361,7 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
                         String last_rcvd=user_data.getLast_rcvd();
 
                         (new Messages(context)).setLastRead(user_name, last_rcvd, Stores.RCVD_MSG);
+
                         (new Messages(context)).setLastRead(user_name, last_read, Stores.READ_MSG);
 
                         if(online.trim().equalsIgnoreCase("1")){

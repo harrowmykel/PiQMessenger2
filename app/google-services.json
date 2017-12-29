@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "275120474349",
+    "firebase_url": "https://piccmaq-messenger.firebaseio.com",
+    "project_id": "piccmaq-messenger",
+    "storage_bucket": "piccmaq-messenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275120474349:android:632ae3e1fc9d751e",
+        "android_client_info": {
+          "package_name": "ng.com.coursecode.piqmessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275120474349-dk6bfp8fcoa4h5vevp4su5kjftfpl5k1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVjwIJFOW7IpEliTFSt-3GsT3t_-Y4Rlw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

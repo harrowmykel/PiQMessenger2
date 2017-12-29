@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PiQMessenger2.iml" filepath="$PROJECT_DIR$/PiQMessenger2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-gif-drawable-1.2.8/android-gif-drawable-1.2.8.iml" filepath="$PROJECT_DIR$/android-gif-drawable-1.2.8/android-gif-drawable-1.2.8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tenorarogif/tenorarogif.iml" filepath="$PROJECT_DIR$/tenorarogif/tenorarogif.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tenorarogif2/tenorarogif2.iml" filepath="$PROJECT_DIR$/tenorarogif2/tenorarogif2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tenorgiphyapi/tenorgiphyapi.iml" filepath="$PROJECT_DIR$/tenorgiphyapi/tenorgiphyapi.iml" />
+    </modules>
+  </component>
+</project>
