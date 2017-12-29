@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import ng.com.coursecode.piqmessenger.extLib.PiccMaqFragmentPagerAdapter;
 import ng.com.coursecode.piqmessenger.fragments_.StatusFragment;
+import ng.com.coursecode.piqmessenger.fragments_.StatusFragment2;
 import ng.com.coursecode.piqmessenger.model__. Model__3;
 
 /**
@@ -30,7 +31,7 @@ public class StatusPagerAdapter  extends PiccMaqFragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return StatusFragment.newInstance(messages_list.get(position), type);
+        return StatusFragment2.newInstance(messages_list.get(position), type);
     }
 
     @Override

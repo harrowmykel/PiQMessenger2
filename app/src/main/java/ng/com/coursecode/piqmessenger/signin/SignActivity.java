@@ -105,8 +105,8 @@ public class SignActivity extends FullScreenActivity {
                         }
                     }, true);
                 }else if(user_data_.getSuccess() !=null){
-                    Prefs.putString(Profile.USERS_NAME, username_);
-                    Prefs.putString(Profile.USERS_PASS, pass);
+                    (new Stores(context)).setPass(pass);
+                    (new Stores(context)).setUsername(username_);
                     leave();
                 }
             }

@@ -85,14 +85,19 @@ public class Posts_tab {
                     null,
                     null
             );
-            if (result != null && result.getCount() > 0) {
-                String[] sf=sArray;
-                wrtable.update(sTable, contentValues, toFind, sf);
-                result.close();
-            }else{
-                wrtable.insert(sTable, null, contentValues);
-            }
+            try {
 
+                if (result != null && result.getCount() > 0) {
+                    String[] sf=sArray;
+                    wrtable.update(sTable, contentValues, toFind, sf);
+                    result.close();
+                }else{
+                    wrtable.insert(sTable, null, contentValues);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
@@ -103,7 +108,7 @@ public class Posts_tab {
         // dbHelper = DB_Aro.getHelper(context);
         rdbleDb = DB_Aro.getWDb(context);
         List<Posts_tab> msgs=new ArrayList<>();
-        
+
         String[] projection = {Stores2.user_name};
 
         String selection = null;

@@ -143,6 +143,9 @@ public class ContactLists extends PiccMaqFragment {
             case LikesAct.ONLINE_FRIENDS:
                 call=apiInterface.getOnlineFriends(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, ONLINES, ""+page);
                 break;
+            case LikesAct.ONLINE_MEMBERS:
+                call=apiInterface.getOnlineMembers(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, ONLINES, ""+page);
+                break;
             case LikesAct.BIRTHDAY:
                 call=apiInterface.getOnlineFriends(stores.getUsername(), stores.getPass(), stores.getApiKey(), query, BIRTHDAY, ""+page);
                 break;

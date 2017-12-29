@@ -94,7 +94,10 @@ public class Chats extends PiccMaqFragment {
             if(action.equalsIgnoreCase(Chats.REFRESH_NEW_MESSAGE)){
                 // Get extra data included in the Intent
                 setLists();
-                ((ConvoSearchAct)getActivity()).send(Chats.REFRESH);
+                ConvoSearchAct aConvoSearchAct=((ConvoSearchAct)getActivity());
+                if(aConvoSearchAct!=null){
+                    aConvoSearchAct.send(Chats.REFRESH);
+                }
             }
         }
     };

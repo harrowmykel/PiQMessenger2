@@ -43,7 +43,12 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoViewHolder> {
     public void onBindViewHolder(final ConvoViewHolder holder, int position) {
         if(messages_list.size()>0){
             Messages messages=messages_list.get(position);
-            holder.convo_subtitle.setText(messages.getMess_age());
+            String msgh=messages.getMess_age();
+            if(msgh.trim().isEmpty()){
+                int unicode = 0x1F4F7;
+                msgh=Stores.getEmojiByUnicode(unicode);
+            }
+            holder.convo_subtitle.setText(msgh);
             holder.convo_username.setText(Stores.ucWords(messages.getFullname()));
             holder.convo_time.setText((new TimeModel(context)).getDWM3(""+messages.getTim_e()));
             if(!messages.image.isEmpty()) {

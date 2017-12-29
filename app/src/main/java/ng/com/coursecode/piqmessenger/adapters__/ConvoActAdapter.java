@@ -129,6 +129,14 @@ public class ConvoActAdapter extends RecyclerView.Adapter<ConvoActViewHolder> {
                     visibilize(holder, show);
                 }
             });
+            holder.convo_dp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View vieww=holder.crdview;
+                    boolean show=(vieww.getVisibility()!=View.VISIBLE);
+                    visibilize(holder, show);
+                }
+            });
 
             holder.view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

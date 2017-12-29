@@ -132,6 +132,18 @@ public interface ApiInterface {
     @POST("msgs/index.php?"+CONSTANT+"req=create")
     Call<Model__> newMsg(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("text") String text);
 
+    @FormUrlEncoded
+    @POST("msgs/index.php?"+CONSTANT+"req=deleteconvo")
+    Call<Model__> deleteConvo(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("who") String text);
+
+    @FormUrlEncoded
+    @POST("profile/index.php?"+CONSTANT+"req=editpass")
+    Call<Model__> editPass(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("new_pass") String text);
+
+    @FormUrlEncoded
+    @POST("msgs/index.php?"+CONSTANT+"req=delete")
+    Call<Model__> deleteById(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("msg_id") String text);
+
     /*
     @FormUrlEncoded
     @POST("msgs/index.php?"+CONSTANT+"req=create")
@@ -158,8 +170,12 @@ public interface ApiInterface {
     Call<PostsModel> getThisPosts(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("postid") String q);
 
     @FormUrlEncoded
-    @POST("profile/index.php?"+CONSTANT+"req=searchonline")
+    @POST("profile/index.php?"+CONSTANT+"req=searchonlinefriends")
     Call<Model__> getOnlineFriends(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
+
+    @FormUrlEncoded
+    @POST("profile/index.php?"+CONSTANT+"req=searchonline")
+    Call<Model__> getOnlineMembers(@Field("username") String username, @Field("pass") String pass, @Field("api_key") String api_key, @Field("q") String search, @Field("location") String location, @Field("page") String page);
 
     @FormUrlEncoded
     @POST("groups/index.php?"+CONSTANT+"req=reqfrnd")

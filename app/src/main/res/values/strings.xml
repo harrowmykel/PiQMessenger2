@@ -188,7 +188,10 @@
     <string name="ok">Ok</string>
     <string name="learn_how_to_use">Learn how to use this app</string>
     <string name="dont_show_again">Dont show again</string>
-    <string name="how_to_use_app">fd</string>
+    <string name="how_to_use_app">Long click any image to view it. Statuses last for only 24 hours. Deactivate images
+        in settings to save data. long click reply in view status to view image larger. if zou send a request
+        zou will see their public post on zour timeiine even if they havent accepted yet. long click like button for more options
+    </string>
     <string name="new_notification">New notification</string>
     <string name="delete_all">Delete all</string>
     <string name="settings">Settings</string>
@@ -221,4 +224,11 @@
     <string name="int_error">Internal Error</string>
     <string name="unread_messages">Unread Messages</string>
     <string name="text_copied_to_clipboard">Text copied to clipboard</string>
+    <string name="error_no_internet_unable_to_delete">Error! unable to delete. no internet connection</string>
+    <string name="input_old_pass">Input Current Password</string>
+    <string name="input_new_pass">Input New Password</string>
+    <string name="change_pass">Edit Password</string>
+    <string name="pass_changed">Password Changed</string>
+    <string name="inv_pass">Invalid Password</string>
+    <string name="online_members">Online members</string>
 </resources>

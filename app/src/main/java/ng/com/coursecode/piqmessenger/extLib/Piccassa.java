@@ -36,6 +36,14 @@ public class Piccassa {
         //0 = all, 1=only prof_pic, only posts
         loadDp(context, image_to_load, view, false);
     }
+    public static void loadDp(Context context, int image_to_load, ImageView view){
+        String str=(new Stores(context)).getResUri(image_to_load).toString();
+        setUpLongView(context, str, view, true);
+        //0 = all, 1=only prof_pic, only posts
+        Picasso.with(context)
+                .load(image_to_load)
+                .into(view);
+    }
 
     public static void loadDp(final Context context, final String image_to_load, ImageView view, boolean b){
         setUpLongView(context, image_to_load, view, true);
@@ -146,25 +154,38 @@ public class Piccassa {
         loadGlide(context, item, thumbnail, view, false);
     }
 
-    public static void loadGlide(Context context, Uri item, int thumbnail, ImageView view, boolean b) {
+    static int thumbnailo;
+
+    public static void loadGlide(final Context context, Uri item, int thumbnail, final ImageView view, boolean b) {
         //0 = all, 1=only prof_pic, only posts
         setUpLongView(context, item.toString(), view, false);
         if(thumbnail==R.drawable.going_out_add_status_plus){
-            thumbnail=R.drawable.ic_forward_screen_mystory;
+            thumbnailo=R.drawable.ic_forward_screen_mystory;
+        }else{
+            thumbnailo=thumbnail;
         }
         int bae=Stores.parseInt(Prefs.getString("load_images1", "0"));
         if((!((bae==0) || bae==2))){
             if(!b) {
                 Glide.with(context)
-                        .load(thumbnail)
+                        .load(thumbnailo)
                         .into(view);
                 Toasta.makeText(context, R.string.load_warning, Toast.LENGTH_SHORT);
                 return;
             }
         }
-        Glide.with(context).load(item)
-                .thumbnail(Glide.with(context).load(thumbnail))
-                .into(view);
+        Glide.with(context).load(item).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                Picasso.with(context).load(thumbnailo).into(view);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                return false;
+            }
+        }).into(view);
     }
 
     public static void loadStatusFrag(Context context, String image_to_load, int placeholder, ImageView view, Callback callback){

@@ -68,6 +68,7 @@ public class Stores {
     public static final String RCVD_MSG = "rcvd";
     public static final String UNSENT_MSG = "dffnffkj";
     public static final String CLIPBOARD_LABEL = "label";
+    public static final String USER_FIREBASE_TOPIC = "asdfghj";
     public static int flingVelX=1;
     public static int flingVelY=2;
     public static boolean flingEdit=true;
@@ -595,5 +596,17 @@ public class Stores {
                 }
             }
         };
+    }
+
+    public static String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
+
+    public void setPass(String pass) {
+        Prefs.putString(Profile.USERS_PASS, pass);
+    }
+
+    public void setUsername(String username_) {
+        Prefs.putString(Profile.USERS_NAME, username_);
     }
 }

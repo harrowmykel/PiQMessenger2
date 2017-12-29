@@ -93,15 +93,20 @@ public class Messages{
                     null,
                     null
             );
-            long nuk;
-            if (result != null && result.getCount() > 0) {
-                nuk = wrtable.update(sTable, contentValues, toFind, sArray);
-                result.close();
-            } else {
-                nuk = wrtable.insert(sTable, null, contentValues);
+            try{
+                long nuk;
+                if (result != null && result.getCount() > 0) {
+                    nuk = wrtable.update(sTable, contentValues, toFind, sArray);
+                    result.close();
+                } else {
+                    nuk = wrtable.insert(sTable, null, contentValues);
+                }
+                newId = nuk;
+                return (nuk != -1);
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            newId = nuk;
-            return (nuk != -1);
         }
 
         return false;
@@ -467,10 +472,7 @@ public class Messages{
     public List<Messages> listAllFromUser(Context context, String recipp) {
         tim_e=1;
         this.context=context;
-        List<Messages> msgs = new ArrayList<>();
-        // dbHelper = DB_Aro.getHelper(context);
         rdbleDb = DB_Aro.getWDb(context);
-        List<String> msgs_ = new ArrayList<>();
         String thisUser=(new Stores(context)).getUsername();
 
         String[] projection = {Stores2.id_,
@@ -488,57 +490,14 @@ public class Messages{
         // How you want the results sorted in the resulting Cursor
         String sortOrder = Stores2.tim_e + " DESC ";
 
-        cursor = rdbleDb.query(true, Stores2.messagesTable,  // The table to query
+        cursor = rdbleDb.query(Stores2.messagesTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-                sortOrder,                                 // The sort order
-                ""
-
-        );
-        int num = cursor.getCount();
-
-        Stores store=new Stores(context);
-        tim_e=1;
-        Prefs.putString(Converse.LAST_READ_USER, recipp);
-        Prefs.putInt(Converse.LAST_READ, 10);
-        for (int i = 0; i < num; i++) {
-            cursor.moveToPosition(i);
-            Messages messages = new Messages();
-
-            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-            recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
-            mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
-            tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
-            image = cursor.getString(cursor.getColumnIndex(Stores2.image));
-            confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
-            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
-            id = cursor.getInt(cursor.getColumnIndex(Stores2.id_));
-
-            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
-            recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
-
-            messages.setAuth(auth);
-            messages.setRecip(recip);
-
-            messages.setMess_age(mess_age);
-            messages.setTim_e(tim_e);
-            messages.setImage(image);
-            messages.setConfirm(confirm);
-            messages.setmsg_id(msg_id);
-            messages.setId(id);
-            messages.setAuthorUp(auth, store);
-
-            if(i==0) {//since desc
-                Prefs.putInt(Converse.LAST_READ, tim_e);
-            }
-            if(!auth.isEmpty())
-                msgs.add(messages);
-        }
-        cursor.close();
-        return msgs;
+                sortOrder);
+        return displace(cursor, recipp);
     }
 
     public void setAuthorUp(String auth, Stores store) {
@@ -656,9 +615,21 @@ public class Messages{
 
     public void setLastRead(String username, String last_read, String confirm_) {
         rdbleDb = DB_Aro.getWDb(context);
-        String selection = Stores2.recip+" = ? AND "+Stores2.confirm+" <> ? AND "+Stores2.tim_e+" = ? AND "+Stores2.tim_e+" < ?";
-        String[] selectionArgs = {username, Stores.READ_MSG, last_read, last_read};
+        username=username.trim();
+        last_read=""+last_read.trim();
+        String selection = Stores2.recip + " = ? AND " + Stores2.confirm + " <> ? AND " + Stores2.tim_e + " = ?";
+        String[] selectionArgs = new String[]{username, Stores.READ_MSG, last_read};
+
         ContentValues contentValues=new ContentValues();
+        contentValues.put(Stores2.confirm, confirm_);
+
+        rdbleDb.update(Stores2.messagesTable, contentValues, // The table to query
+                selection,                                // The columns for the WHERE clause
+                selectionArgs);
+
+        selection = Stores2.recip + " = ? AND " + Stores2.confirm + " <> ? AND " + Stores2.tim_e + " < ?";
+        selectionArgs = new String[]{username, Stores.READ_MSG, last_read};
+        contentValues=new ContentValues();
         contentValues.put(Stores2.confirm, confirm_);
 
         rdbleDb.update(Stores2.messagesTable, contentValues, // The table to query
@@ -690,5 +661,84 @@ public class Messages{
         int hj=rdbleDb.delete(Stores2.messagesTable,  // The table to query
                 selection,                                // The columns for the WHERE clause
                 selectionArgs);
+    }
+
+    public List<Messages> listAllFromUser(Context context, String recipp, String search) {
+
+        tim_e = 1;
+        this.context = context;
+        // dbHelper = DB_Aro.getHelper(context);
+        rdbleDb = DB_Aro.getWDb(context);
+        String thisUser = (new Stores(context)).getUsername();
+
+        String[] projection = {Stores2.id_,
+                Stores2.auth,
+                Stores2.recip,
+                Stores2.mess_age,
+                Stores2.tim_e,
+                Stores2.image,
+                Stores2.confirm,
+                Stores2.msg_id};
+
+        String selection = "((" + Stores2.auth + " = ? AND " + Stores2.recip + " = ? ) OR (" + Stores2.auth + " = ? AND " + Stores2.recip + " = ? )) AND " + Stores2.mess_age + " LIKE  ?";
+        String[] selectionArgs = {thisUser, recipp, recipp, thisUser, "%"+search+"%"};// username};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = Stores2.tim_e + " DESC ";
+
+        cursor = rdbleDb.query(Stores2.messagesTable,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder);
+        return displace(cursor, recipp);
+    }
+
+    public List<Messages> displace(Cursor cursor, String recipp){
+        List<Messages> msgs = new ArrayList<>();
+        List<String> msgs_ = new ArrayList<>();
+        int num = cursor.getCount();
+
+        Stores store=new Stores(context);
+        tim_e=1;
+        Prefs.putString(Converse.LAST_READ_USER, recipp);
+        Prefs.putInt(Converse.LAST_READ, 10);
+        for (int i = 0; i < num; i++) {
+            cursor.moveToPosition(i);
+            Messages messages = new Messages();
+
+            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
+            recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
+            mess_age = cursor.getString(cursor.getColumnIndex(Stores2.mess_age));
+            tim_e = cursor.getInt(cursor.getColumnIndex(Stores2.tim_e));
+            image = cursor.getString(cursor.getColumnIndex(Stores2.image));
+            confirm = cursor.getString(cursor.getColumnIndex(Stores2.confirm));
+            msg_id = cursor.getString(cursor.getColumnIndex(Stores2.msg_id));
+            id = cursor.getInt(cursor.getColumnIndex(Stores2.id_));
+
+            auth = cursor.getString(cursor.getColumnIndex(Stores2.auth));
+            recip = cursor.getString(cursor.getColumnIndex(Stores2.recip));
+
+            messages.setAuth(auth);
+            messages.setRecip(recip);
+
+            messages.setMess_age(mess_age);
+            messages.setTim_e(tim_e);
+            messages.setImage(image);
+            messages.setConfirm(confirm);
+            messages.setmsg_id(msg_id);
+            messages.setId(id);
+            messages.setAuthorUp(auth, store);
+
+            if(i==0) {//since desc
+                Prefs.putInt(Converse.LAST_READ, tim_e);
+            }
+            if(!auth.isEmpty())
+                msgs.add(messages);
+        }
+        cursor.close();
+        return msgs;
     }
 }

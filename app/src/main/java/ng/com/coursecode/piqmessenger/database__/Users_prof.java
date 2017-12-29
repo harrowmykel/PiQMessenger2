@@ -74,15 +74,20 @@ public class Users_prof implements Parcelable {
                     null,
                     null
             );
-            if (result != null && result.getCount() > 0) {
-                String[] sf=sArray;
-                wrtable.update(sTable, contentValues, toFind, sf);
-                result.close();
-            }else{
-                wrtable.insert(sTable, null, contentValues);
+            try{
+                if (result != null && result.getCount() > 0) {
+                    String[] sf=sArray;
+                    wrtable.update(sTable, contentValues, toFind, sf);
+                    result.close();
+                }else{
+                    wrtable.insert(sTable, null, contentValues);
+                }
+                wrtable.close();
+                return true;
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            wrtable.close();
-            return true;
         }
         return false;
     }

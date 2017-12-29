@@ -23,6 +23,7 @@ import ng.com.coursecode.piqmessenger.contacts_.ContactAct;
 import ng.com.coursecode.piqmessenger.database__.Users_prof;
 import ng.com.coursecode.piqmessenger.dialog_.LearnDialog;
 import ng.com.coursecode.piqmessenger.EditProfile;
+import ng.com.coursecode.piqmessenger.dialog_.PassChangeDialog;
 import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.extLib.Piccassa;
 import ng.com.coursecode.piqmessenger.extLib.StartUp;
@@ -36,6 +37,7 @@ import ng.com.coursecode.piqmessenger.R;
 import ng.com.coursecode.piqmessenger.searches.ConvoSearchAct;
 import ng.com.coursecode.piqmessenger.searches.SearchAct;
 import ng.com.coursecode.piqmessenger.settingss.SettingsActivity;
+import ng.com.coursecode.piqmessenger.statuses.StatusAll;
 
 public class Menu_ extends PiccMaqCompatActivity {
 
@@ -61,8 +63,8 @@ public class Menu_ extends PiccMaqCompatActivity {
     Context context;
     String username_;
 
-    int[] list1List1={R.string.edit_profile, R.string.friends, R.string.find_people, R.string.find_group, R.string.online_friends};
-    int[] list1List2={R.string.games_and_fun, R.string.notifications, R.string.learn_how_to_use, R.string.settings};//,R.string.birthday_celebrants, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
+    int[] list1List1={R.string.edit_profile, R.string.friends, R.string.find_people, R.string.find_group, R.string.online_friends, R.string.online_members};
+    int[] list1List2={R.string.games_and_fun, R.string.notifications, R.string.learn_how_to_use, R.string.settings, R.string.change_pass};//,R.string.birthday_celebrants, , R.string.spend_time_and_earn}R.string.create_avatar, R.string.help_translate_and_earn};
     int[] list1List3={R.string.home, R.string.messages, R.string.status, R.string.groups, R.string.help};
 
     int[] list1List1img={R.string.edit_profile, R.string.friends, R.string.online_friends};
@@ -164,9 +166,16 @@ public class Menu_ extends PiccMaqCompatActivity {
                     intent=new Intent(context, LikesAct.class);
                     intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.ONLINE_FRIENDS);
                     break;
+                case R.string.online_members:
+                    intent=new Intent(context, LikesAct.class);
+                    intent.putExtra(LikesAct.TYPE_OF_ACTION, LikesAct.ONLINE_MEMBERS);
+                    break;
                 case R.string.learn_how_to_use:
                 case R.string.help:
                     (new LearnDialog(context)).show();
+                    break;
+                case R.string.change_pass:
+                    (new PassChangeDialog(context)).show();
                     break;
                 case R.string.settings:
                     intent=new Intent(context, SettingsActivity.class);
@@ -182,8 +191,11 @@ public class Menu_ extends PiccMaqCompatActivity {
                     break;
                 case R.string.home:
                 case R.string.groups:
-                case R.string.status:
                     intent=new Intent(context, MainActivity.class);
+                    intent.putExtra(Stores.TYPE_OF_ACTION, clicked);
+                    break;
+                case R.string.status:
+                    intent=new Intent(context, StatusAll.class);
                     intent.putExtra(Stores.TYPE_OF_ACTION, clicked);
                     break;
                 case R.string.spend_time_and_earn:

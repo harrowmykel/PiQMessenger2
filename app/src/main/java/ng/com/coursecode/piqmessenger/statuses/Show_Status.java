@@ -30,6 +30,8 @@ public class Show_Status extends FullScreenActivity implements SendDatum {
     public static final String POSITION = "kejwdasnrfznkfl";
     public static final String NEXT_STATUS = "jdkjfsnkj";
     public static final String FULLSCREEN = "jfksnkldgkf";
+    public static final String VIEW_USER = "Jeejej";
+    public static final String DELETE = "jnfdlfdn";
     public static String FINISH_="jkh;jlkjl";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -50,7 +52,7 @@ public class Show_Status extends FullScreenActivity implements SendDatum {
     String type_= Status_tab.SEEN;
     int position_=0;
     Context context;
-Stores stores;
+    Stores stores;
 
     @State
     ArrayList<String> sent_updates;

@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.coursecode.piqmessenger.dialog_.MsgLongClickDialog;
+import ng.com.coursecode.piqmessenger.dialog_.SearchDialog;
 import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
 
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -96,13 +97,32 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
         public void send(Object object) {
             int refresh=(int)object;
             if(refresh==Chats.REFRESH){
-                Toasta.makeText(context, R.string.refresh, Toast.LENGTH_SHORT);
-                messages_list = messages.listAllFromUser(context, username);
-                nt_reversed=true;
-                dopeAll();
+                reset();
+            }else if(refresh==R.string.action_search){
+                (new SearchDialog(context, new SendDatum() {
+                    @Override
+                    public void send(Object object) {
+                        String search=(String)object;
+                        if(search.equals(""+Chats.REFRESH)){
+                            reset();
+                        }else{
+                            messages_list = messages.listAllFromUser(context, username, search);
+                            nt_reversed = true;
+                            dopeAll();
+                        }
+                    }
+                })).show();
             }
         }
     };
+
+    private void reset() {
+        (new MessagesCall(context)).getAllMessages();
+        Toasta.makeText(context, R.string.refresh, Toast.LENGTH_SHORT);
+        messages_list = messages.listAllFromUser(context, username);
+        nt_reversed=true;
+        dopeAll();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +214,7 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
                     if (recieve[0] == LONG_CLICK) {
                         Messages msg=messages_lista.get(position);
                         if(msg!=null) {
-                            MsgLongClickDialog msgLongClickDialog=new MsgLongClickDialog(context, msg.getMess_age(), msg.getId(), sendData);
+                            MsgLongClickDialog msgLongClickDialog=new MsgLongClickDialog(context, msg.getMess_age(), msg.getId(), msg.getmsg_id(), sendData);
                             msgLongClickDialog.show();
                         }
                     }
@@ -340,8 +360,9 @@ public class Converse extends PiccMaqCompatActivity implements MessageInput.Inpu
                         String last_read=user_data.getLast_read();
                         String last_rcvd=user_data.getLast_rcvd();
 
-                        (new Messages(context)).setLastRead(user_name, last_read, Stores.READ_MSG);
                         (new Messages(context)).setLastRead(user_name, last_rcvd, Stores.RCVD_MSG);
+                        (new Messages(context)).setLastRead(user_name, last_read, Stores.READ_MSG);
+
                         if(online.trim().equalsIgnoreCase("1")){
                             online = getString(R.string.online);
                         }else{

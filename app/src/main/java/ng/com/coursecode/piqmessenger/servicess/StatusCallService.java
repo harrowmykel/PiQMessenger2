@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +62,7 @@ public class StatusCallService extends Service {
     boolean moreCanBeLoaded;
     String username, sTime, sTTime;
     boolean redo=false, frndredo=false, delredo=false;
+    String user_name;
 
     public StatusCallService() {
         super();
@@ -266,7 +269,7 @@ public class StatusCallService extends Service {
                 if(pgLeft>0){
                     getAllDeletedMessages();
                 }else{
-                   delredo=false;
+                    delredo=false;
                     sendEnd();
                 }
             }
@@ -289,18 +292,25 @@ public class StatusCallService extends Service {
     }
 
     private void subscribeToAllFriendsPosts() {
+        stores = new Stores(context);
+        username=stores.getUsername();
+
         if(!frndredo){
             frndpage=1;
         }
         frndredo=true;
+        if(frndredo) {
+            FirebaseMessaging.getInstance().subscribeToTopic((Stores.APP_FIREBASE_TOPIC).toLowerCase());//status
+            FirebaseMessaging.getInstance().subscribeToTopic((username.trim()+Stores.USER_FIREBASE_TOPIC).toLowerCase());//status
+
+            Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, true);
+            Prefs.putLong(FirebaseInstanceIdServ.SUBSCRIBE_TIME, System.currentTimeMillis());
+            return;//todo remove
+        }
         Prefs.putBoolean(FirebaseInstanceIdServ.SUBSCRIBED_TO_FRIENDS, false);
         Retrofit retrofit = ApiClient.getClient();
-        stores = new Stores(context);
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
         String query="";
-        username=stores.getUsername();
-
-        FirebaseMessaging.getInstance().subscribeToTopic((Stores.APP_FIREBASE_TOPIC).toLowerCase());//status
 
 
         Call<Model__> call=apiInterface.searchUsers(username, stores.getPass(), stores.getApiKey(), query, location, ""+frndpage);
@@ -331,7 +341,7 @@ public class StatusCallService extends Service {
                         }, true);
                         break;
                     }
-                    String user_name = modelll.getAuth_username();
+                    user_name = modelll.getAuth_username();
                     FirebaseMessaging.getInstance().subscribeToTopic((user_name+Stores.TopicEND).toLowerCase());//status
                 }
 

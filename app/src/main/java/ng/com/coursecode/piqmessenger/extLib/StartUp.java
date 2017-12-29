@@ -47,6 +47,7 @@ public class StartUp {
     }
 
     public void start(){
+        context.deleteDatabase(DB_Aro.SQLL_DATEBASE_NAME);
         Prefs.putBoolean(ISLOGINED, true);
         FirebaseInstanceId.getInstance().getToken();
         Prefs.putBoolean(SplashScreen.IS_NT_FIRST_TRIAL, true);
@@ -54,6 +55,7 @@ public class StartUp {
         Prefs.putBoolean(GifAct.srcIsTENOR, true);
         Prefs.putBoolean(StatusFragment.HAS_SEEN_DEF_STAT, false);
         fetchOldThings();
+        FirebaseInstanceId.getInstance().getToken();
     }
 
     public void fetchOldThings(){
@@ -79,13 +81,22 @@ public class StartUp {
         Prefs.putString(Profile.USERS_PASS, "");
         Prefs.putBoolean(ISLOGINED, false);
         Prefs.putBoolean(SplashScreen.IS_NT_FIRST_TRIAL, false);
+        Prefs.putBoolean(FirebaseInstanceIdServ.TOKEN_SENT, false);
+        Prefs.putString(FirebaseInstanceIdServ.TOKEN, "");
         context.deleteDatabase(DB_Aro.SQLL_DATEBASE_NAME);
         Prefs.clear();
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     public static boolean isLogined(Context context) {
@@ -96,8 +107,10 @@ public class StartUp {
         Prefs.putBoolean(FirebaseInstanceIdServ.TOKEN_SENT, false);
         String token=Prefs.getString(FirebaseInstanceIdServ.TOKEN, "");
         if(token.trim().isEmpty()){
+            Prefs.putString(FirebaseInstanceIdServ.TOKEN, FirebaseInstanceId.getInstance().getToken());
             return;
         }
+
         Retrofit retrofit = ApiClient.getClient();
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 

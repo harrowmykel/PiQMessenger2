@@ -39,7 +39,7 @@ public class Group_tab implements Parcelable {
     public Group_tab(){
     }
     public Group_tab(String user_name,String user_id,
-                      String fullname,String image){
+                     String fullname,String image){
         setUser_id(user_id);
         setUser_name(user_name);
         setFullname(fullname);
@@ -72,15 +72,19 @@ public class Group_tab implements Parcelable {
                     null,
                     null
             );
-            if (result != null && result.getCount() > 0) {
-                String[] sf=sArray;
-                wrtable.update(sTable, contentValues, toFind, sf);
-                result.close();
-            }else{
-                wrtable.insert(sTable, null, contentValues);
+            try {
+                if (result != null && result.getCount() > 0) {
+                    String[] sf = sArray;
+                    wrtable.update(sTable, contentValues, toFind, sf);
+                    result.close();
+                } else {
+                    wrtable.insert(sTable, null, contentValues);
+                }
+                wrtable.close();
+                return true;
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            wrtable.close();
-            return true;
         }
         return false;
     }
@@ -99,7 +103,7 @@ public class Group_tab implements Parcelable {
 
         // How you want the results sorted in the resulting Cursor
         String sortOrder = Stores2.id_ + " DESC";
-        
+
         cursor = rdbleDb.query(Stores2.groupTable,  // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
@@ -354,7 +358,7 @@ public class Group_tab implements Parcelable {
     public void delete(Context context) {
         String fname=getUser_name();
         rdbleDb = DB_Aro.getWDb(context);
-        
+
         String selection = Stores2.user_name+" = ? ";
         String[] selectionArgs = {fname};
         rdbleDb.delete(Stores2.groupTable, selection, selectionArgs);

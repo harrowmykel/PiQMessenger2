@@ -126,7 +126,7 @@ public class StatusFragment  extends PiccMaqFragment {
 
         setViewsUp();
 
-        Piccassa.load(context, Uri.parse(user_img_), R.drawable.user_sample, stat_dp);
+        Piccassa.loadDp(context, user_img_, stat_dp);
         stat_username.setText(az);
         stat_name.setText(fullname_);
         position=users_posts.getStartFrom();
@@ -226,7 +226,7 @@ public class StatusFragment  extends PiccMaqFragment {
         if(Status_tab.INTRO.equalsIgnoreCase(type_of_action) || (context.getString(R.string.app_name).equalsIgnoreCase(username_))){
             stat_reply.setVisibility(View.GONE);
             stat_reply.setVisibility(View.INVISIBLE);
-            Piccassa.load(context, R.drawable.profile_btn_superlike, stat_dp);
+            Piccassa.loadDp(context, R.drawable.profile_btn_superlike, stat_dp);
         }else if(thisUser_){
             stat_reply.setVisibility(View.VISIBLE);
             stat_reply.setText(R.string.view_users);

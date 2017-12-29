@@ -28,7 +28,7 @@ public class Status_tab {
     public static final String CREATE = "create";
     public static final String INTRO = "heidkhifr";
     public String user_name;
-    
+
     public String status_id="fskjbjtjktslj;tbobos";
     public String time;
     public String text;
@@ -45,7 +45,7 @@ public class Status_tab {
     String auth;
     private String type;
     int startFrom;
-    
+
     public Status_tab(){
 
     }
@@ -89,15 +89,19 @@ public class Status_tab {
                     null,
                     null
             );
-            if (result != null && result.getCount() > 0) {
-                String[] sf=sArray;
-                //no need to update
+            try{
+                if (result != null && result.getCount() > 0) {
+                    String[] sf=sArray;
+                    //no need to update
 //                wrtable.update(sTable, contentValues, toFind, sf);
-                result.close();
-            }else{
-                wrtable.insert(sTable, null, contentValues);
-            }
+                    result.close();
+                }else{
+                    wrtable.insert(sTable, null, contentValues);
+                }
 
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
@@ -157,7 +161,7 @@ public class Status_tab {
         );
         return  listFromCursor(cursor);
     }
-    
+
     public ArrayList<Model__3> listFromCursor(Cursor cursor){
 
         ArrayList<Model__3> statuses = new ArrayList<>();
@@ -237,9 +241,9 @@ public class Status_tab {
                 fav_ = fav_ || (!fav.equals("0"));
                 status_tab_list.add(status_tab);
                 if(!seen_ && !unseen_set){
-                    unseen_set=true; 
+                    unseen_set=true;
                     startFrom=i1;
-                    
+
                 }
             }
 

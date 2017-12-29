@@ -53,15 +53,20 @@ public class Notify {
                     null,
                     null
             );
-            long nuk;
-            if (result != null && result.getCount() > 0) {
-                nuk = wrtable.update(sTable, contentValues, toFind, sArray);
-                result.close();
-            } else {
-                nuk = wrtable.insert(sTable, null, contentValues);
+            try{
+                long nuk;
+                if (result != null && result.getCount() > 0) {
+                    nuk = wrtable.update(sTable, contentValues, toFind, sArray);
+                    result.close();
+                } else {
+                    nuk = wrtable.insert(sTable, null, contentValues);
+                }
+                newId = nuk;
+                return (nuk != -1);
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            newId = nuk;
-            return (nuk != -1);
         }
 
         return false;

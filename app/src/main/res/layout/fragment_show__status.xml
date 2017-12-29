@@ -19,18 +19,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:orientation="vertical">
-            <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView2
+            <ng.com.coursecode.piqmessenger.extLib.staggeredgridviewdemo.views.ScaleImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 android:id="@+id/stat_img_p"/>
             <VideoView
                 android:layout_width="match_parent"

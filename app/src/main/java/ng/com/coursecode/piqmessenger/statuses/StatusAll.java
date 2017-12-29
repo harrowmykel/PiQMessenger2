@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -29,10 +30,12 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ng.com.coursecode.piqmessenger.Profile;
 import ng.com.coursecode.piqmessenger.R;
+import ng.com.coursecode.piqmessenger.adapters__.SectionsPagerAdapter;
 import ng.com.coursecode.piqmessenger.fragments_.Status;
 import ng.com.coursecode.piqmessenger.extLib.PiccMaqCompatActivity;
 import ng.com.coursecode.piqmessenger.extLib.Toasta;
 import ng.com.coursecode.piqmessenger.model__.Stores;
+import ng.com.coursecode.piqmessenger.networkcalls.StatusCall;
 import ng.com.coursecode.piqmessenger.posts_act.PostsAct;
 import ng.com.coursecode.piqmessenger.searches.SearchAct;
 
@@ -43,6 +46,7 @@ public class StatusAll extends PiccMaqCompatActivity {
     Boolean fromSavedState=false;
     public String cc_title;
     Context context;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,18 @@ public class StatusAll extends PiccMaqCompatActivity {
                 startActivity(intent);
             }
         });
+
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                (new StatusCall(context)).getAllDelMessages();
+                Intent intent = new Intent(Stores.REFRESH_ACTIVITY_STATUS);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        (new StatusCall(context)).getAllDelMessages();
     }
 
     @Override
